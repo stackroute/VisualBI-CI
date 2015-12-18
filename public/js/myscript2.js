@@ -130,12 +130,16 @@
         data.values.forEach(function(item){
          if(level == "MEMBER") {
             li = $("<li><a href='#'>" + item.caption_name + "</a></li>");
+            li.appendTo(childUL).find('a').draggable({
+              appendTo: "body",
+              helper: "clone"
+            });
          } else {
             li = generateLI(item.caption_name);
+            li.appendTo(childUL);
          }
          li.data('unique-name', item.unique_name);
          li.data('path-name', parameters.pathName + "/" + item.unique_name);
-         li.appendTo(childUL);
         });
       }, 'json');
     }
