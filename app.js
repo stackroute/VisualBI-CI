@@ -28,8 +28,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/execute', execute);
+app.use('/get_serverDetails', discover.getDimensions);
 app.use('/get_children', discover.getDimensions);
-app.use('/get_measures', discover.getMeasures);
+app.use('/get_measures',discover.getMeasures);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

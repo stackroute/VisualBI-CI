@@ -63,16 +63,15 @@ exports.getDimensions = function(req,res) {
 
         result.values=values;
     		res.send(result);
-    		res.end();
   		},
   		error:function(){
     		res.write("Error finding the Required Data");
 
   		},
-  		callback:function() {        
+  		callback:function() {
     		res.end();
   		}
-  	}
+  	};
 
   	requestURL.fragments = fragments;
   	requestURL.decodedFragments = decodedFragments;
@@ -144,6 +143,9 @@ exports.getMeasures = function(req,res) {
   var requestURL = {};
   var query = "?url="+xmlaServer;
 
+		  pathName = pathName + "/" + "[Measures]";     //assumed the measures unique_name will be [Measures]
+					console.log(pathName);
+
   var fragments = pathName.split("/"), //pathName
       decodedFragments = decodeFragments(fragments),
       numFragments = fragments.length,
@@ -152,9 +154,6 @@ exports.getMeasures = function(req,res) {
       temp = {},
       discoverRequestType = discoverRequestTypes[numFragments];
 
-  if(numFragments === 4) {
-    pathName = pathName + "/" + "[Measures]";
-  }
 
   var xmlaRequest = {
       async:true,
@@ -181,7 +180,7 @@ exports.getMeasures = function(req,res) {
         res.write("Error finding the Required Data");
 
       },
-      callback:function() {        
+      callback:function() {
         res.end();
       }
     }
