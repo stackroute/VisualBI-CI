@@ -22,7 +22,7 @@
     $(this).parent().remove();
     var len = pt.find('ul li').length;
     console.log(len);
-    if(len == 0) {
+    if(len === 0) {
       $("<li class='placeholder'>Drag measures/dimensions here</li>").appendTo(pt.children('ul'));
     }
     var ht = parseInt(pt.outerHeight());
@@ -55,13 +55,13 @@
           $('#myModal select.dataSourceNameList').append(option);
        });
      },'json');
-    };
+    }
   });
 
   $('#myModal #dataSource').on('change', function() {
     var parameters = {xmlaServer: $('#url').val(), pathName: "/"+$(this).val()};
     console.log(parameters);
-    $.get('/get_children', parameters, function(data) {
+    $.get('/get_serverDetails', parameters, function(data) {
       console.log(data);
       $('#myModal #catalog').children().remove();
       $('#myModal #catalog').append($("<option>select</option>"));
@@ -76,7 +76,7 @@
   $('#myModal #catalog').on('change', function() {
     var parameters = {xmlaServer: $('#url').val(), pathName: "/"+ $('#dataSource').val() + "/" + $(this).val()};
     console.log(parameters);
-    $.get('/get_children', parameters, function(data) {
+    $.get('/get_serverDetails', parameters, function(data) {
       console.log(data);
       $('#myModal #cube').children().remove();
       $('#myModal #cube').append($("<option>select</option>"));
@@ -96,50 +96,42 @@
                     };
     // console.log(parameters);
     $('#left-menu-wrapper #cubeName').text($('#cube option:selected').text());
-    $.get('/get_children', parameters, function(data) {
+    $.get('/get_serverDetails', parameters, function(data) {
       $('div#dim-div ul').children().remove();
-      $('div#measures-div ul').children().remove();
       data.values.forEach(function(item){
        var li = generateLI(item.caption_name);
        li.data('unique-name', item.unique_name);
        li.data('path-name', parameters.pathName + "/" + item.unique_name);
-       if(item.caption_name == "Measures") {
-         //li.appendTo('div#measures-div ul');
-       } else {
+       if(item.caption_name !== "Measures") {
          li.appendTo('div#dim-div ul');
        }
       });
     }, 'json');
-
     $.get('/get_measures', parameters, function(data) {
-      $('div#dim-div ul').children().remove();
       $('div#measures-div ul').children().remove();
       data.values.forEach(function(item){
        var li = generateLI(item.caption_name);
        li.data('unique-name', item.unique_name);
-       li.data('path-name', parameters.pathName + "/" + item.unique_name);
-       // if(item.caption_name == "Measures") {
+       li.data('path-name', parameters.pathName + "/[Measures]/" + item.unique_name);
          li.appendTo('div#measures-div ul');
-       // } else {
-       //   li.appendTo('div#dim-div ul');
-       // }
       });
     }, 'json');
   });
 
   $('#dim-div, #measures-div').on('click', 'label', function() {
-    if($(this).parent().children('ul').length == 0) {
+    if($(this).parent().children('ul').length === 0) {
       var parameters = {xmlaServer: $('#url').val(), pathName: $(this).parent().data('path-name')};
       console.log(parameters.pathName);
       var childUL = generateUL();
       childUL.appendTo($(this).parent()).toggle();
-      $.get('/get_measures', parameters, function(data) {
+      $.get('/get_children', parameters, function(data) {
         var level = data.key;
+        var li;
         data.values.forEach(function(item){
          if(level == "MEMBER") {
-           var li = $("<li><a href='#'>" + item.caption_name + "</a></li>");
+            li = $("<li><a href='#'>" + item.caption_name + "</a></li>");
          } else {
-           var li = generateLI(item.caption_name);
+            li = generateLI(item.caption_name);
          }
          li.data('unique-name', item.unique_name);
          li.data('path-name', parameters.pathName + "/" + item.unique_name);
@@ -148,8 +140,6 @@
       }, 'json');
     }
   });
-
-
 
   $('#dim-div,#measures-div').on('click', 'label' , function () {
     $this = $(this).children('span');
