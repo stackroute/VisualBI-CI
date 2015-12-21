@@ -45,7 +45,7 @@
   $('#url').on('keyup', function(e){
    if(e.keyCode === 13) {
      var parameters = { xmlaServer: $(this).val(), pathName: "/" };
-       $.get( '/get_children',parameters, function(data) {
+       $.get( '/discover/getDimensions',parameters, function(data) {
          console.log(data);
          $('#myModal #dataSource').children().remove();
          $('#myModal select.dataSourceNameList').append($("<option>select</option>"));
@@ -61,7 +61,7 @@
   $('#myModal #dataSource').on('change', function() {
     var parameters = {xmlaServer: $('#url').val(), pathName: "/"+$(this).val()};
     console.log(parameters);
-    $.get('/get_serverDetails', parameters, function(data) {
+    $.get('/discover/getServerDetails', parameters, function(data) {
       console.log(data);
       $('#myModal #catalog').children().remove();
       $('#myModal #catalog').append($("<option>select</option>"));
@@ -76,7 +76,7 @@
   $('#myModal #catalog').on('change', function() {
     var parameters = {xmlaServer: $('#url').val(), pathName: "/"+ $('#dataSource').val() + "/" + $(this).val()};
     console.log(parameters);
-    $.get('/get_serverDetails', parameters, function(data) {
+    $.get('/discover/getServerDetails', parameters, function(data) {
       console.log(data);
       $('#myModal #cube').children().remove();
       $('#myModal #cube').append($("<option>select</option>"));
@@ -96,7 +96,7 @@
                     };
     // console.log(parameters);
     $('#left-menu-wrapper #cubeName').text($('#cube option:selected').text());
-    $.get('/get_serverDetails', parameters, function(data) {
+    $.get('/discover/getDimensions', parameters, function(data) {
       $('div#dim-div ul').children().remove();
       data.values.forEach(function(item){
        var li = generateLI(item.caption_name);
@@ -107,7 +107,7 @@
        }
       });
     }, 'json');
-    $.get('/get_measures', parameters, function(data) {
+    $.get('/discover/getMeasures', parameters, function(data) {
       $('div#measures-div ul').children().remove();
       data.values.forEach(function(item){
        var li = generateLI(item.caption_name);
@@ -124,7 +124,7 @@
       console.log(parameters.pathName);
       var childUL = generateUL();
       childUL.appendTo($(this).parent()).toggle();
-      $.get('/get_children', parameters, function(data) {
+      $.get('/discover/getDimensions', parameters, function(data) {
         var level = data.key;
         var li;
         data.values.forEach(function(item){

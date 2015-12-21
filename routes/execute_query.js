@@ -3,7 +3,7 @@ var router = express.Router();
 
 router.post('/', function(req, res) {
 
-      var xmla   =  require("./Xmla.js"),
+      var xmla   =  require("../lib/Xmla.js"),
           Xmla   =  xmla.Xmla,
           statement  = req.body.statement,
           url        = req.body.url,
@@ -58,21 +58,20 @@ router.post('/', function(req, res) {
         var cell=obj.getCellset();
         if(cell.hasMoreCells){
               cellData[0]={
-                  "CellOrdinal"  : cell.readCell()["ordinal"],
-                  "FmtValue"      : cell.readCell()["FmtValue"]};
+                  "CellOrdinal"  : cell.readCell().ordinal,
+                  "FmtValue"      : cell.readCell().FmtValue
+                };
 
           while(cell.nextCell()!=-1)
           {  cellData[cellData.length]={
-                "CellOrdinal"  : cell.readCell()["ordinal"],
-                "FmtValue"     : cell.readCell()["FmtValue"]
+                  "CellOrdinal"  : cell.readCell().ordinal,
+                  "FmtValue"      : cell.readCell().FmtValue
               };
             }
 
-      };
-      dataSet["Axes"]={"Axis":[columnAxis,rowAxis]};
-      dataSet["CellData"]={"Cell":cellData};
-
-
+      }
+      dataSet.Axes={"Axis":[columnAxis,rowAxis]};
+      dataSet.CellData={"Cell":cellData};
     }
 
     var xmlaRequest = {
