@@ -1,11 +1,12 @@
-function jsondata(){
-  $("button#button").css('display','none');
+function jsondata(mdxQuery){
+  // $("button#button").css('display','none');
   // jQuery for post request
   $.post(
       "/execute",
       { url: "http://172.23.238.252:8080/pentaho/Xmla?userid=admin&password=password",
         dataSource: "Pentaho",
         catalog: "SampleData",
+        //statement: "select UNION({[Department].[All Departments]},{}) on columns, {[Measures].[Actual]} on ROWS from [Quadrant Analysis]"
         statement: "select NON EMPTY {[Measures].[Actual],[Measures].[Budget]} ON COLUMNS, "+
                     "NON EMPTY Crossjoin(Union({[Region].[All Regions]},{[Region].[All Regions].Children}),"+
                         " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+

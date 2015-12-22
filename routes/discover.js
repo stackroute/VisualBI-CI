@@ -112,7 +112,6 @@ router.get('/getServerDetails',function(req,res) {
 	var parameters = req.query;
 	var xmlaServer = parameters.xmlaServer;
 	var pathName = parameters.pathName;
-	var hostAddress = "http://localhost:8080";
 
   var discoverRequestTypes =[
   	    null,
@@ -219,7 +218,6 @@ router.get('/getMeasures',function(req,res) {
   var parameters = req.query;
   var xmlaServer = parameters.xmlaServer;
   var pathName = parameters.pathName;
-  var hostAddress = "http://localhost:8080";
 
   var discoverRequestTypes =[
         null,
