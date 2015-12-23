@@ -86,12 +86,12 @@ router.post('/', function(req, res) {
             {
               getDatafrmDataset(obj);
             }
+            res.json(dataSet);
         },
       error: function(xmla, xmlaRequest, exception) {
             res.write("error!!");
         },
         callback: function(){
-            res.json(dataSet);
             res.end();
         }
       };
