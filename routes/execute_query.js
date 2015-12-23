@@ -42,6 +42,7 @@ router.post('/', function(req, res) {
       var columnAxis=[];
       var rowAxis=[];
       var cellData=[];
+
         //Constructing Column-Axis or Axis0
         obj.getColumnAxis().eachTuple(function(tuple){
           columnAxis[columnAxis.length]={Member:tuple.members};
@@ -50,6 +51,7 @@ router.post('/', function(req, res) {
         //Constructing Row-Axis or Axis1
         obj.getRowAxis().eachTuple(function(tuple){
           rowAxis[rowAxis.length]={Member:tuple.members};
+          console.log(tuple.members);
         });
 
         //May Require something on SlicerAxis
@@ -68,10 +70,11 @@ router.post('/', function(req, res) {
                   "FmtValue"      : cell.readCell().FmtValue
               };
             }
-
+          console.log(cellData);
       }
       dataSet.Axes={"Axis":[columnAxis,rowAxis]};
       dataSet.CellData={"Cell":cellData};
+      console.log("dataSet:"+JSON.stringify(dataSet,null,2));
     }
 
     var xmlaRequest = {
@@ -86,12 +89,14 @@ router.post('/', function(req, res) {
             {
               getDatafrmDataset(obj);
             }
+            console.log("from Success function"+JSON.stringify(dataSet,null,2));
+            res.json(dataSet);
         },
       error: function(xmla, xmlaRequest, exception) {
             res.write("error!!");
         },
         callback: function(){
-            res.json(dataSet);
+
             res.end();
         }
       };

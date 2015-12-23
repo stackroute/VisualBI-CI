@@ -6,14 +6,15 @@ function jsondata(mdxQuery){
       { url: "http://172.23.238.252:8080/pentaho/Xmla?userid=admin&password=password",
         dataSource: "Pentaho",
         catalog: "SampleData",
-        //statement: "select UNION({[Department].[All Departments]},{}) on columns, {[Measures].[Actual]} on ROWS from [Quadrant Analysis]"
-        statement: "select NON EMPTY {[Measures].[Actual],[Measures].[Budget]} ON COLUMNS, "+
-                    "NON EMPTY Crossjoin(Union({[Region].[All Regions]},{[Region].[All Regions].Children}),"+
-                        " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
-                          "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
-                              " {[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
+        statement: "select NON EMPTY UNION([Department].members,{}) on columns, NON EMPTY {[Measures].[Actual], [Measures].[Budget]} on ROWS from [Quadrant Analysis]"
+        // statement: "select NON EMPTY {[Measures].[Actual],[Measures].[Budget]} ON COLUMNS, "+
+        //             "NON EMPTY Crossjoin(Union({[Region].[All Regions]},{[Region].[All Regions].Children}),"+
+        //                 " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
+        //                   "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
+        //                       " {[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
       }
     ).done(function( data ) {
+      console.log("FE"+JSON.stringify(data,null,2));
         renderData(data);
       });
 }
