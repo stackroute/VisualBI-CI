@@ -52,7 +52,7 @@
   $('#url').on('keyup', function(e){
    if(e.keyCode === 13) {
      var parameters = { xmlaServer: $(this).val(), pathName: "/" };
-       $.get( '/discover/getDimensions',parameters, function(data) {
+       $.get( '/discover/getServerDetails',parameters, function(data) {
          console.log(data);
          $('#myModal #dataSource').children().remove();
          $('#myModal select.dataSourceNameList').append($("<option>select</option>"));
@@ -117,10 +117,20 @@
     $.get('/discover/getMeasures', parameters, function(data) {
       $('div#measures-div ul').children().remove();
       data.values.forEach(function(item){
+<<<<<<< HEAD
        var li = generateLI(item.caption_name);
        li.data('unique_name', item.unique_name);
        li.data('path-name', parameters.pathName + "/[Measures]/" + item.unique_name);
          li.appendTo('div#measures-div ul');
+=======
+       var li = $("<li><a href='#'>" + item.caption_name + "</a></li>");
+       li.data('unique-name', item.unique_name);
+       li.data('path-name', parameters.pathName + "/[Measures]/[Measures]/[Measures].[MeasuresLevel]/" + item.unique_name);
+         li.appendTo('div#measures-div ul').find('a').draggable({
+           appendTo: "body",
+           helper: "clone"
+         });
+>>>>>>> master
       });
     }, 'json');
   });

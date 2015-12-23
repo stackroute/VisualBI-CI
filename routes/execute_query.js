@@ -89,14 +89,20 @@ router.post('/', function(req, res) {
             {
               getDatafrmDataset(obj);
             }
+<<<<<<< HEAD
             console.log("from Success function"+JSON.stringify(dataSet,null,2));
+=======
+>>>>>>> master
             res.json(dataSet);
         },
       error: function(xmla, xmlaRequest, exception) {
             res.write("error!!");
         },
         callback: function(){
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
             res.end();
         }
       };
