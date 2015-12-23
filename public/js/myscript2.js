@@ -117,20 +117,13 @@
     $.get('/discover/getMeasures', parameters, function(data) {
       $('div#measures-div ul').children().remove();
       data.values.forEach(function(item){
-<<<<<<< HEAD
-       var li = generateLI(item.caption_name);
-       li.data('unique_name', item.unique_name);
-       li.data('path-name', parameters.pathName + "/[Measures]/" + item.unique_name);
-         li.appendTo('div#measures-div ul');
-=======
        var li = $("<li><a href='#'>" + item.caption_name + "</a></li>");
-       li.data('unique-name', item.unique_name);
+       li.data('unique_name', item.unique_name);
        li.data('path-name', parameters.pathName + "/[Measures]/[Measures]/[Measures].[MeasuresLevel]/" + item.unique_name);
          li.appendTo('div#measures-div ul').find('a').draggable({
            appendTo: "body",
            helper: "clone"
          });
->>>>>>> master
       });
     }, 'json');
   });
@@ -187,20 +180,30 @@
     var col_query = "",
         row_query = "",
         filter_query = "",
-        strArr = [];
+        col_query = "{}",
+        row_query = "{}";
 
-    //if(colItems[0].text() !== "Drag measures/dimensions here") {
+    if(colItems.eq(0).text() !== "Drag measures/dimensions here") {
       colItems.each(function(index, value) {
           if($(this).data('is_member')) {
-            strArr.push("{" + $(this).data('sub_query') + "}");
+            col_query = "UNION(" + "{" + $(this).data('sub_query') + "}," + col_query + ")";
           } else {
-            strArr.push($(this).data('sub_query') + ".members");
+            col_query = "UNION(" + $(this).data('sub_query') + ".members," + col_query + ")";
           }
       });
-    //}
-    col_query = "UNION(" + strArr.join() + ",{})";
+    }
     console.log(col_query);
-    mdxQuery = "select " + col_query + " on columns" + " from [Quadrant Analysis]" ;
+    if(rowItems.eq(0).text() !== "Drag measures/dimensions here") {
+      rowItems.each(function(index, value) {
+        if($(this).data('is_member')) {
+          row_query = "UNION(" + "{" + $(this).data('sub_query') + "}," + row_query + ")";
+        } else {
+          row_query = "UNION(" + $(this).data('sub_query') + ".members," + row_query + ")";
+        }
+      });
+    }
+    console.log(row_query);
+    mdxQuery = "select " + col_query + " on columns, " + row_query + " on rows" + " from [Quadrant Analysis]" ;
     console.log(mdxQuery);
     jsondata(mdxQuery);
   });
