@@ -209,6 +209,7 @@
      $('#password').val($("option:selected",this).data("password"));
    });
 
+   // adding new connection
    $("#addConn").on('click',function(){
      $('#serverURL').prop('readonly',false);
      $('#userId').prop('readonly',false);
