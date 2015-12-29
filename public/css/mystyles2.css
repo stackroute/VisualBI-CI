@@ -208,3 +208,7 @@ h4 {
   display: block;
   margin: auto;
 }
+
+.closeButton{
+  color: red;
+}

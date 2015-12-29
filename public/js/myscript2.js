@@ -42,31 +42,15 @@
     return $("<ul class='nav nav-list nav-left-ml'></ul>");
   }
 
-  $('#url').on('keyup', function(e){
-   if(e.keyCode === 13) {
-     var parameters = { xmlaServer: $(this).val(), pathName: "/" };
-       $.get( '/discover/getServerDetails',parameters, function(data) {
-         console.log(data);
-         $('#myModal #dataSource').children().remove();
-         $('#myModal select.dataSourceNameList').append($("<option>select</option>"));
-         data.values.forEach(function(item){
-          console.log(item.caption_name);
-          var option = $("<option value=" +  item.caption_name + ">" + item.caption_name + "</option>");
-          $('#myModal select.dataSourceNameList').append(option);
-       });
-     },'json');
-    }
-  });
-
   $('#myModal #dataSource').on('change', function() {
-    var parameters = {xmlaServer: $('#url').val(), pathName: "/"+$(this).val()};
-    console.log(parameters);
+    var parameters = {
+      username  : "hotChocolate",
+      pathName: "/"+$(this).val()
+    };
     $.get('/discover/getServerDetails', parameters, function(data) {
-      console.log(data);
       $('#myModal #catalog').children().remove();
       $('#myModal #catalog').append($("<option>select</option>"));
       data.values.forEach(function(item){
-       console.log(item.caption_name);
        var option = $("<option value=" +  item.caption_name + ">" + item.caption_name + "</option>");
        $('#myModal select.catalogNameList').append(option);
       });
@@ -74,7 +58,9 @@
   });
 
   $('#myModal #catalog').on('change', function() {
-    var parameters = {xmlaServer: $('#url').val(), pathName: "/"+ $('#dataSource').val() + "/" + $(this).val()};
+    var parameters = {
+      username  : "hotChocolate",
+      pathName: "/"+ $('#dataSource').val() + "/" + $(this).val()};
     console.log(parameters);
     $.get('/discover/getServerDetails', parameters, function(data) {
       console.log(data);
@@ -91,7 +77,7 @@
   $('.modal-footer #save').on('click', function(){
     // console.log($('#cube option:selected').text());
     var parameters = {
-                      xmlaServer: $('#url').val(),
+                      username  : "hotChocolate",
                       pathName: "/"+ $('#dataSource').val() + "/" + $('#catalog').val() + "/" + $('#cube option:selected').text()
                     };
     // console.log(parameters);
@@ -123,7 +109,7 @@
 
   $('#dim-div, #measures-div').on('click', 'label', function() {
     if($(this).parent().children('ul').length === 0) {
-      var parameters = {xmlaServer: $('#url').val(), pathName: $(this).parent().data('path-name')};
+      var parameters = {username  : "hotChocolate", pathName: $(this).parent().data('path-name')};
       console.log(parameters.pathName);
       var childUL = generateUL();
       childUL.appendTo($(this).parent()).toggle();
@@ -161,4 +147,89 @@
   });
 
   $('#executeButton').on('click', jsondata);
+
+  $('#saveCredentials').on('click',function(){
+    $('#myModal #url').val($('.credentialDetails #serverURL').val());
+    $.post(
+        "/serverCredentials/save",
+        {
+          //window.username
+          username: 'hotChocolate',
+          connection_id: $("option:selected",'#connName').val()
+        }
+      ).done(function( data ) {
+          var parameters = {
+            // xmlaServer  : $('.credentialDetails #serverURL').val(),
+            pathName    : "/",
+            username      : "hotChocolate"
+          };
+          $.get( '/discover/getServerDetails',parameters, function(data) {
+            $('#myModal #dataSource').children().remove();
+            $('#myModal select.dataSourceNameList').append($("<option>select</option>"));
+            data.values.forEach(function(item){
+                 var option = $("<option value=" +  item.caption_name + ">" + item.caption_name + "</option>");
+                 $('#myModal select.dataSourceNameList').append(option);
+            });
+          },'json');
+        });
+  });
+
+  $('#editConnection').on('click',function(){
+    $.get('/serverCredentials/getAvailableConnections',function(data){
+      $('#connName').css({display: "inline"});
+      $('#newConnName').css({display:"none"});
+      $('#connName').children().remove();
+      $('#connName').append($("<option data-url='akdjf'>select</option>"));
+      for(var x in data){
+        console.log(x);
+        var item=data[x];
+        console.log(item);
+        var option = $("<option value=" +  item._id + ">" + item.connectionName + "</option>");
+        console.log(item.serverURL);
+        option.data('url',item.serverURL);
+        option.data('userid',item.userid);
+        option.data('password',item.password);
+        $('#connName').append(option);
+      }
+    });
+   });
+
+   $('#connName').on('change',function(){
+     $('#serverURL').val($("option:selected",this).data("url"));
+     $('#userId').val($("option:selected",this).data("userid"));
+     $('#password').val($("option:selected",this).data("password"));
+   });
+
+   $("#addConn").on('click',function(){
+     $('#serverURL').prop('readonly',false);
+     $('#userId').prop('readonly',false);
+     $('#password').prop('readonly',false);
+     $('#validate').css({display: "inline"});
+     $('#saveCredentials').css({display:"none"});
+     $('#newConnName').css({display: "inline"});
+     $('#connName').css({display:"none"});
+   });
+
+   $('#validate').on('click',function(){
+     //Validate the inputs here and Error Handlers of input(s)
+     var parameters = {
+       connName : $(".credentialDetails #newConnName").val(),
+       url      : $(".credentialDetails #serverURL").val(),
+       userid   : $(".credentialDetails #userId").val(),
+       password : $(".credentialDetails #password").val()
+
+     };
+     $.get('/serverCredentials/addConnection',parameters,function(data){
+        console.log(data);
+        $('#myModal #url').val($('.credentialDetails #serverURL').val());
+        $('#serverCredentials').modal('hide');
+        $('#myModal').modal();
+     });
+     $('#myModal #dataSource').children().remove();
+     $('#myModal #catalog').children().remove();
+     $('#myModal #cube').children().remove();
+
+
+   });
+
 }());

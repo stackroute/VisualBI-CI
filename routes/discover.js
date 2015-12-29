@@ -1,8 +1,13 @@
-//Necessary Modules
-var express = require('express'),
-    http 		= require("http"),
-    xmla 		= require("../lib/Xmla.js"),
-    url 		= require("url");
+// Modules
+var express   = require('express'),
+    http 		  = require("http"),
+    url 		  = require("url"),
+    mongoose  = require('mongoose');
+
+// Files
+var xmla 		  = require("../lib/Xmla.js"),
+  UserDetails = require('../Models/userDetails'),
+  Connections = require("../Models/Connections");
 
 var router 	= express.Router(),
         X   = xmla.Xmla;
@@ -18,7 +23,26 @@ var discoverRequestTypes =[
  			{name: X.MDSCHEMA_MEMBERS, key: "MEMBER_UNIQUE_NAME", value:"MEMBER_NAME", level:"MEMBER"}
  ];
 
-//Necessary functions
+// Functions
+
+function callRequest(userId,fragments,res){
+  UserDetails.findOne({username:userId},function(err,user){
+    if(err)
+      console.log(err);
+    else{
+      console.log("Jaina"+user.activeConnection);
+      Connections.findById(user.activeConnection,function(err,conn){
+
+        var xmlaRequest = generateXmlaRequest(conn.getServer(), fragments, res);
+        var x = new xmla.Xmla;
+        x.request(xmlaRequest);
+      });
+
+    }
+  });
+}
+
+
 function getXmlaConfigParameters(fragments){
   var numFragments  = fragments[1]===""?1:fragments.length,
       properties    = {},
@@ -44,8 +68,7 @@ function getXmlaConfigParameters(fragments){
 
 }
 
-
-function generateXmlaRequest(serverURL,fragments,response){
+function generateXmlaRequest(serverURL, fragments, response){
   var configParameters=getXmlaConfigParameters(fragments);
 
   var xmlaRequest = {
@@ -83,42 +106,40 @@ function generateXmlaRequest(serverURL,fragments,response){
 
     return xmlaRequest;
 }
-//----------------------------------------Server Details-----------------------------------------------
-router.get('/getServerDetails',function(req,res) {
-  var parameters = req.query,
-      xmlaServer = parameters.xmlaServer,
-      pathName   = parameters.pathName,
-      fragments  = pathName.split("/");
 
-  var xmlaRequest = generateXmlaRequest(xmlaServer,fragments,res);
-  var x = new xmla.Xmla;
-  x.request(xmlaRequest);
+//----------------------------------------Server Details-----------------------------------------------
+
+router.get('/getServerDetails', function(req, res) {
+  var parameters = req.query,
+      pathName   = parameters.pathName,
+      fragments  = pathName.split("/"),
+      username     = req.query.username;
+
+  callRequest(username,fragments,res);
+
 });
 
 //----------------------------------------Dimesnions-----------------------------------------------
  router.get('/getDimensions',function(req,res) {
-  var parameters = req.query,
-      xmlaServer = parameters.xmlaServer,
-      pathName   = parameters.pathName,
-      fragments  = pathName.split("/");
+   var parameters = req.query,
+       pathName   = parameters.pathName,
+       fragments  = pathName.split("/"),
+       username     = req.query.username;
 
-	var xmlaRequest = generateXmlaRequest(xmlaServer,fragments,res);
-	var x = new xmla.Xmla;
-	x.request(xmlaRequest);
+   callRequest(username,fragments,res);
+
 });
 
 //------------------------------Get Measures------------------------------------------------
 router.get('/getMeasures',function(req,res) {
   var parameters = req.query,
-      xmlaServer = parameters.xmlaServer,
-      pathName   = parameters.pathName;
+      pathName   = parameters.pathName,
+      username     = req.query.username;
 
 	pathName = pathName + "/[Measures]/[Measures]/[Measures].[MeasuresLevel]";     //Assumption that it follows this way
   var fragments = pathName.split("/");
 
-  var xmlaRequest = generateXmlaRequest(xmlaServer,fragments,res);
-  var x = new xmla.Xmla;
-  x.request(xmlaRequest);
+  callRequest(username,fragments,res);
 });
 
 module.exports = router;

@@ -30,13 +30,15 @@
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="closeButton" aria-hidden="true">&times;</span></button>
                       <h4 class="modal-title" id="myModalLabel">Server details</h4>
                     </div>
                     <div class="modal-body">
                       <p>
                         <label for="url">Server URL</label>
-                        <input type="search" name="url" id="url" value="http://172.23.238.252:8080/pentaho/Xmla%3fuserid=admin%26password=password">
+                        <input type="search" name="url" id="url" readonly="true">
+                          <button type="button" class="btn" id="editConnection" data-toggle="modal" data-dismiss="modal" data-target="#serverCredentials"><span class="glyphicon glyphicon-edit"></span></button>
+
                       </p>
                       <p>
                         <label for="dataSource">DataSource</label>
@@ -64,6 +66,52 @@
                   </div> <!-- modal-content end -->
                 </div> <!-- modal-dialog end -->
               </div> <!-- myModal end-->
+
+
+
+              <!-- Modal Server Credentials -->
+              <div class="modal fade" id="serverCredentials" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="closeButton" aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel1">Server Credentials</h4>
+                    </div>
+                    <div class="modal-body credentialDetails">
+                      <p>
+                        <label for="connectionName">Connection Name:</label>
+                        <select class="connectionsNameList" name="connName" id="connName">
+                          <option value="">select</option>
+                        </select>
+                        <input type="text" name="connName" id="newConnName" placeholder="Tag this Connection" style="display: none;">
+                        <button type="button" class="btn-small btn-primary" id="addConn">Add Connection</button>
+
+                      </p>
+                      <p>
+                        <label for="serverURL">Server URL:</label>
+                        <input type="text" name="serverURL" id="serverURL" placeholder="Enter the server URL" readonly="true">
+                      </p>
+                      <p>
+                        <label for="userId">User ID:</label>
+                        <input type="text" name="userId" id="userId" placeholder="Enter the server User ID" readonly="true">
+                      </p>
+                      <p>
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" placeholder="Enter the server password" readonly="true">
+                      </p>
+                    </div> <!-- modal-body end-->
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default">Reset</button>
+                      <button type="button" class="btn btn-default" id="validate" style="display: none;">Apply</button>
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#myModal" id="saveCredentials">Save</button>
+                    </div> <!-- modal-footer end -->
+                  </div> <!-- modal-content end -->
+                </div> <!-- modal-dialog end -->
+              </div> <!-- myModal end-->
+
+
+
+
             </div> <!-- head-div end-->
             <h4>Dimensions</h4>
             <div id='dim-div'>
@@ -185,7 +233,6 @@
 
   <!-- Custom JS -->
   <script src='js/myscript2.js'></script>
-
 
   </body>
 </html>

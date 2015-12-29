@@ -1,17 +1,20 @@
 var express = require('express');
-var path = require('path');
+var path    = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var logger  = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var bodyParser   = require('body-parser');
 
 var execute = require('./routes/execute_query');
 var discover = require('./routes/discover');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var serverCredentials = require('./routes/serverCredentials');
 
+require('./Models/db.js');
 
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,9 +32,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/execute', execute);
 app.use('/discover', discover);
-// app.use('/get_serverDetails', discover.getDimensions);
-// app.use('/get_children', discover.getDimensions);
-// app.use('/get_measures',discover.getMeasures);
+app.use('/serverCredentials', serverCredentials);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

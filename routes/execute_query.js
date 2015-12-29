@@ -87,6 +87,7 @@ router.post('/', function(req, res) {
               getDatafrmDataset(obj);
             }
             res.json(dataSet);
+            console.log(JSON.stringify(dataSet,null,2));
         },
       error: function(xmla, xmlaRequest, exception) {
             res.write("error!!");
