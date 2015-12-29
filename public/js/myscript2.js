@@ -5,9 +5,16 @@
       $this = $(this).children('ul');
       $this.find(".placeholder").remove();
       //$("<li></li>").text(ui.draggable.text()).appendTo($this);
-      $("<li>" + ui.draggable.text() + "<button type='button' class='close'>&times;</button></li>").appendTo($this);
+      var parentLI = $(ui.draggable).closest('li');
+      var str = $(ui.draggable).closest('li').data('unique_name');
+      console.log(str);
+      var li = $("<li>" + ui.draggable.text() + "<button type='button' class='close'>&times;</button></li>");
+      li.data('sub_query', str);
+      if(parentLI.children('label').length == 0) {
+        li.data('is_member', "yes");
+      }
+      li.appendTo($this);
       var ht = parseInt($this.parent().outerHeight());
-      console.log(ht);
       ht = (ht-39)/2;
       $this.parent().parent().children('.col-xs-2').animate({
          'padding-top' : ht+'px',
@@ -86,7 +93,7 @@
       $('div#dim-div ul').children().remove();
       data.values.forEach(function(item){
        var li = generateLI(item.caption_name);
-       li.data('unique-name', item.unique_name);
+       li.data('unique_name', item.unique_name);
        li.data('path-name', parameters.pathName + "/" + item.unique_name);
        if(item.caption_name !== "Measures") {
          li.appendTo('div#dim-div ul');
@@ -97,7 +104,7 @@
       $('div#measures-div ul').children().remove();
       data.values.forEach(function(item){
        var li = $("<li><a href='#'>" + item.caption_name + "</a></li>");
-       li.data('unique-name', item.unique_name);
+       li.data('unique_name', item.unique_name);
        li.data('path-name', parameters.pathName + "/[Measures]/[Measures]/[Measures].[MeasuresLevel]/" + item.unique_name);
          li.appendTo('div#measures-div ul').find('a').draggable({
            appendTo: "body",
@@ -118,16 +125,19 @@
         var li;
         data.values.forEach(function(item){
          if(level == "MEMBER") {
-            li = $("<li><a href='#'>" + item.caption_name + "</a></li>");
+            li = $("<li><a href='#'>" + item.unique_name + "</a></li>");
             li.appendTo(childUL).find('a').draggable({
               appendTo: "body",
               helper: "clone"
             });
          } else {
-            li = generateLI(item.caption_name);
-            li.appendTo(childUL);
+            li = generateLI(item.unique_name);
+            li.appendTo(childUL).find('a').draggable({
+              appendTo: "body",
+              helper: "clone"
+            });;
          }
-         li.data('unique-name', item.unique_name);
+         li.data('unique_name', item.unique_name);
          li.data('path-name', parameters.pathName + "/" + item.unique_name);
         });
       }, 'json');
@@ -145,8 +155,7 @@
       $this.removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
     }
   });
-
-  $('#executeButton').on('click', jsondata);
+//////////////////
 
   $('#saveCredentials').on('click',function(){
     $('#myModal #url').val($('.credentialDetails #serverURL').val());
@@ -231,5 +240,43 @@
 
 
    });
+
+  $('#executeButton').on('click', function() {
+    //build mdx query from dragged items
+    var colItems = $('div.columns:eq(0)').find('li'),
+        rowItems = $('div.columns:eq(1)').find('li'),
+        filterItems = $('div.columns:eq(2)').find('li');
+
+    var mdxQuery;
+    var col_query = "",
+        row_query = "",
+        filter_query = "",
+        col_query = "{}",
+        row_query = "{}";
+
+    if(colItems.eq(0).text() !== "Drag measures/dimensions here") {
+      colItems.each(function(index, value) {
+          if($(this).data('is_member')) {
+            col_query = "UNION(" + "{" + $(this).data('sub_query') + "}," + col_query + ")";
+          } else {
+            col_query = "UNION(" + $(this).data('sub_query') + ".members," + col_query + ")";
+          }
+      });
+    }
+    console.log(col_query);
+    if(rowItems.eq(0).text() !== "Drag measures/dimensions here") {
+      rowItems.each(function(index, value) {
+        if($(this).data('is_member')) {
+          row_query = "UNION(" + "{" + $(this).data('sub_query') + "}," + row_query + ")";
+        } else {
+          row_query = "UNION(" + $(this).data('sub_query') + ".members," + row_query + ")";
+        }
+      });
+    }
+    console.log(row_query);
+    mdxQuery = "select " + col_query + " on columns, " + row_query + " on rows" + " from [Quadrant Analysis]" ;
+    console.log(mdxQuery);
+    jsondata(mdxQuery);
+  });
 
 }());

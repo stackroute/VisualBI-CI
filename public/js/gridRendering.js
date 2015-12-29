@@ -1,20 +1,21 @@
 /******** AJAX Request for getting json data from response ***********/
 
-function jsondata(){
+function jsondata(mdxQuery){
   $( "#dataTableBody tr" ).replaceWith( "" );
   $.post(
       "/execute",
       { url: "http://172.23.238.252:8080/pentaho/Xmla?userid=admin&password=password",
         dataSource: "Pentaho",
         catalog: "SampleData",
-        //statement: "select NON EMPTY ([Department].[All Departments]) on columns, NON EMPTY {[Measures].[Actual]} on ROWS from [Quadrant Analysis]"
+        statement: mdxQuery
+        // statement: "select NON EMPTY ([Department].[All Departments]) on columns, NON EMPTY {[Measures].[Actual]} on ROWS from [Quadrant Analysis]"
         // statement: "select NON EMPTY UNION([Department].members,{}) on columns, NON EMPTY {[Measures].[Actual], [Measures].[Budget]} on ROWS from [Quadrant Analysis]"
-        statement: "select NON EMPTY {[Measures].[Actual],[Measures].[Budget]} ON COLUMNS, "+
-                    "NON EMPTY Crossjoin(Union({[Region].[All Regions]},{[Region].[All Regions].Children}),"+
-                        " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
-                          "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
-                              " {[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
-        // statement:"select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS from [Quadrant Analysis]"
+        // statement: "select NON EMPTY {[Measures].[Actual],[Measures].[Budget]} ON COLUMNS, "+
+        //             "NON EMPTY Crossjoin(Union({[Region].[All Regions]},{[Region].[All Regions].Children}),"+
+        //                 " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
+        //                   "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
+        //                       " {[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
+
       }
     ).done(function( data ) {
         renderData(data);
@@ -32,7 +33,7 @@ function renderData(data){
 /************************ Generating tree structure *************************************/
       addElement = function(members, tree, level) {
         var child;
-        if (members[0] != null) {
+        if (members[0] !== null) {
           child = members[0];
           if (!tree[child.Caption]) {
             tree[child.Caption] = {
