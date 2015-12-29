@@ -2,8 +2,8 @@ var express = require('express');
 var router  = express.Router();
 var fs      = require('fs');
 var mongoose= require('mongoose');
-var UserDetails = require('../Models/userDetails');
-var Connections = require('../Models/Connections');
+var UserDetails = require('../models/userDetails');
+var Connections = require('../models/Connections');
 
 
 router.post('/save',function(req,res){

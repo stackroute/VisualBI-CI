@@ -6,8 +6,8 @@ var express   = require('express'),
 
 // Files
 var xmla 		  = require("../lib/Xmla.js"),
-  UserDetails = require('../Models/userDetails'),
-  Connections = require("../Models/Connections");
+  UserDetails = require('../models/userDetails'),
+  Connections = require("../models/Connections");
 
 var router 	= express.Router(),
         X   = xmla.Xmla;

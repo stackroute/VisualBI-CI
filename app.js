@@ -11,7 +11,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var serverCredentials = require('./routes/serverCredentials');
 
-require('./Models/db.js');
+require('./models/db.js');
 
 var app = express();
 
