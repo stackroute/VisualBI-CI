@@ -164,13 +164,13 @@ function renderData(data){
   $('#dataTableBody').append(frag1);
 }
 
-  $("#graph").on("click",function(){
+  $(".graph").on("click",function(){
     // $(".graphColumn").toggle();
-    if(($(".graphColumn").length) === 0){
-    $("#row0").prev().append("<td class='graphColumn'><span class='graphIcon'>Graph</span></td>");
-    $(".dataRow").append("<td class='graphColumn'><span class='graphIcon'></span></td>");
+    if(($("."+this.id+"").length) === 0){
+    $("#row0").prev().append("<td class="+this.id+"><span class='graphIcon'>"+this.id+"</span></td>");
+    $(".dataRow").append("<td class="+this.id+"><span class='graphIcon'></span></td>");
   }
   else{
-    $(".graphColumn").toggle();
+    $("."+this.id+"").toggle();
   }
   });
