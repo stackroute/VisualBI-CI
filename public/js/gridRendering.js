@@ -9,11 +9,12 @@ function jsondata(){
         catalog: "SampleData",
         // statement: "select NON EMPTY ([Department].[All Departments]) on columns, NON EMPTY {[Measures].[Actual]} on ROWS from [Quadrant Analysis]"
         // statement: "select NON EMPTY UNION([Department].members,{}) on columns, NON EMPTY {[Measures].[Actual], [Measures].[Budget]} on ROWS from [Quadrant Analysis]"
-        statement: "select NON EMPTY {[Measures].[Actual],[Measures].[Budget]} ON COLUMNS, "+
-                    "NON EMPTY Crossjoin(Union({[Region].[All Regions]},{[Region].[All Regions].Children}),"+
-                        " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
-                          "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
-                              " {[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
+        // statement: "select NON EMPTY {[Measures].[Actual],[Measures].[Budget]} ON COLUMNS, "+
+        //             "NON EMPTY Crossjoin(Union({[Region].[All Regions]},{[Region].[All Regions].Children}),"+
+        //                 " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
+        //                   "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
+        //                       " {[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
+        statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
       }
     ).done(function( data ) {
         renderData(data);
@@ -131,6 +132,7 @@ function renderData(data){
     var elementIndex = 0;
 
     /************* Function for rendering axis1 *****************/
+    var rowId = 0;
     tdAxis1Child = function(element) {
       var a, ele, name;
       if (Object.keys(element).length === 0) {
@@ -142,12 +144,13 @@ function renderData(data){
         for (name in element) {
           ele = element[name];
           if(Object.keys(ele.children).length === 0){
-            results.push(("<tr><td rowspan='" + ele.count + "' class='level" + ele.level + "'>" + name + "</td>")+dataArray[elementIndex].td);
+            results.push(("<tr id='row"+rowId+"' class='dataRow'><td rowspan='" + ele.count + "' class='level" + ele.level + "'>" + name + "</td>")+dataArray[elementIndex].td);
             elementIndex += 1;
           }
           else{
-            results.push(("<tr><td rowspan='" + ele.count + "' class='level" + ele.level + "'>" + name + "</td>") + tdAxis1Child(ele.children));
+            results.push(("<tr id='row"+rowId+"' class='dataRow'><td rowspan='" + ele.count + "' class='level" + ele.level + "'>" + name + "</td>") + tdAxis1Child(ele.children));
           }
+          rowId += 1;
         }
         return results;
       })();
@@ -157,6 +160,17 @@ function renderData(data){
     }
   };
   var template1 = $.trim($("#axis1_insersion").html());
-  var frag1 = template1.replace(/{{axis1}}/ig,"<tr>"+tdAxis1Child(axis1Child));
+  var frag1 = template1.replace(/{{axis1}}/ig,"<tr id='row0' class='dataRow'>"+tdAxis1Child(axis1Child));
   $('#dataTableBody').append(frag1);
 }
+
+  $("#graph").on("click",function(){
+    // $(".graphColumn").toggle();
+    if(($(".graphColumn").length) === 0){
+    $("#row0").prev().append("<td class='graphColumn'><span class='graphIcon'>Graph</span></td>");
+    $(".dataRow").append("<td class='graphColumn'><span class='graphIcon'></span></td>");
+  }
+  else{
+    $(".graphColumn").toggle();
+  }
+  });
