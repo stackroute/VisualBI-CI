@@ -14,9 +14,8 @@ function jsondata(){
         //                 " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
         //                   "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
         //                       " {[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
-        // statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
-        // statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin( {[Positions].[All Positions]}, Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)) ON ROWS from [Quadrant Analysis]"
-      statement: "select NON EMPTY Crossjoin({[Measures].[Actual], [Measures].[Budget]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin({[Positions].[All Positions]}, Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children))) ON ROWS from [Quadrant Analysis]"
+        statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
+      // statement: "select NON EMPTY Crossjoin({[Measures].[Actual], [Measures].[Budget]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin({[Positions].[All Positions]}, Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children))) ON ROWS from [Quadrant Analysis]"
     }
     ).done(function( data ) {
         renderData(data);
@@ -40,6 +39,7 @@ function renderData(data){
          for(var memIndex0 in axis0Member){
            axis0Name = axis0Name+axis0Member[memIndex0].Caption+".";
          }
+         axis0Name = axis0Name.substring(0,axis0Name.length-1);
          axis0Names.push(axis0Name);
        }
 
@@ -132,7 +132,7 @@ var graphKey = [];
       var graphObj = {};
       for (var i = 0, len = axis0.length; i < len; i++) {
         var key = axis0Names[i];
-        graphObj[key] = val[count].value;
+        graphObj[key] = parseFloat(val[count].value.replace(/,/g,''));
         td += "<td>"+val[count].value+"</td>";
         count++;
       }
@@ -164,11 +164,11 @@ var graphKey = [];
           if(Object.keys(ele.children).length === 0){
             results.push(("<tr id='row"+rowId+"' class='dataRow'><td rowspan='" + ele.count + "' class='level" + ele.level + "'>" + name + "</td>")+dataArray[elementIndex].td);
             elementIndex += 1;
+            rowId += 1;
           }
           else{
             results.push(("<tr id='row"+rowId+"' class='dataRow'><td rowspan='" + ele.count + "' class='level" + ele.level + "'>" + name + "</td>") + tdAxis1Child(ele.children));
           }
-          rowId += 1;
         }
         return results;
       })();
