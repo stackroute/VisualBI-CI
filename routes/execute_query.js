@@ -1,12 +1,18 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express'),
+    mongoose  = require('mongoose');
+
+var xmla   =  require("../lib/Xmla.js"),
+    UserDetails = require('../models/userDetails'),
+    Connections = require("../models/Connections");
+
+var router = express.Router(),
+    Xmla   =  xmla.Xmla;
+
 
 router.post('/', function(req, res) {
-
-      var xmla   =  require("../lib/Xmla.js"),
-          Xmla   =  xmla.Xmla,
-          statement  = req.body.statement,
-          url        = req.body.url,
+  console.log(req.body.mdxQuery);
+      var statement  = req.body.statement,
+          username   = req.body.username,
           properties = {};
 
       properties[Xmla.PROP_DATASOURCEINFO]  = req.body.dataSource;
@@ -36,7 +42,7 @@ router.post('/', function(req, res) {
         return name;
     }
 
-  var dataSet={};
+    var dataSet={};
 
     function getDatafrmDataset(obj){
       var columnAxis=[];
@@ -74,30 +80,43 @@ router.post('/', function(req, res) {
       dataSet.CellData={"Cell":cellData};
     }
 
-    var xmlaRequest = {
-      async       : true,
-      url         : decodeURIComponent(url),
-      properties  : properties,
-      statement   : statement,
+    UserDetails.findOne({username:username},function(err,user){
+      if(err)
+        console.log(err);
+      else{
+        console.log("Inside getURL of UserDetails.findOne"+user.activeConnection);
+        Connections.findById(user.activeConnection,function(err,conn){
+          //////////
+          var xmlaRequest = {
+            async       : true,
+            url         : conn.getServer(),
+            properties  : properties,
+            statement   : statement,
 
-      success:function(xmla,xmlaRequest,xmlaResponse) {
-          var obj=xmlaResponse;
-          if(obj instanceof Xmla.Dataset)
-            {
-              getDatafrmDataset(obj);
+            success:function(xmla,xmlaRequest,xmlaResponse) {
+                var obj=xmlaResponse;
+                if(obj instanceof Xmla.Dataset)
+                  {
+                    getDatafrmDataset(obj);
+                  }
+                  res.json(dataSet);
+                  console.log(JSON.stringify(dataSet,null,2));
+              },
+            error: function(xmla, xmlaRequest, exception) {
+                  res.write("error!!");
+            },
+            callback: function(){
+              res.end();
             }
-            res.json(dataSet);
-            console.log(JSON.stringify(dataSet,null,2));
-        },
-      error: function(xmla, xmlaRequest, exception) {
-            res.write("error!!");
-        },
-        callback: function(){
-            res.end();
-        }
-      };
-        var x = new xmla.Xmla();
-        var result =x.execute(xmlaRequest);
+          };
+          var x = new xmla.Xmla();
+          var result =x.execute(xmlaRequest);
+          //////////
+
+
+        });
+      }
+    });
 });
 
 module.exports = router;

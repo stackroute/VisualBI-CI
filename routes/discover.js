@@ -25,14 +25,15 @@ var discoverRequestTypes =[
 
 // Functions
 
-function callRequest(userId,fragments,res){
-  UserDetails.findOne({username:userId},function(err,user){
+function callRequest(username,fragments,res){
+  UserDetails.findOne({username:username},function(err,user){
     if(err)
       console.log(err);
     else{
-      console.log("Jaina"+user.activeConnection);
+      console.log("Inside callRequest & UserDetails.findOne"+user.activeConnection);
       Connections.findById(user.activeConnection,function(err,conn){
 
+        console.log(conn.getServer());
         var xmlaRequest = generateXmlaRequest(conn.getServer(), fragments, res);
         var x = new xmla.Xmla;
         x.request(xmlaRequest);

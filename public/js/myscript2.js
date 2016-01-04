@@ -10,7 +10,7 @@
       console.log(str);
       var li = $("<li>" + ui.draggable.text() + "<button type='button' class='close'>&times;</button></li>");
       li.data('sub_query', str);
-      if(parentLI.children('label').length == 0) {
+      if(parentLI.children('label').length === 0) {
         li.data('is_member', "yes");
       }
       li.appendTo($this);
@@ -135,7 +135,7 @@
             li.appendTo(childUL).find('a').draggable({
               appendTo: "body",
               helper: "clone"
-            });;
+            });
          }
          li.data('unique_name', item.unique_name);
          li.data('path-name', parameters.pathName + "/" + item.unique_name);
@@ -184,11 +184,14 @@
   });
 
   $('#editConnection').on('click',function(){
-    $.get('/serverCredentials/getAvailableConnections',function(data){
-      $('#connName').css({display: "inline"});
-      $('#newConnName').css({display:"none"});
-      $('#connName').children().remove();
-      $('#connName').append($("<option data-url='akdjf'>select</option>"));
+    $('#validate').css({display:"none"});
+    $('#saveCredentials').css({display: "inline"});
+    $('#connName').css({display: "inline"});
+    $('#newConnName').css({display:"none"});
+    $('#connName').children().remove();
+    $('#connName').append($("<option data-url='akdjf'>select</option>"));
+    
+    $.get('/serverCredentials/getAvailableConnections',{username:"hotChocolate"},function(data){
       for(var x in data){
         console.log(x);
         var item=data[x];
@@ -223,6 +226,7 @@
    $('#validate').on('click',function(){
      //Validate the inputs here and Error Handlers of input(s)
      var parameters = {
+       username : "hotChocolate",
        connName : $(".credentialDetails #newConnName").val(),
        url      : $(".credentialDetails #serverURL").val(),
        userid   : $(".credentialDetails #userId").val(),
@@ -234,11 +238,27 @@
         $('#myModal #url').val($('.credentialDetails #serverURL').val());
         $('#serverCredentials').modal('hide');
         $('#myModal').modal();
-     });
-     $('#myModal #dataSource').children().remove();
-     $('#myModal #catalog').children().remove();
-     $('#myModal #cube').children().remove();
 
+        $('#myModal #catalog').children().remove();
+        $('#myModal #catalog').append($("<option>select</option>"));
+        $('#myModal #cube').children().remove();
+        $('#myModal #cube').append($("<option>select</option>"));
+
+        var parameters = {
+          // xmlaServer  : $('.credentialDetails #serverURL').val(),
+          pathName    : "/",
+          username      : "hotChocolate"
+        };
+        $.get( '/discover/getServerDetails',parameters, function(data) {
+          $('#myModal #dataSource').children().remove();
+          $('#myModal select.dataSourceNameList').append($("<option>select</option>"));
+          data.values.forEach(function(item){
+               var option = $("<option value=" +  item.caption_name + ">" + item.caption_name + "</option>");
+               $('#myModal select.dataSourceNameList').append(option);
+          });
+        },'json');
+
+     });
 
    });
 
@@ -246,12 +266,11 @@
     //build mdx query from dragged items
     var colItems = $('div.columns:eq(0)').find('li'),
         rowItems = $('div.columns:eq(1)').find('li'),
-        filterItems = $('div.columns:eq(2)').find('li');
+        filterItems = $('div.columns:eq(2)').find('li'),
+        query={};
 
     var mdxQuery;
-    var col_query = "",
-        row_query = "",
-        filter_query = "",
+    var filter_query = "{}",
         col_query = "{}",
         row_query = "{}";
 
@@ -277,7 +296,11 @@
     console.log(row_query);
     mdxQuery = "select " + col_query + " on columns, " + row_query + " on rows" + " from [Quadrant Analysis]" ;
     console.log(mdxQuery);
-    jsondata(mdxQuery);
+    query.dataSource = $('#dataSource').val();
+    query.catalog = $('#catalog').val();
+    query.mdxQuery = mdxQuery;
+    query.username = "hotChocolate";
+    jsondata(query);
   });
 
 }());
