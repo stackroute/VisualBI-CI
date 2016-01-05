@@ -13,9 +13,9 @@ function jsondata(){
         //             "NON EMPTY Crossjoin(Union({[Region].[All Regions]},{[Region].[All Regions].Children}),"+
         //                 " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
         //                   "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
-        //                       " {[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
-        statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
-      // statement: "select NON EMPTY Crossjoin({[Measures].[Actual], [Measures].[Budget]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin({[Positions].[All Positions]}, Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children))) ON ROWS from [Quadrant Analysis]"
+        //                       "{[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
+        // statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
+      statement: "select NON EMPTY Crossjoin({[Measures].[Actual], [Measures].[Budget]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin({[Positions].[All Positions]}, Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children))) ON ROWS from [Quadrant Analysis]"
     }
     ).done(function( data ) {
         renderData(data);
@@ -42,7 +42,7 @@ function renderData(data){
          axis0Name = axis0Name.substring(0,axis0Name.length-1);
          axis0Names.push(axis0Name);
        }
-
+      //  console.log(axis0Names);
 /************************ Generating tree structure *************************************/
       addElement = function(members, tree, level) {
         var child;
@@ -129,17 +129,20 @@ var graphKey = [];
     for (var j = 0, len1 = axis1.length; j < len1; j++) {
       td='';
       var tempDataObj = {};
-      var graphObj = {};
+      var graphInnerArray = [];
       for (var i = 0, len = axis0.length; i < len; i++) {
-        var key = axis0Names[i];
-        graphObj[key] = parseFloat(val[count].value.replace(/,/g,''));
+        var graphObj = {};
+        graphObj.key = axis0Names[i];
+        graphObj.value = parseFloat(val[count].value.replace(/,/g,''));
+        graphInnerArray.push(graphObj);
         td += "<td>"+val[count].value+"</td>";
         count++;
       }
       tempDataObj.td = td;
       dataArray.push(tempDataObj);
-      graphArray.push(graphObj);
+      graphArray.push(graphInnerArray);
     }
+    // console.log(graphArray);
     // graphArray is for D3.js part.
 
 /****************************** Axis1 Hierarchical Structure **********************************/
