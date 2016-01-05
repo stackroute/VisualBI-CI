@@ -1,5 +1,8 @@
-/******** AJAX Request for getting json data from response ***********/
+/*******************   Necessary Imports    *****************************/
+// var render = require('./renderBarChart.js');
 
+/******** AJAX Request for getting json data from response ***********/
+var graphArray = [];
 function jsondata(){
   $( "#dataTableBody tr" ).replaceWith( "" );
   $.post(
@@ -14,7 +17,15 @@ function jsondata(){
         //                 " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
         //                   "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
         //                       "{[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
+<<<<<<< HEAD
+<<<<<<< HEAD
+         // statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
+=======
         // statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
+>>>>>>> e00ba15f3e79633349bde14e61610c70023771f4
+=======
+        // statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
+>>>>>>> e00ba15f3e79633349bde14e61610c70023771f4
       statement: "select NON EMPTY Crossjoin({[Measures].[Actual], [Measures].[Budget]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin({[Positions].[All Positions]}, Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children))) ON ROWS from [Quadrant Analysis]"
     }
     ).done(function( data ) {
@@ -61,7 +72,7 @@ function renderData(data){
         return tree;
         };
 /************************************** Graph Arrays *****************************************/
-var graphArray = [];
+// var graphArray = [];
 var graphKey = [];
 /****************************** Axis0 Hierarchical Structure **********************************/
 
@@ -190,6 +201,10 @@ var graphKey = [];
     if(($("."+this.id+"").length) === 0){
     $("#row0").prev().append("<td class="+this.id+"><span class='graphIcon'>"+this.id+"</span></td>");
     $(".dataRow").append("<td class="+this.id+"><span class='graphIcon'></span></td>");
+
+    for(var index in graphArray) {
+      renderChart(graphArray[index],'#row'+index+ ' '+'td.'+this.id + ' ' +'span.graphIcon');
+    }
   }
   else{
     $("."+this.id+"").toggle();
