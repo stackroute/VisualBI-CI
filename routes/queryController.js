@@ -26,36 +26,43 @@ router.get('/byUser',function (req, res) {
 
 //POST queries
 router.post('/new', function(req, res) {
+  var parameters = JSON.parse(req.body.myString);
+  console.log(parameters);
   console.log("saving query to db");
   Query.create({
-    queryName: req.body.queryName,
-    createdBy: req.body.userName,
+    queryName: parameters.queryName,
+    createdBy: parameters.userName,
     createdOn: Date.now(),
     modifiedOn: Date.now(),
-    onColumns: req.body["colArray[]"],
-    onRows: req.body["rowArray[]"],
-    onFilters: req.body["filterArray[]"],
-    queryMDX: req.body.queryMDX
+    onColumns: parameters.colArray,
+    onRows: parameters.rowArray,
+    onFilters: parameters.filterArray,
+    queryMDX: parameters.queryMDX,
+    connectionData: {
+                     xmlaServer: parameters.connectionData.xmlaServer,
+                     dataSource: parameters.connectionData.dataSource,
+                     catalog: parameters.connectionData.catalog,
+                     cube: parameters.connectionData.cube
+                   }
   }, function(err, query) {
     if(!err) {
       console.log("query saved to db: " + query);
-      res.json({status: 'success', info: "query successfully saved"});
+      res.json({status: 'success', info: "Query successfully saved"});
     } else {
       console.error(err);
       if(err.code === 11000) {
-        res.json({status: 'error', info: "query name already exists"});
+        res.json({status: 'error', info: "Query name already exists"});
       }
       else {
-        res.json({status: 'error', info: "oops! error occcured saving query"});
+        res.json({status: 'error', info: "Oops! error occcured saving query"});
       }
     }
-    res.end();
   });
 });
 
 // get query
 router.get('/find', function(req, res) {
-  Query.findOne({queryName: req.query.queryName}, 'onColumns onRows', function(err, query) {
+  Query.findOne({queryName: req.query.queryName}, 'onColumns onRows connectionData', function(err, query) {
     if(!err) {
       res.json(query);
     } else {

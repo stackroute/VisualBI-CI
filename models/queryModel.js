@@ -5,17 +5,31 @@ var querySchema = new mongoose.Schema({
   createdBy: String,
   createdOn: Date,
   modifiedOn: {type: Date, default: Date.now},
-  onColumns: [String],
-  onRows: [String],
+  onColumns: [{
+              unique_name: String,
+              caption_name: String,
+              is_member: String
+             }],
+  onRows: [{
+           unique_name: String,
+           caption_name: String,
+           is_member: String
+          }],
   onFilters: [String],
-  queryMDX: String
+  queryMDX: String,
+  connectionData: {
+                   xmlaServer: String,
+                   dataSource: String,
+                   catalog: String,
+                   cube: String
+                  }
 });
 
 querySchema.statics.findByUserName = function (userName, callback) {
   this.find(
     { createdBy: userName },
     '_id queryName',
-    {sort: 'modifiedOn'},
+    {sort: '-modifiedOn'},
     callback);
 }
 

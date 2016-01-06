@@ -88,6 +88,12 @@
   });
 
   $('.modal-footer #save').on('click', function(){
+    window.connData = {
+                       xmlaServer: $('#url').val(),
+                       dataSource: $('#dataSource').val(),
+                       catalog: $('#catalog').val(),
+                       cube: $('#cube option:selected').text()
+                      }
     var parameters = {
                       xmlaServer: $('#url').val(),
                       pathName: "/"+ $('#dataSource').val() + "/" + $('#catalog').val() + "/" + $('#cube option:selected').text()
@@ -174,13 +180,10 @@
         row_query = "{}",
         filter_query = "{}";
 
-    var colArray = [],
-        rowArray = [],
-        filterArray = [];
-
+    //console.log(colItems.eq(0).data('caption_name'));
+    //console.log("awrgaw");
     if(colItems.eq(0).data('caption_name') !== undefined) {
       colItems.each(function(index, value) {
-          colArray.push("" + $(this).data('unique_name') + " " + $(this).data('caption_name') + " " + $(this).data('is_member'));
           if($(this).data('is_member') === "yes") {
             col_query = "UNION(" + "{" + $(this).data('unique_name') + "}," + col_query + ")";
           } else {
@@ -190,7 +193,6 @@
     }
     if(rowItems.eq(0).data('caption_name') !== undefined) {
       rowItems.each(function(index, value) {
-        rowArray.push("" + $(this).data('unique_name') + " " + $(this).data('caption_name') + " " + $(this).data('is_member'));
         if($(this).data('is_member') === "yes") {
           row_query = "UNION(" + "{" + $(this).data('unique_name') + "}," + row_query + ")";
         } else {
@@ -215,13 +217,17 @@
 
         if(colItems.eq(0).data('caption_name') !== undefined) {
           colItems.each(function(index, value) {
-              colArray.push("" + $(this).data('unique_name') + " " + $(this).data('caption_name') + " " + $(this).data('is_member'));
+              colArray.push({unique_name: $(this).data('unique_name'),
+                             caption_name: $(this).data('caption_name'),
+                             is_member: $(this).data('is_member')});
 
           });
         }
         if(rowItems.eq(0).data('caption_name') !== undefined) {
           rowItems.each(function(index, value) {
-            rowArray.push("" + $(this).data('unique_name') + " " + $(this).data('caption_name') + " " + $(this).data('is_member'));
+            rowArray.push({unique_name: $(this).data('unique_name'),
+                           caption_name: $(this).data('caption_name'),
+                           is_member: $(this).data('is_member')});
 
           });
         }
@@ -232,15 +238,27 @@
           colArray: colArray,
           rowArray: rowArray,
           filterArray: filterArray,
-          queryMDX: mdxGenerator()
+          queryMDX: mdxGenerator(),
+          connectionData: connData
         };
+        console.log("parameters");
         console.log(parameters);
-        $.post('/query/new', parameters, function(data) {
+        //console.log(JSON.stringify(parameters));
+        $.post('/query/new', {myString: JSON.stringify(parameters)}, function(data) {
+
           var alert = $('#saveQueryModal .alert');
-          alert.find('strong').remove();
-          alert.append($("<strong>" + data.info + "</strong>"));
-          alert.toggle();
+          alert.find('strong').text(data.info);
+          alert.show();
+
+          if(data.status=="success")
+          {
+            var li = $("<li><a href='#'>" + qName + "</a></li>");
+            li.prependTo($('div.navbar ul#queryList'));
+          }
+
         }, 'json');
+
+
   });
 
   $.get('/query/byUser', {userName: "Batman"}, function(data) {
@@ -261,34 +279,69 @@
   $('div.navbar ul#queryList').on('click', 'a', function(e) {
     e.preventDefault();
     $.get('/query/find', {queryName: $(this).text()}, function(data) {
+      connData = data.connectionData;
+      var parameters = {
+                        xmlaServer: data.connectionData.xmlaServer,
+                        pathName: "/"+ data.connectionData.dataSource + "/" + data.connectionData.catalog + "/" + data.connectionData.cube
+                      };
+
+      $('#left-menu-wrapper #cubeName').text(data.connectionData.cube);
+      $.get('/discover/getDimensions', parameters, function(data) {
+        $('div#dim-div ul').children().remove();
+        data.values.forEach(function(item){
+         var li = generateLI(item.caption_name);
+         li.data('unique_name', item.unique_name);
+         li.data('caption_name', item.caption_name);
+         li.data('path-name', parameters.pathName + "/" + item.unique_name);
+         if(item.caption_name !== "Measures") {
+           li.appendTo('div#dim-div ul');
+         }
+        });
+      }, 'json');
+      $.get('/discover/getMeasures', parameters, function(data) {
+        $('div#measures-div ul').children().remove();
+        data.values.forEach(function(item){
+         var li = $("<li><a href='#'>" + item.caption_name + "</a></li>");
+         li.data('unique_name', item.unique_name);
+         li.data('caption_name', item.caption_name);
+         li.data('path-name', parameters.pathName + "/[Measures]/[Measures]/[Measures].[MeasuresLevel]/" + item.unique_name);
+           li.appendTo('div#measures-div ul').find('a').draggable({
+             appendTo: "body",
+             helper: "clone"
+           });
+        });
+      }, 'json');
       var colArray = data.onColumns,
           rowArray = data.onRows;
-
+      //console.log(colArray);
       var ul = $('div.columns:eq(0)').find('ul');
       ul.children().remove();
       colArray.forEach(function(item) {
-        var str = item.split(" ");
-        var li = $("<li>" + str[1] + "<button type='button' class='close'>&times;</button></li>");
-        li.data('unique_name', str[0]);
-        li.data('caption_name', str[1]);
-        li.data('is_member', str[2]);
+        //var str = item.split(" ");
+        var li = $("<li>" + item.caption_name + "<button type='button' class='close'>&times;</button></li>");
+        li.data('unique_name',item.unique_name);
+        //console.log(item.unique_name);
+        li.data('caption_name',item.caption_name);
+        li.data('is_member',item.is_member);
         li.appendTo(ul);
       });
 
       var ul = $('div.columns:eq(1)').find('ul');
       ul.children().remove();
       rowArray.forEach(function(item) {
-        var str = item.split(" ");
-        var li = $("<li>" + str[1] + "<button type='button' class='close'>&times;</button></li>");
-        li.data('unique_name', str[0]);
-        li.data('caption_name', str[1]);
-        li.data('is_member', str[2]);
+        //var str = item.split(" ");
+        var li = $("<li>" + item.caption_name + "<button type='button' class='close'>&times;</button></li>");
+        li.data('unique_name',item.unique_name);
+        li.data('caption_name',item.caption_name);
+        li.data('is_member',item.is_member);
         li.appendTo(ul);
       });
     }, 'json');
+
+
   })
 
-  $('#saveQueryModal .alert').toggle();
+  $('#saveQueryModal .alert').hide();
   $('div.alert .close').on('click', function() {
     $('#saveQueryModal div.alert').hide();
   });
