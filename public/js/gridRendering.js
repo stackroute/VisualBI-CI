@@ -3,13 +3,14 @@
 
 /******** AJAX Request for getting json data from response ***********/
 var graphArray = [];
-function jsondata(){
+function jsondata(query){
   $( "#dataTableBody tr" ).replaceWith( "" );
   $.post(
       "/execute",
-      { url: "http://172.23.238.252:8080/pentaho/Xmla?userid=admin&password=password",
-        dataSource: "Pentaho",
-        catalog: "SampleData",
+      { username : query.username,
+        dataSource : query.dataSource,
+        catalog: query.catalog,
+        statement: query.mdxQuery
         // statement: "select NON EMPTY ([Department].[All Departments]) on columns, NON EMPTY {[Measures].[Actual]} on ROWS from [Quadrant Analysis]"
         // statement: "select NON EMPTY UNION([Department].members,{}) on columns, NON EMPTY {[Measures].[Actual], [Measures].[Budget]} on ROWS from [Quadrant Analysis]"
         // statement: "select NON EMPTY {[Measures].[Actual],[Measures].[Budget]} ON COLUMNS, "+
@@ -17,17 +18,7 @@ function jsondata(){
         //                 " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
         //                   "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
         //                       "{[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
-<<<<<<< HEAD
-<<<<<<< HEAD
-         // statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
-=======
-        // statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
->>>>>>> e00ba15f3e79633349bde14e61610c70023771f4
-=======
-        // statement: "select NON EMPTY Crossjoin({[Measures].[Actual]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children)), {[Positions].[All Positions]}) ON ROWS from [Quadrant Analysis]"
->>>>>>> e00ba15f3e79633349bde14e61610c70023771f4
-      statement: "select NON EMPTY Crossjoin({[Measures].[Actual], [Measures].[Budget]}, Union({[Region].[All Regions]}, [Region].[All Regions].Children)) ON COLUMNS, NON EMPTY Crossjoin({[Positions].[All Positions]}, Hierarchize(Union({[Department].[All Departments]}, [Department].[All Departments].Children))) ON ROWS from [Quadrant Analysis]"
-    }
+      }
     ).done(function( data ) {
         renderData(data);
       });
