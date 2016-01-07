@@ -99,7 +99,7 @@ span.nav-toggle-icon{
 }
 
 .navbar .btn {
-  font-size: 17px;
+  font-size: 16px;
 }
 #content {
   height: 100%;
@@ -204,10 +204,6 @@ h4 {
   width: 30%;
 }
 
-#executeButton {
-  display: block;
-  margin: auto;
-}
 
 .closeButton{
   color: red;
