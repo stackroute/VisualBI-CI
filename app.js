@@ -9,9 +9,11 @@ var express = require('express'),
     discover = require('./routes/discover'),
     queryController = require('./routes/queryController'),
     routes = require('./routes/index'),
-    users = require('./routes/users');
+    users = require('./routes/users'),
+    serverCredentials = require('./routes/serverCredentials');
 
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,10 +31,8 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/execute', execute);
 app.use('/discover', discover);
+app.use('/serverCredentials', serverCredentials);
 app.use('/query', queryController);
-// app.use('/get_serverDetails', discover.getDimensions);
-// app.use('/get_children', discover.getDimensions);
-// app.use('/get_measures',discover.getMeasures);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

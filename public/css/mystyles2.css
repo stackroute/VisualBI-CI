@@ -203,3 +203,8 @@ h4 {
 #myModal label {
   width: 30%;
 }
+
+
+.closeButton{
+  color: red;
+}

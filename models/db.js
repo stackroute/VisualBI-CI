@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+
 var dbURI = "mongodb://localhost/visualBI";
 mongoose.connect(dbURI);
 

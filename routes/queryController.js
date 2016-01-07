@@ -54,6 +54,7 @@ router.post('/new', function(req, res) {
         res.json({status: 'error', info: "Query name already exists"});
       }
       else {
+        console.log(err);
         res.json({status: 'error', info: "Oops! error occcured saving query"});
       }
     }

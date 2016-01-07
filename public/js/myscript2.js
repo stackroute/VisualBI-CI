@@ -8,13 +8,15 @@
       var str1 = parentLI.data('unique_name');
       var str2 = parentLI.data('caption_name');
       var li = $("<li>" + ui.draggable.text() + "<button type='button' class='close'>&times;</button></li>");
+
       li.data('unique_name', str1);
       li.data('caption_name', str2);
-      if(parentLI.children('label').length == 0) {
+      if(parentLI.children('label').length === 0) {
         li.data('is_member', "yes");
       } else {
         li.data('is_member', "no");
       }
+
       li.appendTo($this);
       var ht = parseInt($this.parent().outerHeight());
       ht = (ht-39)/2;
@@ -49,22 +51,11 @@
     return $("<ul class='nav nav-list nav-left-ml'></ul>");
   }
 
-  $('#url').on('keyup', function(e){
-   if(e.keyCode === 13) {
-     var parameters = { xmlaServer: $(this).val(), pathName: "/" };
-       $.get( '/discover/getServerDetails',parameters, function(data) {
-         $('#myModal #dataSource').children().remove();
-         $('#myModal select.dataSourceNameList').append($("<option>select</option>"));
-         data.values.forEach(function(item){
-          var option = $("<option value=" +  item.caption_name + ">" + item.caption_name + "</option>");
-          $('#myModal select.dataSourceNameList').append(option);
-       });
-     },'json');
-    }
-  });
-
   $('#myModal #dataSource').on('change', function() {
-    var parameters = {xmlaServer: $('#url').val(), pathName: "/"+$(this).val()};
+    var parameters = {
+      username  : "hotChocolate",
+      pathName: "/"+$(this).val()
+    };
     $.get('/discover/getServerDetails', parameters, function(data) {
       $('#myModal #catalog').children().remove();
       $('#myModal #catalog').append($("<option>select</option>"));
@@ -76,7 +67,9 @@
   });
 
   $('#myModal #catalog').on('change', function() {
-    var parameters = {xmlaServer: $('#url').val(), pathName: "/"+ $('#dataSource').val() + "/" + $(this).val()};
+    var parameters = {
+      username  : "hotChocolate",
+      pathName: "/"+ $('#dataSource').val() + "/" + $(this).val()};
     $.get('/discover/getServerDetails', parameters, function(data) {
       $('#myModal #cube').children().remove();
       $('#myModal #cube').append($("<option>select</option>"));
@@ -93,9 +86,9 @@
                        dataSource: $('#dataSource').val(),
                        catalog: $('#catalog').val(),
                        cube: $('#cube option:selected').text()
-                      }
+                     };
     var parameters = {
-                      xmlaServer: $('#url').val(),
+                      username  : "hotChocolate",
                       pathName: "/"+ $('#dataSource').val() + "/" + $('#catalog').val() + "/" + $('#cube option:selected').text()
                     };
     $('#left-menu-wrapper #cubeName').text($('#cube option:selected').text());
@@ -128,7 +121,7 @@
 
   $('#dim-div, #measures-div').on('click', 'label', function() {
     if($(this).parent().children('ul').length === 0) {
-      var parameters = {xmlaServer: $('#url').val(), pathName: $(this).parent().data('path-name')};
+      var parameters = {username  : "hotChocolate", pathName: $(this).parent().data('path-name')};
       var childUL = generateUL();
       childUL.appendTo($(this).parent()).toggle();
       $.get('/discover/getDimensions', parameters, function(data) {
@@ -164,6 +157,111 @@
       $this.removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
     }
   });
+//////////////////
+
+  $('#saveCredentials').on('click',function(){
+    $('#myModal #url').val($('.credentialDetails #serverURL').val());
+    $.post(
+        "/serverCredentials/save",
+        {
+          //window.username
+          username: 'hotChocolate',
+          connection_id: $("option:selected",'#connName').val()
+        }
+      ).done(function( data ) {
+          var parameters = {
+            // xmlaServer  : $('.credentialDetails #serverURL').val(),
+            pathName    : "/",
+            username      : "hotChocolate"
+          };
+          $.get( '/discover/getServerDetails',parameters, function(data) {
+            $('#myModal #dataSource').children().remove();
+            $('#myModal select.dataSourceNameList').append($("<option>select</option>"));
+            data.values.forEach(function(item){
+                 var option = $("<option value=" +  item.caption_name + ">" + item.caption_name + "</option>");
+                 $('#myModal select.dataSourceNameList').append(option);
+            });
+          },'json');
+        });
+  });
+
+  $('#editConnection').on('click',function(){
+    $('#validate').css({display:"none"});
+    $('#saveCredentials').css({display: "inline"});
+    $('#connName').css({display: "inline"});
+    $('#newConnName').css({display:"none"});
+    $('#connName').children().remove();
+    $('#connName').append($("<option data-url='akdjf'>select</option>"));
+    $.get('/serverCredentials/getAvailableConnections',{username:"hotChocolate"},function(data){
+      for(var x in data){
+        console.log(x);
+        var item=data[x];
+        console.log(item);
+        var option = $("<option value=" +  item._id + ">" + item.connectionName + "</option>");
+        console.log(item.serverURL);
+        option.data('url',item.serverURL);
+        option.data('userid',item.userid);
+        option.data('password',item.password);
+        $('#connName').append(option);
+      }
+    });
+   });
+
+   $('#connName').on('change',function(){
+     $('#serverURL').val($("option:selected",this).data("url"));
+     $('#userId').val($("option:selected",this).data("userid"));
+     $('#password').val($("option:selected",this).data("password"));
+   });
+
+   // adding new connection
+   $("#addConn").on('click',function(){
+     $('#serverURL').prop('readonly',false);
+     $('#userId').prop('readonly',false);
+     $('#password').prop('readonly',false);
+     $('#validate').css({display: "inline"});
+     $('#saveCredentials').css({display:"none"});
+     $('#newConnName').css({display: "inline"});
+     $('#connName').css({display:"none"});
+   });
+
+   $('#validate').on('click',function(){
+     //Validate the inputs here and Error Handlers of input(s)
+     var parameters = {
+       username : "hotChocolate",
+       connName : $(".credentialDetails #newConnName").val(),
+       url      : $(".credentialDetails #serverURL").val(),
+       userid   : $(".credentialDetails #userId").val(),
+       password : $(".credentialDetails #password").val()
+
+     };
+     $.get('/serverCredentials/addConnection',parameters,function(data){
+        console.log(data);
+        $('#myModal #url').val($('.credentialDetails #serverURL').val());
+        $('#serverCredentials').modal('hide');
+        $('#myModal').modal();
+
+        $('#myModal #catalog').children().remove();
+        $('#myModal #catalog').append($("<option>select</option>"));
+        $('#myModal #cube').children().remove();
+        $('#myModal #cube').append($("<option>select</option>"));
+
+        var parameters = {
+          // xmlaServer  : $('.credentialDetails #serverURL').val(),
+          pathName    : "/",
+          username      : "hotChocolate"
+        };
+        $.get( '/discover/getServerDetails',parameters, function(data) {
+          $('#myModal #dataSource').children().remove();
+          $('#myModal select.dataSourceNameList').append($("<option>select</option>"));
+          data.values.forEach(function(item){
+               var option = $("<option value=" +  item.caption_name + ">" + item.caption_name + "</option>");
+               $('#myModal select.dataSourceNameList').append(option);
+          });
+        },'json');
+
+     });
+
+   });
 
   $('#executeButton').on('click', function() {
     //build mdx query from dragged items
@@ -173,7 +271,8 @@
   function mdxGenerator() {
     var colItems = $('div.columns:eq(0)').find('li'),
         rowItems = $('div.columns:eq(1)').find('li'),
-        filterItems = $('div.columns:eq(2)').find('li');
+        filterItems = $('div.columns:eq(2)').find('li'),
+        query={};
 
     var mdxQuery,
         col_query = "{}",
@@ -202,8 +301,12 @@
     }
     mdxQuery = "select " + col_query + " on columns, " + row_query + " on rows" + " from [Quadrant Analysis]" ;
     console.log(mdxQuery);
-    return mdxQuery;
-  }
+    query.dataSource = $('#dataSource').val();
+    query.catalog = $('#catalog').val();
+    query.mdxQuery = mdxQuery;
+    query.username = "hotChocolate";
+    return query;
+    }
 
   $('#saveQueryModal #saveQueryButton').on('click', function() {
 
@@ -234,11 +337,11 @@
         var qName = $('#saveQueryModal #queryName').val();
         var parameters = {
           queryName: qName,
-          userName: "Batman",
+          userName: "hotChocolate",
           colArray: colArray,
           rowArray: rowArray,
           filterArray: filterArray,
-          queryMDX: mdxGenerator(),
+          queryMDX: mdxGenerator().mdxQuery,
           connectionData: connData
         };
         console.log("parameters");
@@ -261,7 +364,7 @@
 
   });
 
-  $.get('/query/byUser', {userName: "Batman"}, function(data) {
+  $.get('/query/byUser', {userName: "hotChocolate"}, function(data) {
     if(data.length > 0) {
       if (data.status && data.status === 'error') {
         console.log(data.error);
@@ -326,7 +429,7 @@
         li.appendTo(ul);
       });
 
-      var ul = $('div.columns:eq(1)').find('ul');
+      ul = $('div.columns:eq(1)').find('ul');
       ul.children().remove();
       rowArray.forEach(function(item) {
         //var str = item.split(" ");
@@ -339,10 +442,11 @@
     }, 'json');
 
 
-  })
+  });
 
   $('#saveQueryModal .alert').hide();
   $('div.alert .close').on('click', function() {
     $('#saveQueryModal div.alert').hide();
   });
+
 }());

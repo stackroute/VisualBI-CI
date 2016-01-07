@@ -1,13 +1,13 @@
 /******** AJAX Request for getting json data from response ***********/
 
-function jsondata(mdxQuery){
+function jsondata(query){
   $( "#dataTableBody tr" ).replaceWith( "" );
   $.post(
       "/execute",
-      { url: "http://172.23.238.252:8080/pentaho/Xmla?userid=admin&password=password",
-        dataSource: "Pentaho",
-        catalog: "SampleData",
-        statement: mdxQuery
+      { username : query.username,
+        dataSource : query.dataSource,
+        catalog: query.catalog,
+        statement: query.mdxQuery
         // statement: "select NON EMPTY ([Department].[All Departments]) on columns, NON EMPTY {[Measures].[Actual]} on ROWS from [Quadrant Analysis]"
         // statement: "select NON EMPTY UNION([Department].members,{}) on columns, NON EMPTY {[Measures].[Actual], [Measures].[Budget]} on ROWS from [Quadrant Analysis]"
         // statement: "select NON EMPTY {[Measures].[Actual],[Measures].[Budget]} ON COLUMNS, "+
