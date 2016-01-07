@@ -190,7 +190,6 @@
     $('#newConnName').css({display:"none"});
     $('#connName').children().remove();
     $('#connName').append($("<option data-url='akdjf'>select</option>"));
-    
     $.get('/serverCredentials/getAvailableConnections',{username:"hotChocolate"},function(data){
       for(var x in data){
         console.log(x);
