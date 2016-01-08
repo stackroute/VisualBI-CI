@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prestart": "npm i",
+    "prestart": "npm i; bower i",
     "start": "supervisor bin/www"
   },
   "dependencies": {
