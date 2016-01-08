@@ -18,7 +18,7 @@ Vagrant.configure(2) do |config|
   config.vm.hostname = 'stackroute-node'
 
   # Map the guest os port 8080 to host os port 8080
-  config.vm.network "forwarded_port", guest: 3000, host: 8090
+  config.vm.network "forwarded_port", guest: 3000, host: 3040
 
   if OS.windows?
 
