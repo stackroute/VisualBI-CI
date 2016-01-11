@@ -77,6 +77,7 @@ span.nav-toggle-icon{
 #head-div {
   height: 15%;
   overflow-y: auto;
+  margin: 15px;
 }
 
 #dim-div, #measures-div {
@@ -230,4 +231,49 @@ rect {
 }
 rect:hover{
   fill: orange;
+}
+
+/*********** Angularizing Modal *******************/
+.selectConnection {
+  border-right: 1px solid lightgrey;
+}
+.modal-content input{
+  width:210px;
+}
+.selectConnection select{
+  min-width: 100px;
+}
+.selectConnection, .addNewConnection{
+  padding: 30px 15px;
+}
+.addNewConnection button{
+  height: 55px;
+  width: 170px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.connectionDiv .row, .modal-content .row{
+  margin: auto 0px;
+}
+.connectionHeading {
+  background: lightgrey;
+}
+.connectionHeading h4{
+  float: left;
+}
+.connectionHeading button{
+  float: right;
+}
+.modal-content label{
+  width: 130px;
+  text-align: left;
+}
+.connectionForm {
+  text-align: center;
+}
+.cubeLabel{
+  width:40%;
+}
+#head-div select{
+  min-width: 40%;
 }

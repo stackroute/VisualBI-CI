@@ -13,106 +13,90 @@
 
 		<!-- Include Modernizr in the head, before any other Javascript -->
 		<script src="js/modernizr-2.6.2.min.js"></script>
+    <!-- Include Angular in the head -->
+		<script src="lib/angular/angular.min.js"></script>
+    <!-- Include Angularjs UI-Bootstrap -->
+    <script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <!-- Include ConnectionModelController.js -->
+    <script src="controllers/ConnectionModelController.js"></script>
   </head>
   <body>
-    <div class="container-fluid" id="main">
+    <div class="container-fluid" id="main" ng-app="hotChocolate">
       <div class="row">
         <div class="col-xs-3" id= "left-menu">
           <div id="left-menu-wrapper">
-            <h4 id="cubeName">Select cube</h4>
-            <div id="head-div">
-              <!-- Button trigger modal -->
-              <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">
-                Choose cube
-              </button>
-              <!-- myModal -->
-              <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="closeButton" aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title" id="myModalLabel">Server details</h4>
-                    </div>
-                    <div class="modal-body">
-                      <p>
-                        <label for="url">Server URL</label>
-                        <input type="search" name="url" id="url" readonly="true">
-                          <button type="button" class="btn" id="editConnection" data-toggle="modal" data-dismiss="modal" data-target="#serverCredentials"><span class="glyphicon glyphicon-edit"></span></button>
+            <div class="connectionDiv" ng-controller="ConnectionModelController">
+              <div class="connectionHeading row">
+                <h4 id="cubeName">Connection </h4>
+                <button type="button" id="Connection" ng-click="open()"><span class="glyphicon glyphicon-edit"></span></button>
+              </div>
+              <script type="text/ng-template" id="serverCredentials.html">
+                <div class="modal-header row">
+                    <h3 class="modal-title" ng-hide="addConnection">Server Credentials</h3>
+                    <h3 class="modal-title" ng-show="addConnection">New Connection</h3>
+                </div>
+                <div class="modal-body row">
+                  <div class= "selectConnection col-xs-8" ng-hide="addConnection">
+                    <label for="availableConnections" class="modalLabel"> Connection Name: </label>
+                    <select name="availableConnections" ng-model="connIndex">
+                      <!-- <option value="select">select</option> -->
+                      <option ng-repeat="conn in availableConnections" value="{{$index}}">{{conn.connectionName}}</option>
+                    </select>
+                    <br>
+                    <label for="selectedConnUrl" class="modalLabel"> Server URL: </label>
+                    <input name="selectedConnUrl" type="text"  value="{{availableConnections[connIndex].url}}"></input>
+                    <br>
+                  </div>
+                  <div class="addNewConnection col-xs-4" ng-hide="addConnection">
+                    <button type="button" class="btn btn-md btn-primary" ng-click="addNewConnection()">
+                     Add New connection
+                   </button>
+                  </div>
 
-                      </p>
-                      <p>
-                        <label for="dataSource">DataSource</label>
-                        <select class="dataSourceNameList" name="dataSource" id="dataSource">
-                          <option value="">select</option>
-                        </select>
-                      </p>
-                      <p>
-                        <label for="catalog">Catalog</label>
-                        <select class="catalogNameList" name="catalog" id="catalog">
-                          <option value="">select</option>
-                        </select>
-                      </p>
-                      <p>
-                        <label for="cube">Cube</label>
-                        <select class="cubeNameList" name="cube" id="cube">
-                          <option value="">select</option>
-                        </select>
-                      </p>
-                    </div> <!-- modal-body end-->
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary" data-dismiss="modal" id="save">Save</button>
-                    </div> <!-- modal-footer end -->
-                  </div> <!-- modal-content end -->
-                </div> <!-- modal-dialog end -->
-              </div> <!-- myModal end-->
-
-
-
-              <!-- Modal Server Credentials -->
-              <div class="modal fade" id="serverCredentials" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="closeButton" aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title" id="myModalLabel1">Server Credentials</h4>
-                    </div>
-                    <div class="modal-body credentialDetails">
-                      <p>
-                        <label for="connectionName">Connection Name:</label>
-                        <select class="connectionsNameList" name="connName" id="connName">
-                          <option value="">select</option>
-                        </select>
-                        <input type="text" name="connName" id="newConnName" placeholder="Tag this Connection" style="display: none;">
-                        <button type="button" class="btn-small btn-primary" id="addConn">Add Connection</button>
-
-                      </p>
-                      <p>
-                        <label for="serverURL">Server URL:</label>
-                        <input type="text" name="serverURL" id="serverURL" placeholder="Enter the server URL" readonly="true">
-                      </p>
-                      <p>
-                        <label for="userId">User ID:</label>
-                        <input type="text" name="userId" id="userId" placeholder="Enter the server User ID" readonly="true">
-                      </p>
-                      <p>
-                        <label for="password">Password</label>
-                        <input type="password" name="password" id="password" placeholder="Enter the server password" readonly="true">
-                      </p>
-                    </div> <!-- modal-body end-->
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default">Reset</button>
-                      <button type="button" class="btn btn-default" id="validate" style="display: none;">Apply</button>
-                      <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#myModal" id="saveCredentials">Save</button>
-                    </div> <!-- modal-footer end -->
-                  </div> <!-- modal-content end -->
-                </div> <!-- modal-dialog end -->
-              </div> <!-- myModal end-->
-
-
-
-
+                  <!-- Div body for adding new connection -->
+                  <div class="connectionForm" ng-show="addConnection">
+                    <label for="connName" class="modalLabel"> Connection Name: </label>
+                    <input name="connName" type="text" placeholder="User Defined Connection Name" ng-model="newConn.connName"></input>
+                    <br>
+                    <label for="url" class="modalLabel"> Server URL: </label>
+                    <input name="url" type="text" placeholder="Server URL" ng-model="newConn.url"></input>
+                    <br>
+                    <label for="userId" class="modalLabel"> User ID: </label>
+                    <input name="userId" type="text" placeholder="Connection User ID" ng-model="newConn.userId"></input>
+                    <br>
+                    <label for="password" class="modalLabel"> Password: </label>
+                    <input name="password" type="password" placeholder="Password" ng-model="newConn.password"></input>
+                    <br>
+                  </div> <!-- End of ConnectionFormBody -->
+                </div> <!-- End modal-body -->
+                <div class="modal-footer row">
+                    <button class="btn btn-primary" type="button" ng-click="save()" ng-hide="addConnection">Save</button>
+                    <button class="btn btn-primary" type="button" ng-click="addConn()" ng-show="addConnection">Add Connection</button>
+                    <button class="btn btn-warning" type="button" ng-click="reset()" ng-show="addConnection">Reset</button>
+                    <button class="btn btn-warning" type="button" ng-click="cancel()">cancel</button>
+                </div>
+              </script>
+            </div> <!-- End ConnectionDiv -->
+            <div id="head-div" ng-controller = "cubeInfoCtrl">
+              <label for="DataSourceName" class="cubeLabel"> Data Source: </label>
+              <select name="DataSourceName" ng-model="DataSourceName" ng-change="">
+                <!-- <option ng-repeat="conn in availableConnections" value="{{$index}}">{{conn.connectionName}}</option> -->
+              </select>
+              <br>
+              <label for="CatalogName" class="cubeLabel" ng-change=""> Catalog: </label>
+              <select name="CatalogName" ng-model="connIndex">
+                <!-- <option ng-repeat="conn in availableConnections" value="{{$index}}">{{conn.connectionName}}</option> -->
+              </select>
+              <br>
+              <label for="CubeName" class="cubeLabel"> Cube: </label>
+              <select name="CubeName" ng-model="connIndex" ng-change="">
+                <!-- <option ng-repeat="conn in availableConnections" value="{{$index}}">{{conn.connectionName}}</option> -->
+              </select>
+              <br>
             </div> <!-- head-div end-->
+
+
+            <!-- Dimentions -->
             <h4>Dimensions</h4>
             <div id='dim-div'>
               <!-- adding dimensions from json -->
