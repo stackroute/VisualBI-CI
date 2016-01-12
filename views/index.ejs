@@ -17,8 +17,18 @@
 		<script src="lib/angular/angular.min.js"></script>
     <!-- Include Angularjs UI-Bootstrap -->
     <script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+    <script src="angularApp.js" charset="utf-8"></script>
+    <!-- Include ConnectionModelController.js -->
+    <script src="services/addConnection.js"></script>
+    <!-- Include ConnectionModelController.js -->
+    <script src="services/getAvailableConnections.js"></script>
+    <!-- Include ConnectionModelController.js -->
+    <script src="services/saveConnection.js"></script>
+    <script src="services/discover.js"></script>
     <!-- Include ConnectionModelController.js -->
     <script src="controllers/ConnectionModelController.js"></script>
+
   </head>
   <body>
     <div class="container-fluid" id="main" ng-app="hotChocolate">
@@ -44,7 +54,7 @@
                     </select>
                     <br>
                     <label for="selectedConnUrl" class="modalLabel"> Server URL: </label>
-                    <input name="selectedConnUrl" type="text"  value="{{availableConnections[connIndex].url}}"></input>
+                    <input name="selectedConnUrl" type="text"  value="{{availableConnections[connIndex].serverURL}}"></input>
                     <br>
                   </div>
                   <div class="addNewConnection col-xs-4" ng-hide="addConnection">
@@ -62,7 +72,7 @@
                     <input name="url" type="text" placeholder="Server URL" ng-model="newConn.url"></input>
                     <br>
                     <label for="userId" class="modalLabel"> User ID: </label>
-                    <input name="userId" type="text" placeholder="Connection User ID" ng-model="newConn.userId"></input>
+                    <input name="userId" type="text" placeholder="Connection User ID" ng-model="newConn.userid"></input>
                     <br>
                     <label for="password" class="modalLabel"> Password: </label>
                     <input name="password" type="password" placeholder="Password" ng-model="newConn.password"></input>
@@ -70,31 +80,31 @@
                   </div> <!-- End of ConnectionFormBody -->
                 </div> <!-- End modal-body -->
                 <div class="modal-footer row">
-                    <button class="btn btn-primary" type="button" ng-click="save()" ng-hide="addConnection">Save</button>
+                    <button class="btn btn-primary" type="button" ng-click="save(availableConnections[connIndex])" ng-hide="addConnection">Save</button>
                     <button class="btn btn-primary" type="button" ng-click="addConn()" ng-show="addConnection">Add Connection</button>
                     <button class="btn btn-warning" type="button" ng-click="reset()" ng-show="addConnection">Reset</button>
                     <button class="btn btn-warning" type="button" ng-click="cancel()">cancel</button>
                 </div>
               </script>
-            </div> <!-- End ConnectionDiv -->
-            <div id="head-div" ng-controller = "cubeInfoCtrl">
+
+            <div id="head-div">
               <label for="DataSourceName" class="cubeLabel"> Data Source: </label>
-              <select name="DataSourceName" ng-model="DataSourceName" ng-change="">
-                <!-- <option ng-repeat="conn in availableConnections" value="{{$index}}">{{conn.connectionName}}</option> -->
+              <select name="DataSourceName" ng-model="DataSourceName" ng-change="getCatalogNames(DataSourceName)">
+                <option ng-repeat="DataSourceName in DataSourceNames" value="{{DataSourceName.unique_name}}">{{DataSourceName.caption_name}}</option>
               </select>
               <br>
-              <label for="CatalogName" class="cubeLabel" ng-change=""> Catalog: </label>
-              <select name="CatalogName" ng-model="connIndex">
-                <!-- <option ng-repeat="conn in availableConnections" value="{{$index}}">{{conn.connectionName}}</option> -->
+              <label for="CatalogName" class="cubeLabel"> Catalog: </label>
+              <select name="CatalogName" ng-model="CatalogName" ng-change="getCubeNames(DataSourceName, CatalogName)">
+                <option ng-repeat="CatalogName in CatalogNames" value="{{CatalogName.unique_name}}">{{CatalogName.caption_name}}</option>
               </select>
               <br>
               <label for="CubeName" class="cubeLabel"> Cube: </label>
-              <select name="CubeName" ng-model="connIndex" ng-change="">
-                <!-- <option ng-repeat="conn in availableConnections" value="{{$index}}">{{conn.connectionName}}</option> -->
+              <select name="CubeName" ng-model="CubeName" ng-change="getChildren(DataSourceName, CatalogName, CubeName)">
+                <option ng-repeat="CubeName in CubeNames" value="{{CubeName.unique_name}}">{{CubeName.caption_name}}</option>
               </select>
               <br>
             </div> <!-- head-div end-->
-
+          </div> <!-- End ConnectionDiv -->
 
             <!-- Dimentions -->
             <h4>Dimensions</h4>

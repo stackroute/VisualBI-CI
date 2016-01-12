@@ -93,8 +93,9 @@ function generateXmlaRequest(serverURL, fragments, response){
         result.values=values;
         response.send(result);
       },
-      error   : function(){
+      error   : function(err){
         response.write("Error finding the Required Data");
+        console.log(err);
       },
       callback: function() {
         response.end();
@@ -114,7 +115,7 @@ router.get('/getServerDetails', function(req, res) {
   var parameters = req.query,
       pathName   = parameters.pathName,
       fragments  = pathName.split("/"),
-      username     = req.query.username;
+      username   = parameters.username;
 
   callRequest(username,fragments,res);
 
@@ -125,7 +126,7 @@ router.get('/getServerDetails', function(req, res) {
    var parameters = req.query,
        pathName   = parameters.pathName,
        fragments  = pathName.split("/"),
-       username     = req.query.username;
+       username   = parameters.username;
 
    callRequest(username,fragments,res);
 
@@ -135,7 +136,7 @@ router.get('/getServerDetails', function(req, res) {
 router.get('/getMeasures',function(req,res) {
   var parameters = req.query,
       pathName   = parameters.pathName,
-      username     = req.query.username;
+      username   = parameters.username;
 
 	pathName = pathName + "/[Measures]/[Measures]/[Measures].[MeasuresLevel]";     //Assumption that it follows this way
   var fragments = pathName.split("/");

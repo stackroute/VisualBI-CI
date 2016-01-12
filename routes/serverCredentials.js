@@ -53,10 +53,12 @@ router.get("/addConnection",function(req,res){
     userid: req.query.userid,
     password: req.query.password
   });
+  console.log(myConnection);
   myConnection.save( function(err){
     if (err)
     {  res.send(err);}
     else {
+      console.log(username);
       UserDetails.findOneAndUpdate(
         {username : username},
         {
