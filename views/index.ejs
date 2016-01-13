@@ -125,19 +125,19 @@
             <div id='dim-div'>
               <ul class='nav nav-list-main dimensions'>
                 <li ng-repeat="dimension in dimensions" ng-if="dimension.caption_name !== 'Measures'">
-                  <label class='nav-toggle nav-header' ng-click="!dimension.children.length > 0 && getHierarchies(dimension.unique_name)" toggle-list>
+                  <label class='nav-toggle nav-header' ng-click="!dimension.children.length > 0 && getHierarchies($index)" toggle-list>
                     <span class='nav-toggle-icon glyphicon glyphicon-chevron-right'></span>
                     <a href='#'> {{dimension.caption_name}}</a>
                   </label>
                   <ul class='nav nav-list nav-left-ml' ng-show="dimension.children.length">
                     <li ng-repeat="hierarchy in dimension.children">
-                      <label class='nav-toggle nav-header' ng-click="!hierarchy.children.length > 0 && getLevels(dimension.unique_name,hierarchy.unique_name)" toggle-list>
+                      <label class='nav-toggle nav-header' ng-click="!hierarchy.children.length > 0 && getLevels($parent.$index, $index)" toggle-list>
                         <span class='nav-toggle-icon glyphicon glyphicon-chevron-right'></span>
                         <a href='#' ng-model="dimension.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}"> {{hierarchy.caption_name}}</a>
                       </label>
                       <ul class='nav nav-list nav-left-ml' ng-show="hierarchy.children.length">
                         <li ng-repeat="level in hierarchy.children">
-                          <label class='nav-toggle nav-header' ng-click="!level.children.length > 0 && getMembers(dimension.unique_name, hierarchy.unique_name, level.unique_name)" toggle-list>
+                          <label class='nav-toggle nav-header' ng-click="!level.children.length > 0 && getMembers($parent.$parent.$index, $parent.$index, $index)" toggle-list>
                             <span class='nav-toggle-icon glyphicon glyphicon-chevron-right'></span>
                             <a href='#' ng-model="hierarchy.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}"> {{level.caption_name}}</a>
                           </label>
