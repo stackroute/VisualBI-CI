@@ -1,1 +1,1 @@
-angular.module("hotChocolate", ['ui.bootstrap']);
+angular.module("hotChocolate", ['ui.bootstrap', 'ngDragDrop']);

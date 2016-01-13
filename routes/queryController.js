@@ -17,7 +17,7 @@ router.get('/byUser',function (req, res) {
           console.log(err);
           res.json({"status":"error", "error":err});
         }
-    })
+    });
   }else{
     console.log("No user name supplied");
     res.json({"status":"error", "error":"No user id supplied"});
@@ -39,7 +39,7 @@ router.post('/new', function(req, res) {
     onFilters: parameters.filterArray,
     queryMDX: parameters.queryMDX,
     connectionData: {
-                     xmlaServer: parameters.connectionData.xmlaServer,
+                    //  xmlaServer: parameters.connectionData.xmlaServer,
                      dataSource: parameters.connectionData.dataSource,
                      catalog: parameters.connectionData.catalog,
                      cube: parameters.connectionData.cube

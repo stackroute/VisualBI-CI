@@ -263,10 +263,10 @@
 
    });
 
-  $('#executeButton').on('click', function() {
-    //build mdx query from dragged items
-    jsondata(mdxGenerator());
-  });
+  // $('#executeButton').on('click', function() {
+  //   //build mdx query from dragged items
+  //   jsondata(mdxGenerator());
+  // });
 
   function mdxGenerator() {
     var colItems = $('div.columns:eq(0)').find('li'),

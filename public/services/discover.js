@@ -9,12 +9,19 @@ hotChocolate.factory('discover',
                            };
                            return $http.get('/discover/getServerDetails', {params: parameters});
                          };
-                         factory.getChildren= function (path) {
+                         factory.getDimensions= function (path) {
                             var parameters= {
                               username: 'hotChocolate',
                               pathName: path
                             };
                             return $http.get('/discover/getDimensions', {params: parameters});
                           };
+                          factory.getMeasures= function (path) {
+                             var parameters= {
+                               username: 'hotChocolate',
+                               pathName: path
+                             };
+                             return $http.get('/discover/getMeasures', {params: parameters});
+                           };
                          return factory;
                         });
