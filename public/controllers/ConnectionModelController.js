@@ -6,6 +6,7 @@ hotChocolate.controller('ConnectionModelController',
     $scope.addConnection = false;
     $scope.newConn = {};
     $scope.DataSourceName = "";
+    $rootScope.connIndex = '0';
     $scope.$watch('DataSourceName', function(newValue, oldValue){
       $rootScope.DataSourceName = newValue;
     });
