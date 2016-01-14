@@ -1,5 +1,5 @@
 var hotChocolate = angular.module("hotChocolate");
-hotChocolate.directive('saveQuery', function($http) {
+hotChocolate.directive('saveQuery', function($http, $timeout) {
   return {
     restrict: 'A',
     link: function(scope, element, attrs) {
@@ -35,6 +35,9 @@ hotChocolate.directive('saveQuery', function($http) {
           myString: JSON.stringify(parameters)
         }).success(function(data) {
           scope.showModalAlert = true;
+          $timeout(function (){
+            scope.showModalAlert = false;
+          }, 2000);
           scope.querySaveMessage = data.info;
           if(data.status=="success")
           {

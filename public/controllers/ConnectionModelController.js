@@ -88,7 +88,9 @@ hotChocolate.controller('ConnectionModelController',
       discover.getDimensions(pathName)
                       .then(function(data){
                          console.log(data.data.values);
-                         $scope.dimensions[dimIdx].children[hierIdx].children[levelIdx].children = data.data.values;
+                         var members = data.data.values;
+                         for(var i=0, len = members.length; i < len; i++) { members[i].isMember = "yes"; }
+                         $scope.dimensions[dimIdx].children[hierIdx].children[levelIdx].children = members;
                        });
     };
     $scope.open = function(){
