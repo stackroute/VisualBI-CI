@@ -55,78 +55,45 @@ hotChocolate.controller('ConnectionModelController',
                             }
       });
     };
-    $scope.getHierarchies = function(parent_unique_name) {
+    $scope.getHierarchies = function(idx) {
       var pathName= "/"+ $scope.DataSourceName +
                     "/" + $scope.CatalogName +
                     "/" + $scope.CubeName +
-                    "/" + parent_unique_name;
+                    "/" + $scope.dimensions[idx].unique_name;
       discover.getDimensions(pathName)
                       .then(function(data){
                          console.log(data.data.values);
-                        var len = $scope.dimensions.length;
-                        for(var i=0; i < len; i++) {
-                          if($scope.dimensions[i].unique_name === parent_unique_name) {
-                            $scope.dimensions[i].children = data.data.values;
-                          }
-                        }
+                         $scope.dimensions[idx].children = data.data.values;
+
             });
-          };
-    $scope.getLevels = function(dim_unique_name, hier_unique_name) {
+    };
+    $scope.getLevels = function(dimIdx, hierIdx) {
         var pathName= "/"+ $scope.DataSourceName +
                       "/" + $scope.CatalogName +
                       "/" + $scope.CubeName +
-                      "/" + dim_unique_name +
-                      "/" + hier_unique_name;
+                      "/" + $scope.dimensions[dimIdx].unique_name +
+                      "/" + $scope.dimensions[dimIdx].children[hierIdx].unique_name;
         discover.getDimensions(pathName)
                         .then(function(data){
                            console.log(data.data.values);
-                           var dim_len = $scope.dimensions.length;
-                           for(var i=0; i < dim_len; i++) {
-                               if($scope.dimensions[i].unique_name === dim_unique_name) {
-                                 var hiers = $scope.dimensions[i].children;
-                                 var hier_len = hiers.length;
-                                 for(var j=0; j < hier_len; j++) {
-                                   if(hiers[j].unique_name === hier_unique_name) {
-                                     hiers[j].children = data.data.values;
-                                   }
-                                 }
-                               }
-                             }
-                           });
-                         };
-    $scope.getMembers = function(dim_unique_name, hier_unique_name, level_unique_name) {
+                           $scope.dimensions[dimIdx].children[hierIdx].children = data.data.values;
+                        });
+    };
+    $scope.getMembers = function(dimIdx, hierIdx, levelIdx) {
       var pathName= "/"+ $scope.DataSourceName +
                     "/" + $scope.CatalogName +
                     "/" + $scope.CubeName +
-                    "/" + dim_unique_name +
-                    "/" + hier_unique_name+
-                    "/" + level_unique_name;
+                    "/" + $scope.dimensions[dimIdx].unique_name +
+                    "/" + $scope.dimensions[dimIdx].children[hierIdx].unique_name +
+                    "/" + $scope.dimensions[dimIdx].children[hierIdx].children[levelIdx].unique_name;
       discover.getDimensions(pathName)
                       .then(function(data){
                          console.log(data.data.values);
-                         var dim_len = $scope.dimensions.length;
-                         for(var i=0; i < dim_len; i++) {
-                            if($scope.dimensions[i].unique_name === dim_unique_name) {
-                              var hiers = $scope.dimensions[i].children;
-                              var hier_len = hiers.length;
-                              for(var j=0; j < hier_len; j++) {
-                                if(hiers[j].unique_name === hier_unique_name) {
-                                  var levels = hiers[j].children;
-                                  var level_len = levels.length;
-                                  for(var k=0; k < level_len; k++) {
-                                    if(levels[k].unique_name === level_unique_name) {
-                                      levels[k].children = data.data.values;
-                                      for(var l=0; l < levels[k].children.length; l++) {
-                                        levels[k].children[l].isMember = "yes";
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                         });
-                       };
+                         var members = data.data.values;
+                         for(var i=0, len = members.length; i < len; i++) { members[i].isMember = "yes"; }
+                         $scope.dimensions[dimIdx].children[hierIdx].children[levelIdx].children = members;
+                       });
+    };
     $scope.open = function(){
       var response = getAvailableConnections.availableConnections();
       response.then(function(data) {

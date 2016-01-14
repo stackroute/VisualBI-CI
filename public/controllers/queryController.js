@@ -66,7 +66,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
  };
 });
 hotChocolate.controller('SaveQryModalCtrl',
-    function ($scope, $uibModalInstance, items, queryList, mdxQuery, saveQuery )
+    function ($scope, $uibModalInstance, $timeout, items, queryList, mdxQuery, saveQuery )
     {
         $scope.items = items;
         $scope.queryList = queryList;
@@ -96,13 +96,21 @@ hotChocolate.controller('SaveQryModalCtrl',
 
              console.log(data);
              $scope.showModalAlert = true;
+             $timeout(function() {
+               $scope.showModalAlert = false;
+             }, 2000);
              $scope.querySaveMessage = data.info;
              if(data.status=="success")
              {
                $scope.queryList.push({queryName : $scope.newQueryName});
              }
+             console.log($scope.queryList);
+             if (data.status === "success"){
+               $timeout(function() {
+                 $uibModalInstance.close($scope.queryList);
+               }, 5000);
+             }
            });
-           console.log($scope.queryList);
        };
        $scope.close = function(){
          $uibModalInstance.close($scope.queryList);
