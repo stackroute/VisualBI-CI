@@ -133,6 +133,7 @@ hotChocolate.controller('ConnectionModelController',
         $scope.availableConnections = data.data;
         var modalInstance = $uibModal.open({
            animation: $scope.animationsEnabled,
+           windowClass: "modal fade in",
            templateUrl: 'serverCredentials.html',
            controller: 'ModalInstanceCtrl',
            resolve: {
@@ -153,6 +154,8 @@ hotChocolate.controller('ConnectionModelController',
            $scope.CubeName = "";
            $scope.CatalogNames = [];
            $scope.CubeNames = [];
+           $scope.dimensions = [];
+           $scope.measures = [];
            $scope.DataSourceNames = DataSourceNames;
          });
        });
@@ -162,20 +165,24 @@ hotChocolate.controller('ConnectionModelController',
      };
    });
 
-
-
 hotChocolate.controller('ModalInstanceCtrl',
-    function ($scope, $uibModalInstance, availableConnections, addNewConnection, saveConnection, discover)
+    function ($scope, $rootScope, $uibModalInstance, availableConnections, addNewConnection, saveConnection, discover)
     {
        $scope.availableConnections = availableConnections;
-      //  $scope.DataSourceNames = DataSourceNames;
+       $scope.connIndex = $rootScope.connIndex;
+      //  console.log($scope.connIndex);
+       $scope.$watch('connIndex', function(newValue, oldValue){
+         $rootScope.connIndex = newValue;
+       });
        /*************** What to be done for saving **********/
        $scope.save = function (conn) {
           saveConnection.saveConnection(conn)
                         .then(function(data){
                           discover.getSource('/').then(function(data){
                             $scope.DataSourceNames = data.data.values;
-                            console.log($scope.DataSourceNames);
+                            // $scope.$parent.changeConnName($scope.connName);
+                            // console.log($scope.DataSourceNames);
+                            $rootScope.connIndex = $scope.connIndex;
                             $uibModalInstance.close($scope.DataSourceNames);
                           }, function(error){
                             $scope.DataSourceNames = [];
@@ -195,10 +202,14 @@ hotChocolate.controller('ModalInstanceCtrl',
                           .then(function(){
                             discover.getSource('/').then(function(data){
                               $scope.DataSourceNames = data.data.values;
-                              console.log($scope.DataSourceNames);
+                              // console.log($scope.DataSourceNames);
+                              $rootScope.connIndex = $scope.availableConnections.length+'';
+                              console.log("ok"+$scope.availableConnections.length);
                               $uibModalInstance.close($scope.DataSourceNames);
                             }, function(error){
                               $scope.DataSourceNames = [];
+                              console.log("err"+$scope.availableConnections.length);
+                              $rootScope.connIndex = $scope.availableConnections.length+'';
                               console.log(error);
                               $uibModalInstance.close();
                             });

@@ -26,7 +26,8 @@ router.get('/byUser',function (req, res) {
 
 //POST queries
 router.post('/new', function(req, res) {
-  var parameters = JSON.parse(req.body.myString);
+  console.log(req.body.parameter);
+  var parameters = JSON.parse(req.body.parameter);
   console.log(parameters);
   console.log("saving query to db");
   Query.create({
