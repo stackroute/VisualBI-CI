@@ -6,11 +6,6 @@
     <!-- Mobile viewport optimized -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<!-- Bootstrap CSS -->
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-		<!-- Custom CSS -->
-		<link href="stylesheets/style.css" rel="stylesheet">
-
 		<!-- Include Modernizr in the head, before any other Javascript -->
 		<script src="js/modernizr-2.6.2.min.js"></script>
     <!-- Include Angular in the head -->
@@ -25,7 +20,7 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <!-- Include Angularjs UI-Bootstrap -->
     <script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-
+    <!-- Include angularApp.js for defining module -->
     <script src="angularApp.js" charset="utf-8"></script>
     <!-- Include ConnectionModelController.js -->
     <script src="services/addConnection.js"></script>
@@ -44,6 +39,11 @@
     <script src="directives/toggleList.js"></script>
     <!-- Include saveQuery.js -->
     <script src="directives/saveQuery.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="stylesheets/style.css" rel="stylesheet">
 
   </head>
   <body>
@@ -64,8 +64,8 @@
                 <div class="modal-body row">
                   <div class= "selectConnection col-xs-8" ng-hide="addConnection">
                     <label for="availableConnections" class="modalLabel"> Connection Name: </label>
-                    <select name="availableConnections" ng-model="connIndex">
-                      <!-- <option value="select">select</option> -->
+                    <select name="availableConnections" ng-model="connIndex"  ng-cloak>
+                      <option value="">select</option>
                       <option ng-repeat="conn in availableConnections" value="{{$index}}">{{conn.connectionName}}</option>
                     </select>
                     <br>
@@ -103,17 +103,20 @@
               </script>
             <div id="head-div">
               <label for="DataSourceName" class="cubeLabel"> Data Source: </label>
-              <select name="DataSourceName" ng-model="DataSourceName" ng-change="getCatalogNames(DataSourceName)">
+              <select name="DataSourceName" ng-model="DataSourceName" ng-change="getCatalogNames(DataSourceName)" ng-cloak>
+                <option value='' ng-selected="true">select</option>
                 <option ng-repeat="DataSourceName in DataSourceNames" value="{{DataSourceName.unique_name}}">{{DataSourceName.caption_name}}</option>
               </select>
               <br>
               <label for="CatalogName" class="cubeLabel"> Catalog: </label>
-              <select name="CatalogName" ng-model="CatalogName" ng-change="getCubeNames(DataSourceName, CatalogName)">
+              <select name="CatalogName" ng-model="CatalogName" ng-change="getCubeNames(DataSourceName, CatalogName)" ng-cloak>
+                <option value='' ng-selected="true">select</option>
                 <option ng-repeat="CatalogName in CatalogNames" value="{{CatalogName.unique_name}}">{{CatalogName.caption_name}}</option>
               </select>
               <br>
               <label for="CubeName" class="cubeLabel"> Cube: </label>
-              <select name="CubeName" ng-model="CubeName" ng-change="getChildren(DataSourceName, CatalogName, CubeName)">
+              <select name="CubeName" ng-model="CubeName" ng-change="getChildren(DataSourceName, CatalogName, CubeName)" ng-cloak>
+                <option value='' ng-selected="true">select</option>
                 <option ng-repeat="CubeName in CubeNames" value="{{CubeName.unique_name}}">{{CubeName.caption_name}}</option>
               </select>
               <br>
@@ -143,7 +146,7 @@
                           </label>
                           <ul class='nav nav-list nav-left-ml' ng-show="level.children.length">
                             <li ng-repeat="member in level.children">
-                              <a href='#' ng-model="level.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}"> {{member.caption_name}}</a>
+                              <a href='#' ng-model="level.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}"  ng-cloak> {{member.caption_name}}</a>
                             </li>
                           </ul>
                         </li>
@@ -157,7 +160,7 @@
             <div id="measures-div">
               <ul class='nav nav-list-main measures'>
                 <li ng-repeat="measure in measures">
-                    <a href='#' ng-model="measures" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}"> {{measure.caption_name}}</a>
+                    <a href='#' ng-model="measures" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}"  ng-cloak> {{measure.caption_name}}</a>
                 </li>
               </ul>
             </div>
@@ -224,11 +227,11 @@
           </div> <!-- navbar-end -->
           <div id="content-wrapper">
             <div class="row myRect" ng-repeat="item in items">
-              <div class="col-xs-2">
+              <div class="col-xs-2"  ng-cloak>
                 <h4>{{item.label}}</h4>
               </div>
               <div class="col-xs-10 columns">
-                <ul class="nav" data-drop="true" ng-model="item.list" jqyoui-droppable="{multiple:true}">
+                <ul class="nav" data-drop="true" ng-model="item.list" jqyoui-droppable="{multiple:true}"  ng-cloak>
                   <li ng-repeat="elem in item.list track by $index" ng-show="elem.caption_name">
                     {{elem.caption_name}}<button type='button' class='close' ng-click="deleteItem($index, $parent.$index)">&times;</button>
                   </li>

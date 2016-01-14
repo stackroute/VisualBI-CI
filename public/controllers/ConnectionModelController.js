@@ -24,6 +24,7 @@ hotChocolate.controller('ConnectionModelController',
     $scope.measures = [];
     $scope.getCatalogNames = function(DataSourceName){
       // $rootScope.DataSourceName = DataSourceName;
+      $scope.CubeName = "";
       $scope.CubeNames = [];
       discover.getSource('/'+DataSourceName).then(function(data){
         $scope.CatalogNames = data.data.values;
@@ -114,6 +115,9 @@ hotChocolate.controller('ConnectionModelController',
            }
          });
          modalInstance.result.then(function (DataSourceNames) {
+           $scope.DataSourceName = "";
+           $scope.CatalogName = "";
+           $scope.CubeName = "";
            $scope.CatalogNames = [];
            $scope.CubeNames = [];
            $scope.DataSourceNames = DataSourceNames;
@@ -134,8 +138,6 @@ hotChocolate.controller('ModalInstanceCtrl',
       //  $scope.DataSourceNames = DataSourceNames;
        /*************** What to be done for saving **********/
        $scope.save = function (conn) {
-          if(conn!=="? undefined:undefined ?")
-        {
           saveConnection.saveConnection(conn)
                         .then(function(data){
                           discover.getSource('/').then(function(data){
@@ -148,7 +150,7 @@ hotChocolate.controller('ModalInstanceCtrl',
                             $uibModalInstance.close();
                           });
                          });
-       }};
+       };
        $scope.cancel = function () {
          $uibModalInstance.dismiss('cancel');
        };
