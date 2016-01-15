@@ -22,7 +22,9 @@ hotChocolate.controller('ConnectionModelController',
     $scope.CatalogNames = [];
     $scope.CubeNames = [];
     $scope.dimensions = [];
+    $rootScope.dimensions = [];
     $scope.measures = [];
+    $rootScope.measures = [];
     $scope.getCatalogNames = function(DataSourceName){
       // $rootScope.DataSourceName = DataSourceName;
       $scope.CubeName = "";
@@ -95,6 +97,17 @@ hotChocolate.controller('ConnectionModelController',
                          $scope.dimensions[dimIdx].children[hierIdx].children[levelIdx].children = members;
                        });
     };
+
+    $scope.$on('retrieveQueryEvent', function(event, data) {
+      $scope.getCatalogNames(data.dataSource);
+      $scope.getCubeNames(data.dataSource, data.catalog);
+      $scope.DataSourceName =  data.dataSource;
+      $scope.CatalogName =  data.catalog;
+      $scope.CubeName = data.cube;
+
+      $scope.getChildren(data.dataSource, data.catalog, data.cube);
+    });
+
     $scope.open = function(){
       var response = getAvailableConnections.availableConnections();
       response.then(function(data) {
