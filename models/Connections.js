@@ -4,7 +4,31 @@ var ConnectionsSchema = mongoose.Schema({
   connectionName: String,
   serverURL: String,
   userid: String,
-  password: String
+  password: String,
+  savedQueries: [{
+    queryName: {type: String, unique: true},
+    // createdBy: String,
+    createdOn: Date,
+    modifiedOn: {type: Date, default: Date.now},
+    onColumns: [{
+                unique_name: String,
+                caption_name: String,
+                isMember: String
+               }],
+    onRows: [{
+             unique_name: String,
+             caption_name: String,
+             isMember: String
+            }],
+    onFilters: [String],
+    queryMDX: String,
+    connectionData: {
+                    //  xmlaServer: String,
+                     dataSource: String,
+                     catalog: String,
+                     cube: String
+                    }
+  }]
 });
 
 ConnectionsSchema.methods.getConnectionId = function() {
