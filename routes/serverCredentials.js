@@ -51,12 +51,14 @@ router.get("/addConnection",function(req,res){
     connectionName: req.query.connName,
     serverURL: req.query.url,
     userid: req.query.userid,
-    password: req.query.password
+    password: req.query.password,
+    savedQueries: []
   });
   console.log(myConnection);
   myConnection.save( function(err, myConnection){
     if (err)
-    {  res.send(err);}
+    {
+       res.send(err);}
     else {
       console.log(username);
       UserDetails.findOneAndUpdate(
@@ -73,10 +75,11 @@ router.get("/addConnection",function(req,res){
           }
           else {
             console.log("Done");
-              res.send(myConnection);
+              // res.send(myConnection);
           }
 
       });
+      res.send(myConnection);
 
     }
 

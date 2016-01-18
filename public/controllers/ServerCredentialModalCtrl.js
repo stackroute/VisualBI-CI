@@ -4,8 +4,9 @@ hotChocolate.controller('ServerCredentialModalCtrl',
        $scope.availableConnections = availableConnections;
        $scope.connIndex = $rootScope.connIndex;
       //  console.log($scope.connIndex);
-       $scope.$watch('connIndex', function(newValue, oldValue){
-         $rootScope.connIndex = newValue;
+       $rootScope.$watch('connIndex', function(newValue, oldValue){
+         $scope.connIndex = newValue;
+         console.log("connIndex "+$scope.connIndex);
        });
        /*************** What to be done for saving **********/
        $scope.save = function (conn) {
@@ -34,18 +35,20 @@ hotChocolate.controller('ServerCredentialModalCtrl',
        $scope.addConn = function(){
          addNewConnection.addNewConnection($scope.newConn)
                           .then(function(data){
-                            console.log(data.data.values);
-                            $scope.availableConnections.push(data.data.values);
+                            var conn = data.data;
+                            console.log(conn);
+                            $scope.availableConnections.push(conn);
+                            $rootScope.connIndex = ($scope.availableConnections.length-1)+'';
+                            $rootScope.connId = conn._id;
                             discover.getSource('/').then(function(data){
                               $scope.DataSourceNames = data.data.values;
                               // console.log($scope.DataSourceNames);
-                              $rootScope.connIndex = $scope.availableConnections.length+'';
                               console.log("ok"+$scope.availableConnections.length);
                               $uibModalInstance.close($scope.DataSourceNames);
                             }, function(error){
                               $scope.DataSourceNames = [];
                               console.log("err"+$scope.availableConnections.length);
-                              $rootScope.connIndex = $scope.availableConnections.length+'';
+                              // $rootScope.connIndex = $scope.availableConnections.length+'';
                               console.log(error);
                               $uibModalInstance.close();
                             });
