@@ -54,7 +54,7 @@ router.get("/addConnection",function(req,res){
     password: req.query.password
   });
   console.log(myConnection);
-  myConnection.save( function(err){
+  myConnection.save( function(err, myConnection){
     if (err)
     {  res.send(err);}
     else {
@@ -62,12 +62,6 @@ router.get("/addConnection",function(req,res){
       UserDetails.findOneAndUpdate(
         {username : username},
         {
-          // $push : {"connections" : {
-          //   connectionName: req.query.connName,
-          //   serverURL: req.query.url,
-          //   userid: req.query.userid,
-          //   password: req.query.password
-          // }}
           $push : {"connections" : myConnection},
           $set  : {"activeConnection" : myConnection._id}
         },
@@ -79,7 +73,7 @@ router.get("/addConnection",function(req,res){
           }
           else {
             console.log("Done");
-              res.send(user);
+              res.send(myConnection);
           }
 
       });

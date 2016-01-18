@@ -33,7 +33,9 @@ hotChocolate.controller('ServerCredentialModalCtrl',
        };
        $scope.addConn = function(){
          addNewConnection.addNewConnection($scope.newConn)
-                          .then(function(){
+                          .then(function(data){
+                            console.log(data.data.values);
+                            $scope.availableConnections.push(data.data.values);
                             discover.getSource('/').then(function(data){
                               $scope.DataSourceNames = data.data.values;
                               // console.log($scope.DataSourceNames);
