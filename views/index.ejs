@@ -205,7 +205,7 @@
                 Queries <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" id="queryList">
-                <li ng-repeat="query in queryList"><a href="#">{{query.queryName}}</a></li>
+                <li ng-repeat="query in queryList"><a href="#" ng-click="retrieveQuery($index)">{{query.queryName}}</a></li>
               </ul>
               <button type="button" class="btn btn-default navbar-btn" id="executeButton" grid-render><span class="glyphicon glyphicon-play-circle" ></span> Execute</button>
             </div>
