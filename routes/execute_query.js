@@ -103,7 +103,7 @@ router.post('/', function(req, res) {
                   console.log(JSON.stringify(dataSet,null,2));
               },
             error: function(xmla, xmlaRequest, exception) {
-                  res.write("error!!");
+                  res.json({status: "error", info: exception});
             },
             callback: function(){
               res.end();

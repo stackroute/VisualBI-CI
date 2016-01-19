@@ -173,16 +173,16 @@
                 <h4 class="modal-title" id="myModalLabel">Save Query</h4>
             </div> <!-- End modal-header row -->
             <div class="modal-body row">
-            <p>
-              <label for="queryName">Query name</label>
-              <input type="text" name="queryName" id="queryName" ng-model="newQueryName">
-            </p>
-
-              <button type="button" class="close" ng-click="showModalAlert = false">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <strong>{{querySaveMessage}}</strong>
-            </div>
+              <p>
+                <label for="queryName">Query name</label>
+                <input type="text" name="queryName" id="queryName" ng-model="newQueryName">
+              </p>
+              <div class="alert alert-success" ng-show="showModalAlert">
+                <button type="button" class="close" ng-click="showModalAlert = false">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{querySaveMessage}}</strong>
+              </div>
             </div> <!-- End modal-body -->
             <div class="modal-footer row">
                 <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
@@ -235,6 +235,9 @@
                 </ul>
               </div> <!-- col-xs-10 end-->
             </div> <!-- myRect end-->
+            <div class="row alert alert-warning" ng-show="isMdxInputError">
+              <strong>{{mdxInputErrorMessage}}</strong>
+            </div>
             <div class="row">
               <div class="col-xs-12">
                 <div class="section_result">

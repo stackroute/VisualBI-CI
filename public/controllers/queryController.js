@@ -1,6 +1,10 @@
 var hotChocolate = angular.module('hotChocolate');
 hotChocolate.controller('queryController', function($scope, $http, $rootScope, $uibModal) {
   $scope.items = [{
+                    label: 'Measures',
+                    list: []
+                  },
+                  {
                     label: 'Columns',
                     list: []
                   }, {
@@ -25,6 +29,8 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
   $scope.mdxQuery = "";
   $scope.executeQueryData = {};
   $scope.newQueryName = "";
+  $scope.isMdxInputError = false;
+  $scope.mdxInputErrorMessage = "MDX input error.";
 
   $http.get('/query/byUser', {
     params: {

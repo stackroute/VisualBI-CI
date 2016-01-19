@@ -1,5 +1,5 @@
 var hotChocolate = angular.module("hotChocolate");
-hotChocolate.directive('gridRender', function($http) {
+hotChocolate.directive('gridRender', function($http, $timeout) {
   return {
     restrict: 'A',
     link: function(scope, element, attrs) {
@@ -12,10 +12,18 @@ hotChocolate.directive('gridRender', function($http) {
             dataSource: scope.$root.DataSourceName,
             catalog: scope.$root.CatalogName,
             statement: buildQuery()
-        }).success(function(data) {
-            scope.executeQueryData = data;
-            renderData(data);
-          });
+        })
+        .success(function(data) {
+          scope.executeQueryData = data;
+          renderData(data);
+        })
+        .error(function(data) {
+          console.log(data);
+          scope.isMdxInputError = true;
+          $timeout(function() {
+            scope.isMdxInputError = false;
+          }, 3000);
+        });
       });
 
       function buildQuery() {
