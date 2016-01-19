@@ -129,9 +129,9 @@ app.factory('GraphService', function($compile,$rootScope){
 			return result;
 		}
 
-		var margin = {top:20,right:20,bottom:50,left:70},
+		var margin = {top:20,right:20,bottom:100,left:70},
 			width = 500-margin.left-margin.right,
-			height = (500*(9/16))-margin.top-margin.bottom;
+			height = (400)-margin.top-margin.bottom;
 
 		var x = d3.scale.ordinal()
 						.rangeRoundBands([0,width],0.1,1)
@@ -160,10 +160,10 @@ app.factory('GraphService', function($compile,$rootScope){
 			.call(xAxis)
 			.selectAll("text")
 			.style("text-anchor","end")
-			.attr("dx","-0.8em")
+			.attr("dx","-0.5em")
 			.attr("dy","0.15em")
 			.attr("transform",function(d){
-				return "rotate(-25)"
+				return "rotate(-90)"
 			});
 		svg.append('g')
 			.attr("class", "y axis")
@@ -214,9 +214,9 @@ app.factory('GraphService', function($compile,$rootScope){
   						.call(xAxis)
   						.selectAll("text")
   						.style("text-anchor","end")
-						.attr("dx","-0.15em")
+						.attr("dx","-0.8em")
 						.attr("dy","0.15em")
-  						.attr("transform",function(d){return "rotate(-25)";})
+  						.attr("transform",function(d){return "rotate(-65)";})
   						.selectAll("g")
   						.delay(delay);
   		}
