@@ -14,11 +14,11 @@ hotChocolate.controller('ServerCredentialModalCtrl',
                         .then(function(data){
                           $rootScope.queryList = conn.savedQueries;
                           $rootScope.connId = conn._id;
+                          $rootScope.connIndex = $scope.connIndex;
                           discover.getSource('/').then(function(data){
                             $scope.DataSourceNames = data.data.values;
                             // $scope.$parent.changeConnName($scope.connName);
                             // console.log($scope.DataSourceNames);
-                            $rootScope.connIndex = $scope.connIndex;
                             $uibModalInstance.close($scope.DataSourceNames);
                           }, function(error){
                             $scope.DataSourceNames = [];

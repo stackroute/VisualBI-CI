@@ -6,7 +6,7 @@ hotChocolate.controller('ConnectionModelController',
     $scope.addConnection = false;
     $scope.newConn = {};
     $scope.DataSourceName = "";
-    $rootScope.connIndex = '0';
+    // $rootScope.connIndex = '0';
     $scope.$watch('DataSourceName', function(newValue, oldValue){
       $rootScope.DataSourceName = newValue;
     });
@@ -25,6 +25,34 @@ hotChocolate.controller('ConnectionModelController',
     $rootScope.dimensions = [];
     $scope.measures = [];
     $rootScope.measures = [];
+    $scope.getActiveConnection = function(userName){
+      var activeConnId;
+      getAvailableConnections.availableConnections(userName).then(function(availableConnections) {
+        $scope.availableConnections = availableConnections.data;
+        console.log($scope.availableConnections);
+        getAvailableConnections.activeConnection(userName).then(function(activeConnection){
+          console.log(activeConnection);
+          activeConnId = activeConnection.data;
+          console.log(activeConnId);
+          for(var connIdx in $scope.availableConnections){
+            if (activeConnId === $scope.availableConnections[connIdx]._id){
+              $rootScope.connIndex  = connIdx;
+            }
+          }
+          $rootScope.queryList = $scope.availableConnections[$rootScope.connIndex].savedQueries;
+          console.log($rootScope.queryList);
+          $rootScope.connId = activeConnId;
+          discover.getSource('/').then(function(data){
+            console.log("inside getSource");
+            $scope.DataSourceNames = data.data.values;
+            console.log($scope.DataSourceNames);
+          }, function(error){
+            $scope.DataSourceNames = [];
+            console.log(error);
+          });
+        });
+      });
+    };
     $scope.getCatalogNames = function(DataSourceName){
       // $rootScope.DataSourceName = DataSourceName;
       $scope.CubeName = "";
@@ -119,9 +147,6 @@ hotChocolate.controller('ConnectionModelController',
     });
 
     $scope.open = function(){
-      var response = getAvailableConnections.availableConnections();
-      response.then(function(data) {
-        $scope.availableConnections = data.data;
         var modalInstance = $uibModal.open({
            animation: $scope.animationsEnabled,
            windowClass: "modal fade in",
@@ -149,7 +174,6 @@ hotChocolate.controller('ConnectionModelController',
            $scope.measures = [];
            $scope.DataSourceNames = DataSourceNames;
          });
-       });
      };
      $scope.toggleAnimation = function () {
       $scope.animationsEnabled = !$scope.animationsEnabled;

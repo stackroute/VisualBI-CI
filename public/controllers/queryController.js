@@ -39,17 +39,6 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
       $scope.items[1].list = query.onRows;
       $scope.items[2].list = query.onFilters;
       $rootScope.$broadcast('retrieveQueryEvent', query.connectionData);
-
-
-    // $http.get('/query/find', {
-    //   params: {
-    //     queryName: $scope.queryList[idx].queryName
-    //   }
-    // }).success(function(data) {
-    //   $scope.items[0].list = data.onColumns;
-    //   $scope.items[1].list = data.onRows;
-    //   $rootScope.$broadcast('retrieveQueryEvent', data.connectionData);
-    // });
   };
   $scope.open = function(){
       var modalInstance = $uibModal.open({

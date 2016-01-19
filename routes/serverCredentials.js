@@ -45,6 +45,23 @@ router.get("/getAvailableConnections",function(req,res){
   });
 });
 
+// getting Active Connection
+router.get("/getActiveConnection",function(req,res){
+  var usrname = req.query.username;
+  UserDetails.findOne({username:usrname},
+      function(err,user){
+        if (err) {
+           console.log("error from getActiveConnection"+ err);
+          res.send(err);
+        }
+        else {
+          console.log("success from getActiveConnection"+user.activeConnection);
+          res.json(user.activeConnection);
+        }
+    });
+});
+
+
 router.get("/addConnection",function(req,res){
   var username = req.query.username;
   var myConnection = new Connections({

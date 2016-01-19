@@ -54,7 +54,7 @@
     <div class="container-fluid" id="main" ng-app="hotChocolate">
       <div class="row">
         <div class="col-xs-3" id= "left-menu">
-          <div id="left-menu-wrapper" ng-controller="ConnectionModelController">
+          <div id="left-menu-wrapper" ng-controller="ConnectionModelController" ng-init = "getActiveConnection('hotChocolate')">
             <div class="connectionDiv">
               <div class="connectionHeading row">
                 <h4 id="cubeName">Connection </h4>

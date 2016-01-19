@@ -10,7 +10,7 @@ var router = express.Router(),
 
 
 router.post('/', function(req, res) {
-  console.log(req.body.mdxQuery);
+  // console.log(req.body.mdxQuery);
       var statement  = req.body.statement,
           username   = req.body.username,
           properties = {};
@@ -100,7 +100,7 @@ router.post('/', function(req, res) {
                     getDatafrmDataset(obj);
                   }
                   res.json(dataSet);
-                  console.log(JSON.stringify(dataSet,null,2));
+                  // console.log(JSON.stringify(dataSet,null,2));
               },
             error: function(xmla, xmlaRequest, exception) {
                   res.write("error!!");
