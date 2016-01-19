@@ -45,29 +45,42 @@ router.get("/getAvailableConnections",function(req,res){
   });
 });
 
+// getting Active Connection
+router.get("/getActiveConnection",function(req,res){
+  var usrname = req.query.username;
+  UserDetails.findOne({username:usrname},
+      function(err,user){
+        if (err) {
+           console.log("error from getActiveConnection"+ err);
+          res.send(err);
+        }
+        else {
+          console.log("success from getActiveConnection"+user.activeConnection);
+          res.json(user.activeConnection);
+        }
+    });
+});
+
+
 router.get("/addConnection",function(req,res){
   var username = req.query.username;
   var myConnection = new Connections({
     connectionName: req.query.connName,
     serverURL: req.query.url,
     userid: req.query.userid,
-    password: req.query.password
+    password: req.query.password,
+    savedQueries: []
   });
   console.log(myConnection);
-  myConnection.save( function(err){
+  myConnection.save( function(err, myConnection){
     if (err)
-    {  res.send(err);}
+    {
+       res.send(err);}
     else {
       console.log(username);
       UserDetails.findOneAndUpdate(
         {username : username},
         {
-          // $push : {"connections" : {
-          //   connectionName: req.query.connName,
-          //   serverURL: req.query.url,
-          //   userid: req.query.userid,
-          //   password: req.query.password
-          // }}
           $push : {"connections" : myConnection},
           $set  : {"activeConnection" : myConnection._id}
         },
@@ -79,10 +92,11 @@ router.get("/addConnection",function(req,res){
           }
           else {
             console.log("Done");
-              res.send(user);
+              // res.send(myConnection);
           }
 
       });
+      res.send(myConnection);
 
     }
 

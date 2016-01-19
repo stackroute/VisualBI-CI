@@ -17,6 +17,10 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
   $scope.queryList = [];
   $scope.widgetList = [];
   // $scope.$watch()
+  $rootScope.$watch('queryList', function(newValue, oldValue){
+    $scope.queryList = newValue;
+    //console.log("connIndex "+$scope.connIndex);
+  });
   $scope.querySaveMessage = "";
   $scope.showModalAlert = false;
   $scope.newWidgetName = "";
@@ -29,19 +33,15 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
   $scope.executeQueryData = {};
   $scope.newQueryName = "";
 
-  $http.get('/query/byUser', {
-    params: {
-      userName: 'hotChocolate'
-    }
-  }).success(function(data) {
-      if(data.length > 0) {
-        if (data.status && data.status === 'error') {
-          console.log(data.error);
-        } else {
-          $scope.queryList = data;
-        }
-      }
-  });
+  $scope.retrieveQuery = function(idx) {
+    var query = $scope.queryList[idx];
+    console.log(query);
+
+      $scope.items[0].list = query.onColumns;
+      $scope.items[1].list = query.onRows;
+      $scope.items[2].list = query.onFilters;
+      $rootScope.$broadcast('retrieveQueryEvent', query.connectionData);
+  };
   $scope.open = function(){
       var modalInstance = $uibModal.open({
          animation: $scope.animationsEnabled,

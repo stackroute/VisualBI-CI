@@ -32,7 +32,11 @@
     <!-- Include ConnectionModelController.js -->
     <script src="controllers/ConnectionModelController.js"></script>
     <!-- Include ConnectionModelController.js -->
+    <script src="controllers/ServerCredentialModalCtrl.js"></script>
+    <!-- Include ConnectionModelController.js -->
     <script src="controllers/queryController.js"></script>
+    <!-- Include ConnectionModelController.js -->
+    <script src="controllers/SaveQryModalCtrl.js"></script>
     <!-- Include gridRender.js -->
     <script src="directives/gridRender.js"></script>
     <!-- Include toggleList.js -->
@@ -52,7 +56,7 @@
     <div class="container-fluid" id="main" ng-app="hotChocolate">
       <div class="row">
         <div class="col-xs-3" id= "left-menu">
-          <div id="left-menu-wrapper" ng-controller="ConnectionModelController">
+          <div id="left-menu-wrapper" ng-controller="ConnectionModelController" ng-init = "getActiveConnection('hotChocolate')">
             <div class="connectionDiv">
               <div class="connectionHeading row">
                 <h4 id="cubeName">Connection </h4>
@@ -104,6 +108,8 @@
                 </div> <!-- End modal-footer -->
               </script>
             <div id="head-div">
+              <label> Connected to : </label> <b ng-cloak>{{availableConnections[connIndex].connectionName}}</b>
+              <br>
               <label for="DataSourceName" class="cubeLabel"> Data Source: </label>
               <select name="DataSourceName" ng-model="DataSourceName" ng-change="getCatalogNames(DataSourceName)" ng-cloak>
                 <option value='' ng-selected="true">select</option>
@@ -203,7 +209,7 @@
                 Queries <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" id="queryList">
-                <li ng-repeat="query in queryList"><a href="#">{{query.queryName}}</a></li>
+                <li ng-repeat="query in queryList"><a href="#" ng-click="retrieveQuery($index)">{{query.queryName}}</a></li>
               </ul>
               <button type="button" class="btn btn-default navbar-btn" id="executeButton" grid-render><span class="glyphicon glyphicon-play-circle" ></span> Execute</button>
             </div>

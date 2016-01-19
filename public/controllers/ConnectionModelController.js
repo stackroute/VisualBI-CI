@@ -6,7 +6,7 @@ hotChocolate.controller('ConnectionModelController',
     $scope.addConnection = false;
     $scope.newConn = {};
     $scope.DataSourceName = "";
-    $rootScope.connIndex = '0';
+    // $rootScope.connIndex = '0';
     $scope.$watch('DataSourceName', function(newValue, oldValue){
       $rootScope.DataSourceName = newValue;
     });
@@ -22,7 +22,37 @@ hotChocolate.controller('ConnectionModelController',
     $scope.CatalogNames = [];
     $scope.CubeNames = [];
     $scope.dimensions = [];
+    $rootScope.dimensions = [];
     $scope.measures = [];
+    $rootScope.measures = [];
+    $scope.getActiveConnection = function(userName){
+      var activeConnId;
+      getAvailableConnections.availableConnections(userName).then(function(availableConnections) {
+        $scope.availableConnections = availableConnections.data;
+        console.log($scope.availableConnections);
+        getAvailableConnections.activeConnection(userName).then(function(activeConnection){
+          console.log(activeConnection);
+          activeConnId = activeConnection.data;
+          console.log(activeConnId);
+          for(var connIdx in $scope.availableConnections){
+            if (activeConnId === $scope.availableConnections[connIdx]._id){
+              $rootScope.connIndex  = connIdx;
+            }
+          }
+          $rootScope.queryList = $scope.availableConnections[$rootScope.connIndex].savedQueries;
+          console.log($rootScope.queryList);
+          $rootScope.connId = activeConnId;
+          discover.getSource('/').then(function(data){
+            console.log("inside getSource");
+            $scope.DataSourceNames = data.data.values;
+            console.log($scope.DataSourceNames);
+          }, function(error){
+            $scope.DataSourceNames = [];
+            console.log(error);
+          });
+        });
+      });
+    };
     $scope.getCatalogNames = function(DataSourceName){
       // $rootScope.DataSourceName = DataSourceName;
       $scope.CubeName = "";
@@ -95,15 +125,33 @@ hotChocolate.controller('ConnectionModelController',
                          $scope.dimensions[dimIdx].children[hierIdx].children[levelIdx].children = members;
                        });
     };
+
+    $scope.$on('retrieveQueryEvent', function(event, data) {
+      console.log(data);
+      if( $scope.DataSourceName !== data.dataSource)
+      {
+        $scope.DataSourceName =  data.dataSource;
+        $scope.getCatalogNames(data.dataSource);
+      }
+      if($scope.CatalogName !== data.catalog)
+      {
+        $scope.CatalogName =  data.catalog;
+        $scope.getCubeNames(data.dataSource, data.catalog);
+      }
+      if($scope.CubeName !== data.cube)
+      {
+        $scope.CubeName =  data.cube;
+      }
+
+      $scope.getChildren(data.dataSource, data.catalog, data.cube);
+    });
+
     $scope.open = function(){
-      var response = getAvailableConnections.availableConnections();
-      response.then(function(data) {
-        $scope.availableConnections = data.data;
         var modalInstance = $uibModal.open({
            animation: $scope.animationsEnabled,
            windowClass: "modal fade in",
            templateUrl: 'serverCredentials.html',
-           controller: 'ModalInstanceCtrl',
+           controller: 'ServerCredentialModalCtrl',
            resolve: {
              availableConnections: function(){
                return $scope.availableConnections;
@@ -126,65 +174,8 @@ hotChocolate.controller('ConnectionModelController',
            $scope.measures = [];
            $scope.DataSourceNames = DataSourceNames;
          });
-       });
      };
      $scope.toggleAnimation = function () {
       $scope.animationsEnabled = !$scope.animationsEnabled;
      };
    });
-
-hotChocolate.controller('ModalInstanceCtrl',
-    function ($scope, $rootScope, $uibModalInstance, availableConnections, addNewConnection, saveConnection, discover)
-    {
-       $scope.availableConnections = availableConnections;
-       $scope.connIndex = $rootScope.connIndex;
-      //  console.log($scope.connIndex);
-       $scope.$watch('connIndex', function(newValue, oldValue){
-         $rootScope.connIndex = newValue;
-       });
-       /*************** What to be done for saving **********/
-       $scope.save = function (conn) {
-          saveConnection.saveConnection(conn)
-                        .then(function(data){
-                          discover.getSource('/').then(function(data){
-                            $scope.DataSourceNames = data.data.values;
-                            // $scope.$parent.changeConnName($scope.connName);
-                            // console.log($scope.DataSourceNames);
-                            $rootScope.connIndex = $scope.connIndex;
-                            $uibModalInstance.close($scope.DataSourceNames);
-                          }, function(error){
-                            $scope.DataSourceNames = [];
-                            console.log(error);
-                            $uibModalInstance.close();
-                          });
-                         });
-       };
-       $scope.cancel = function () {
-         $uibModalInstance.dismiss('cancel');
-       };
-       $scope.reset = function () {
-         $scope.newConn = {};
-       };
-       $scope.addConn = function(){
-         addNewConnection.addNewConnection($scope.newConn)
-                          .then(function(){
-                            discover.getSource('/').then(function(data){
-                              $scope.DataSourceNames = data.data.values;
-                              // console.log($scope.DataSourceNames);
-                              $rootScope.connIndex = $scope.availableConnections.length+'';
-                              console.log("ok"+$scope.availableConnections.length);
-                              $uibModalInstance.close($scope.DataSourceNames);
-                            }, function(error){
-                              $scope.DataSourceNames = [];
-                              console.log("err"+$scope.availableConnections.length);
-                              $rootScope.connIndex = $scope.availableConnections.length+'';
-                              console.log(error);
-                              $uibModalInstance.close();
-                            });
-                        });
-        //  $uibModalInstance.close();
-       };
-       $scope.addNewConnection = function(){
-         $scope.addConnection = !$scope.addConnection;
-       };
-     });
