@@ -116,6 +116,7 @@ app.factory('GraphService', function($compile,$rootScope){
 		});
 		//$compile(container.find('a'))($rootScope);
    	},
+
    	//Service to plot graph in Modal Window
    renderModalGraph : function(dataset,container) {
    		function getMaxValue(dataset) {
@@ -128,88 +129,100 @@ app.factory('GraphService', function($compile,$rootScope){
 			return result;
 		}
 
-		var w = 500;
-		console.log("****************"+dataset.length);
-		var h = (w*9)/16;
-		var xScale = d3.scale.ordinal()
-						.domain(d3.range(dataset.length))
-						.rangeRoundBands([0,w],0.2);
+		var margin = {top:20,right:20,bottom:50,left:70},
+			width = 500-margin.left-margin.right,
+			height = (500*(9/16))-margin.top-margin.bottom;
 
-		var yScale = d3.scale.linear()
-						.domain([0,getMaxValue(dataset)])
-						.range([0,h]);
+		var x = d3.scale.ordinal()
+						.rangeRoundBands([0,width],0.1,1)
+						.domain(d3.map(dataset,function(d){return d.key;}));
+		var y = d3.scale.linear()
+						.range([height,0])
+						.domain([0,getMaxValue(dataset)]);
 
-		var key = function(d) {
-			return d.key;
-		}
-		//console.log("Custom Text"+index);
-		//Create SVG element
+		var xAxis = d3.svg.axis()
+						.scale(x)
+						.orient("bottom");
+		var yAxis = d3.svg.axis()
+						.scale(y)
+						.orient("left");
+
 		var svg = d3.select(container)
-					.append("svg")
-					.attr("width", w)
-					.attr("height", h);
+					.append('svg')
+					.attr("width",width+margin.left+margin.right)
+					.attr("height",height+margin.top+margin.bottom)
+					.append('g')
+					.attr("transform","translate("+margin.left+","+margin.top+")");
+		//Add Axes
+		svg.append('g')
+			.attr("class","x axis")
+			.attr("transform","translate(0,"+height+")")
+			.call(xAxis)
+			.selectAll("text")
+			.style("text-anchor","end")
+			.attr("dx","-0.8em")
+			.attr("dy","0.15em")
+			.attr("transform",function(d){
+				return "rotate(-25)"
+			});
+		svg.append('g')
+			.attr("class", "y axis")
+			.call(yAxis)
+			.attr("y",10)
+			.append("text")
+			.attr("transform","rotate(-90)")
+			.attr("y",6)
+			.attr("dy","0.71em")
+			.style("text-anchor","end")
+			.text("to be replaced!!!! Ge units from data");
 
-		//Create bars
-		svg.selectAll("rect")
-   		.data(dataset, key)
-   		.enter()
-   		.append("rect")
-   		.attr("x", function(d, i) {
-			return xScale(i);
-   		})
-   		.attr("y", function(d) {
-   			console.log(h+" "+yScale(d.value));
-			return h - yScale(d.value);
-   		})
-   		.attr("width", xScale.rangeBand())
-   		.attr("height", function(d) {
-			return yScale(d.value);
-   		})
-   		.attr("fill", function(d) {
-			return "rgb(0, 0, " + (d.value * 10) + ")";
-		})
+		svg.selectAll(".bar")
+			.data(dataset)
+			.enter().append("rect")
+			.attr("class","bar")
+			.attr("x",function(d,i){return x(i);})
+			.attr("width",20)
+			.attr("y",function(d){return y(d.value);})
+			.attr("height",function(d){return height-y(d.value);});
 
-		//Tooltip
-		.on("mouseover", function(d) {
-			//Get this bar's x/y values, then augment for the tooltip
-			var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.rangeBand() / 2;
-			var yPosition = parseFloat(d3.select(this).attr("y")) + 14;
-			
-			//Update Tooltip Position & value
-			d3.select("#tooltip")
-				.style("left", xPosition + "px")
-				.style("top", yPosition + "px")
-				.select("#value")
-				.text(d.value);
-			d3.select("#tooltip").classed("hidden", false)
-		})
-		.on("mouseout", function() {
-			//Remove the tooltip
-			d3.select("#tooltip").classed("hidden", true);
-		})	;
+		d3.select("input").on("change", change);
 
-	//Create labels
-	svg.selectAll("text")
-	   .data(dataset, key)
-	   .enter()
-	   .append("text")
-	   .text(function(d) {
-			return d.value;
-	   })
-	   .attr("text-anchor", "middle")
-	   .attr("x", function(d, i) {
-			return xScale(i) + xScale.rangeBand() / 2;
-	   })
-	   .attr("y", function(d) {
-	   	console.log(d.value);
-			return h - yScale(d.value) + 14;
-	   })
-	   .attr("font-family", "sans-serif") 
-	   .attr("font-size", "11px")
-	   .attr("fill", "white");
-		// $compile(angular.element(container))($rootScope);
-   }
-   }
+		var sortTimeout = setTimeout(function() {
+    		d3.select("input").property("checked", true).each(change);
+  		}, 1000);
+
+  		function change() {
+  			clearTimeout(sortTimeout);
+
+  			var x0 = x.domain(dataset.sort(this.checked
+  				? function(a,b){return b.value - a.value;}
+  				: function(a,b){return d3.ascending(a.key,b.key);})
+  				.map(function(d){return d.key;}))
+  				.copy();
+
+  			svg.selectAll(".bar")
+  				.sort(function (a,b){return x0(a.key)-x0(b.key);});
+
+  			var transition = svg.transition().duration(550),
+  				delay = function(d,i) {return i*50;};
+
+  			transition.selectAll(".bar")
+  						.delay(delay)
+  						.attr("x",function(d){return x0(d.key);});
+
+  			transition.select(".x.axis")
+  						.call(xAxis)
+  						.selectAll("text")
+  						.style("text-anchor","end")
+						.attr("dx","-0.15em")
+						.attr("dy","0.15em")
+  						.attr("transform",function(d){return "rotate(-25)";})
+  						.selectAll("g")
+  						.delay(delay);
+  		}
+
+   }//end of renderModalGraph
+   }//end of return object
 
 
 
