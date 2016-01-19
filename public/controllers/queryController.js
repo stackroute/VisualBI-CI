@@ -1,10 +1,6 @@
 var hotChocolate = angular.module('hotChocolate');
 hotChocolate.controller('queryController', function($scope, $http, $rootScope,GraphService,$uibModal,$compile) {
   $scope.items = [{
-                    label: 'Measures',
-                    list: []
-                  },
-                  {
                     label: 'Columns',
                     list: []
                   }, {
