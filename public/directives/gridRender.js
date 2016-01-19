@@ -3,7 +3,9 @@ hotChocolate.directive('gridRender', function($http) {
   return {
     restrict: 'A',
     link: function(scope, element, attrs) {
-
+      scope.$root.$watch('CubeName', function(newValue, oldValue){
+        $( "#dataTableBody tr" ).replaceWith( "" );
+      });
       element.on('click', function() {
         // console.log(scope.$root.DataSourceName);
         $( "#dataTableBody tr" ).replaceWith( "" );

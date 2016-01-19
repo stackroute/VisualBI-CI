@@ -16,7 +16,20 @@ hotChocolate.controller('ConnectionModelController',
     });
     $scope.CubeName = "";
     $scope.$watch('CubeName', function(newValue, oldValue){
+      console.log("start"+$rootScope.selectedRetrieveQuery);
       $rootScope.CubeName = newValue;
+      if($rootScope.selectedRetrieveQuery === false){
+      $rootScope.$broadcast('resetQueryData');
+    }
+    else{
+        $rootScope.selectedRetrieveQuery = false;
+    }
+    console.log("end"+$rootScope.selectedRetrieveQuery);
+    $scope.dimensions = [];
+    $scope.measures = [];
+      // $scope.resetQueryData = function(){
+        // alert("hi");
+      // };
     });
     $scope.DataSourceNames = [];
     $scope.CatalogNames = [];
@@ -55,20 +68,28 @@ hotChocolate.controller('ConnectionModelController',
     };
     $scope.getCatalogNames = function(DataSourceName){
       // $rootScope.DataSourceName = DataSourceName;
+      $scope.CatalogName = "";
+      $scope.CatalogNames = [];
       $scope.CubeName = "";
       $scope.CubeNames = [];
-      discover.getSource('/'+DataSourceName).then(function(data){
-        $scope.CatalogNames = data.data.values;
-        console.log($scope.CatalogNames);
-      });
+      if(DataSourceName !== ""){
+        discover.getSource('/'+DataSourceName).then(function(data){
+          $scope.CatalogNames = data.data.values;
+          console.log($scope.CatalogNames);
+        });
+      }
     };
     $scope.getCubeNames = function(DataSourceName, CatalogName){
       // $rootScope.DataSourceName =
+      $scope.CubeName = "";
+      $scope.CubeNames = [];
       console.log('/'+DataSourceName+'/'+CatalogName);
-      discover.getSource('/'+DataSourceName+'/'+CatalogName).then(function(data){
-        $scope.CubeNames = data.data.values;
-        console.log($scope.CubeNames);
-      });
+      if(DataSourceName !== "" || CatalogName !== ""){
+        discover.getSource('/'+DataSourceName+'/'+CatalogName).then(function(data){
+          $scope.CubeNames = data.data.values;
+          console.log($scope.CubeNames);
+        });
+      }
     };
     $scope.getChildren = function(DataSourceName, CatalogName, CubeName){
       console.log('/'+DataSourceName+'/'+CatalogName+'/'+CubeName);

@@ -34,6 +34,8 @@ function callRequest(username,fragments,res){
       Connections.findById(user.activeConnection,function(err,conn){
 
         console.log(conn.getServer());
+        console.log("fragments = ");
+        console.log(fragments);
         var xmlaRequest = generateXmlaRequest(conn.getServer(), fragments, res);
         var x = new xmla.Xmla;
         x.request(xmlaRequest);

@@ -121,7 +121,7 @@
               </select>
               <br>
               <label for="CubeName" class="cubeLabel"> Cube: </label>
-              <select name="CubeName" ng-model="CubeName" ng-change="getChildren(DataSourceName, CatalogName, CubeName)" ng-cloak>
+              <select name="CubeName" ng-model="CubeName" ng-change="getChildren(DataSourceName, CatalogName, CubeName); resetQueryData()" ng-cloak>
                 <option value='' ng-selected="true">select</option>
                 <option ng-repeat="CubeName in CubeNames" value="{{CubeName.unique_name}}">{{CubeName.caption_name}}</option>
               </select>
