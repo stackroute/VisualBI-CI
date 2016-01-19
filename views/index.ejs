@@ -29,10 +29,14 @@
     <!-- Include ConnectionModelController.js -->
     <script src="services/saveConnection.js"></script>
     <script src="services/discover.js"></script>
+    <!-- Include GraphService -->
+    <script src="services/graphService.js"></script>
     <!-- Include ConnectionModelController.js -->
     <script src="controllers/ConnectionModelController.js"></script>
     <!-- Include ConnectionModelController.js -->
     <script src="controllers/queryController.js"></script>
+    <!-- Include ModalGraph Controller -->
+    <script src="controllers/ModalGraphController.js"></script>
     <!-- Include gridRender.js -->
     <script src="directives/gridRender.js"></script>
     <!-- Include toggleList.js -->
@@ -44,6 +48,9 @@
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="stylesheets/style.css" rel="stylesheet">
+    <!-- Include graph Directives -->
+    <script src="directives/graphDirectives.js"></script>
+
 
   </head>
   <body>
@@ -167,6 +174,21 @@
           </div> <!-- left-menu-wrapper end-->
         </div> <!-- left-menu end-->
         <div class="col-xs-8" id="content" ng-controller="queryController">
+          <!-- Graph Modal -->
+    <script type="text/ng-template" id="modalGraph.html">
+      <div>
+        <div class="modal-header">
+          <h3 class="modal-title">Modal Graph</h3>
+        </div>
+        <div class="modal-body">
+          <modal-graph index-passed="index" graph-array="graphArray"></modal-graph>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" ng-click="ok()">OK</button>
+          <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+      </div>
+    </script>
           <!-- saveQueryModal-->
           <script type="text/ng-template" id="saveQuery.html">
             <div class="modal-header row">
@@ -218,7 +240,7 @@
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-floppy-disk"></span></button>
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
-              <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-download-alt"></span></button>
+              <button type="button" class="btn btn-default navbar-btn" ng-click="showGraphColumn()"><span class="glyphicon glyphicon-download-alt"></span></button>
             </div>
           </div> <!-- navbar-end -->
           <div id="content-wrapper">
@@ -256,6 +278,7 @@
             </div> <!-- row end-->
           </div> <!-- content-wrapper end-->
         </div> <!-- col-xs-8 end-->
+
         <div class="col-xs-1" id="right-menu">
           <div class="right-menu-wrapper">
             <div class="btn-group-vertical" role="group">
@@ -276,6 +299,7 @@
         </div> <!-- right-menu end -->
       </div> <!-- row end-->
     </div> <!--container main end -->
+
 
     <!-- app.js-->
     <!-- <script type="text/javascript" src="/app.js"></script> -->
