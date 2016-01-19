@@ -15,7 +15,12 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
     $scope.items[parentIndex].list.splice(childIndex, 1);
   };
   $scope.queryList = [];
-  // $scope.$watch()
+
+  $rootScope.$watch('queryList', function(newValue, oldValue){
+    $scope.queryList = newValue;
+    //console.log("connIndex "+$scope.connIndex);
+  });
+
   $scope.querySaveMessage = "";
   $scope.showModalAlert = false;
   $scope.hideMe = function(list) {
@@ -26,30 +31,25 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
   $scope.executeQueryData = {};
   $scope.newQueryName = "";
 
-  $http.get('/query/byUser', {
-    params: {
-      userName: 'hotChocolate'
-    }
-  }).success(function(data) {
-      if(data.length > 0) {
-        if (data.status && data.status === 'error') {
-          console.log(data.error);
-        } else {
-          $scope.queryList = data;
-        }
-      }
-  });
-
   $scope.retrieveQuery = function(idx) {
-    $http.get('/query/find', {
-      params: {
-        queryName: $scope.queryList[idx].queryName
-      }
-    }).success(function(data) {
-      $scope.items[0].list = data.onColumns;
-      $scope.items[1].list = data.onRows;
-      $rootScope.$broadcast('retrieveQueryEvent', data.connectionData);
-    });
+    var query = $scope.queryList[idx];
+    console.log(query);
+
+      $scope.items[0].list = query.onColumns;
+      $scope.items[1].list = query.onRows;
+      $scope.items[2].list = query.onFilters;
+      $rootScope.$broadcast('retrieveQueryEvent', query.connectionData);
+
+
+    // $http.get('/query/find', {
+    //   params: {
+    //     queryName: $scope.queryList[idx].queryName
+    //   }
+    // }).success(function(data) {
+    //   $scope.items[0].list = data.onColumns;
+    //   $scope.items[1].list = data.onRows;
+    //   $rootScope.$broadcast('retrieveQueryEvent', data.connectionData);
+    // });
   };
   $scope.open = function(){
       var modalInstance = $uibModal.open({

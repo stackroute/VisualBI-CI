@@ -1,5 +1,5 @@
 var hotChocolate = angular.module("hotChocolate");
-hotChocolate.factory('saveQuery',
+hotChocolate.factory('query',
                       function($http) {
                            return {
                              saveQuery: function (parameters, connId) {
@@ -11,6 +11,14 @@ hotChocolate.factory('saveQuery',
                                   method: 'POST',
                                   url: '/query/new',
                                   data: {parameter: JSON.stringify(params)}
+                                };
+                               return $http(req);
+                             },
+                             getSavedQueries: function (connId) {
+                               var req = {
+                                  method: 'GET',
+                                  url: '/query/byUser/byConn',
+                                  data: {connId: connId}
                                 };
                                return $http(req);
                              }

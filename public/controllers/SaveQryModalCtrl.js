@@ -1,5 +1,5 @@
 hotChocolate.controller('SaveQryModalCtrl',
-    function ($scope, $rootScope, $uibModalInstance, $timeout, items, queryList, mdxQuery, saveQuery )
+    function ($scope, $rootScope, $uibModalInstance, $timeout, items, queryList, mdxQuery, query )
     {
         $scope.items = items;
         $scope.queryList = queryList;
@@ -26,7 +26,7 @@ hotChocolate.controller('SaveQryModalCtrl',
              }
            };
            var connId = $rootScope.connId;
-           saveQuery.saveQuery(parameters, connId).success(function(data) {
+           query.saveQuery(parameters, connId).success(function(data) {
              console.log(data);
              $scope.showModalAlert = true;
              $timeout(function() {
@@ -35,7 +35,7 @@ hotChocolate.controller('SaveQryModalCtrl',
              $scope.querySaveMessage = data.info;
              if(data.status=="success")
              {
-               $scope.queryList.push({queryName : $scope.newQueryName});
+               $scope.queryList.push(data.query);
              }
              console.log($scope.queryList);
              if (data.status === "success"){

@@ -99,11 +99,21 @@ hotChocolate.controller('ConnectionModelController',
     };
 
     $scope.$on('retrieveQueryEvent', function(event, data) {
-      $scope.getCatalogNames(data.dataSource);
-      $scope.getCubeNames(data.dataSource, data.catalog);
-      $scope.DataSourceName =  data.dataSource;
-      $scope.CatalogName =  data.catalog;
-      $scope.CubeName = data.cube;
+      console.log(data);
+      if( $scope.DataSourceName !== data.dataSource)
+      {
+        $scope.DataSourceName =  data.dataSource;
+        $scope.getCatalogNames(data.dataSource);
+      }
+      if($scope.CatalogName !== data.catalog)
+      {
+        $scope.CatalogName =  data.catalog;
+        $scope.getCubeNames(data.dataSource, data.catalog);
+      }
+      if($scope.CubeName !== data.cube)
+      {
+        $scope.CubeName =  data.cube;
+      }
 
       $scope.getChildren(data.dataSource, data.catalog, data.cube);
     });

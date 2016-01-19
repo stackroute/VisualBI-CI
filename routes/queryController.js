@@ -4,22 +4,23 @@ var express = require('express'),
 var router = express.Router();
 
 // GET queries by UserID
-router.get('/byUser',function (req, res) {
+router.get('/byUser/byConn',function (req, res) {
   console.log("Getting user queries");
-  if (req.query.userName){
-    Query.findByUserName(
-      req.query.userName,
-      function (err, queries) {
+  var connId = req.query.connId;
+  if (connId){
+    Connection.findById(
+      connId,
+      function (err, conn) {
         if(!err){
-          console.log(queries);
-          res.json(queries);
+          console.log(conn.savedQueries);
+          res.json(conn.savedQueries);
         }else{
           console.log(err);
           res.json({"status":"error", "error":err});
         }
     });
   }else{
-    console.log("No user name supplied");
+    console.log("Error!!! finding connection");
     res.json({"status":"error", "error":"No user id supplied"});
   }
 });
@@ -41,7 +42,7 @@ router.post('/new', function(req, res) {
     },function(err,connection){
         if(!err) {
           console.log(connection);
-          res.json({status: 'success', info: "Query successfully saved"});
+          res.json({status: 'success', info: "Query successfully saved",query: query});
         } else {
           // console.error(err);
           if(err.code === 11000) {

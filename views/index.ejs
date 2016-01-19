@@ -106,6 +106,8 @@
                 </div> <!-- End modal-footer -->
               </script>
             <div id="head-div">
+              <label> Connected to : </label> <b ng-cloak>{{availableConnections[connIndex].connectionName}}</b>
+              <br>
               <label for="DataSourceName" class="cubeLabel"> Data Source: </label>
               <select name="DataSourceName" ng-model="DataSourceName" ng-change="getCatalogNames(DataSourceName)" ng-cloak>
                 <option value='' ng-selected="true">select</option>
