@@ -1,0 +1,201 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/bin/npm', 'install', 'passport', '-g', '--save' ]
+2 info using npm@3.5.3
+3 info using node@v0.12.7
+4 verbose node symlink /usr/bin/node
+5 silly loadCurrentTree Starting
+6 silly install loadCurrentTree
+7 silly install readGlobalPackageData
+8 silly fetchPackageMetaData passport
+9 silly fetchNamedPackageData passport
+10 silly mapToRegistry name passport
+11 silly mapToRegistry using default registry
+12 silly mapToRegistry registry http://172.23.238.253:4873/
+13 silly mapToRegistry uri http://172.23.238.253:4873/passport
+14 verbose request uri http://172.23.238.253:4873/passport
+15 verbose request no auth needed
+16 info attempt registry request try #1 at 11:47:04
+17 verbose request id 1604b095247c708d
+18 verbose etag "68029967faad477ea5b4f461c1608e15"
+19 http request GET http://172.23.238.253:4873/passport
+20 http 304 http://172.23.238.253:4873/passport
+21 verbose headers { 'x-powered-by': 'Sinopia/1.4.0',
+21 verbose headers   etag: '"68029967faad477ea5b4f461c1608e15"',
+21 verbose headers   'x-status-cat': 'http://flic.kr/p/aXY3dH',
+21 verbose headers   date: 'Tue, 19 Jan 2016 17:13:38 GMT',
+21 verbose headers   connection: 'keep-alive' }
+22 silly get cb [ 304,
+22 silly get   { 'x-powered-by': 'Sinopia/1.4.0',
+22 silly get     etag: '"68029967faad477ea5b4f461c1608e15"',
+22 silly get     'x-status-cat': 'http://flic.kr/p/aXY3dH',
+22 silly get     date: 'Tue, 19 Jan 2016 17:13:38 GMT',
+22 silly get     connection: 'keep-alive' } ]
+23 verbose etag http://172.23.238.253:4873/passport from cache
+24 verbose get saving passport to /home/vagrant/.npm/172.23.238.253_4873/passport/.cache.json
+25 silly install normalizeTree
+26 silly loadCurrentTree Finishing
+27 silly loadIdealTree Starting
+28 silly install loadIdealTree
+29 silly cloneCurrentTree Starting
+30 silly install cloneCurrentTreeToIdealTree
+31 silly cloneCurrentTree Finishing
+32 silly loadShrinkwrap Starting
+33 silly install loadShrinkwrap
+34 silly loadShrinkwrap Finishing
+35 silly loadAllDepsIntoIdealTree Starting
+36 silly install loadAllDepsIntoIdealTree
+37 silly resolveWithNewModule passport@0.3.2 checking installable status
+38 silly cache add args [ 'passport', null ]
+39 verbose cache add spec passport
+40 silly cache add parsed spec { raw: 'passport',
+40 silly cache add   scope: null,
+40 silly cache add   name: 'passport',
+40 silly cache add   rawSpec: '',
+40 silly cache add   spec: 'latest',
+40 silly cache add   type: 'tag' }
+41 silly addNamed passport@latest
+42 verbose addNamed "latest" is being treated as a dist-tag for passport
+43 info addNameTag [ 'passport', 'latest' ]
+44 silly mapToRegistry name passport
+45 silly mapToRegistry using default registry
+46 silly mapToRegistry registry http://172.23.238.253:4873/
+47 silly mapToRegistry uri http://172.23.238.253:4873/passport
+48 verbose addNameTag registry:http://172.23.238.253:4873/passport not in flight; fetching
+49 verbose get http://172.23.238.253:4873/passport not expired, no request
+50 silly addNameTag next cb for passport with tag latest
+51 silly addNamed passport@0.3.2
+52 verbose addNamed "0.3.2" is a plain semver version for passport
+53 silly cache afterAdd passport@0.3.2
+54 verbose afterAdd /home/vagrant/.npm/passport/0.3.2/package/package.json not in flight; writing
+55 verbose afterAdd /home/vagrant/.npm/passport/0.3.2/package/package.json written
+56 silly fetchNamedPackageData passport-strategy
+57 silly mapToRegistry name passport-strategy
+58 silly mapToRegistry using default registry
+59 silly mapToRegistry registry http://172.23.238.253:4873/
+60 silly mapToRegistry uri http://172.23.238.253:4873/passport-strategy
+61 silly fetchNamedPackageData pause
+62 silly mapToRegistry name pause
+63 silly mapToRegistry using default registry
+64 silly mapToRegistry registry http://172.23.238.253:4873/
+65 silly mapToRegistry uri http://172.23.238.253:4873/pause
+66 verbose request uri http://172.23.238.253:4873/passport-strategy
+67 verbose request no auth needed
+68 info attempt registry request try #1 at 11:47:05
+69 verbose etag "bdba0192127572bbe30d9e6916948e99"
+70 http request GET http://172.23.238.253:4873/passport-strategy
+71 verbose request uri http://172.23.238.253:4873/pause
+72 verbose request no auth needed
+73 info attempt registry request try #1 at 11:47:05
+74 verbose etag "06a00f46b25d1b4406b9faf23f02e5a6"
+75 http request GET http://172.23.238.253:4873/pause
+76 http 304 http://172.23.238.253:4873/passport-strategy
+77 verbose headers { 'x-powered-by': 'Sinopia/1.4.0',
+77 verbose headers   etag: '"bdba0192127572bbe30d9e6916948e99"',
+77 verbose headers   'x-status-cat': 'http://flic.kr/p/aXY3dH',
+77 verbose headers   date: 'Tue, 19 Jan 2016 17:13:40 GMT',
+77 verbose headers   connection: 'keep-alive' }
+78 silly get cb [ 304,
+78 silly get   { 'x-powered-by': 'Sinopia/1.4.0',
+78 silly get     etag: '"bdba0192127572bbe30d9e6916948e99"',
+78 silly get     'x-status-cat': 'http://flic.kr/p/aXY3dH',
+78 silly get     date: 'Tue, 19 Jan 2016 17:13:40 GMT',
+78 silly get     connection: 'keep-alive' } ]
+79 verbose etag http://172.23.238.253:4873/passport-strategy from cache
+80 verbose get saving passport-strategy to /home/vagrant/.npm/172.23.238.253_4873/passport-strategy/.cache.json
+81 silly resolveWithNewModule passport-strategy@1.0.0 checking installable status
+82 silly cache add args [ 'passport-strategy@1.x.x', null ]
+83 verbose cache add spec passport-strategy@1.x.x
+84 silly cache add parsed spec { raw: 'passport-strategy@1.x.x',
+84 silly cache add   scope: null,
+84 silly cache add   name: 'passport-strategy',
+84 silly cache add   rawSpec: '1.x.x',
+84 silly cache add   spec: '>=1.0.0 <2.0.0',
+84 silly cache add   type: 'range' }
+85 silly addNamed passport-strategy@>=1.0.0 <2.0.0
+86 verbose addNamed ">=1.0.0 <2.0.0" is a valid semver range for passport-strategy
+87 silly addNameRange { name: 'passport-strategy',
+87 silly addNameRange   range: '>=1.0.0 <2.0.0',
+87 silly addNameRange   hasData: false }
+88 silly mapToRegistry name passport-strategy
+89 silly mapToRegistry using default registry
+90 silly mapToRegistry registry http://172.23.238.253:4873/
+91 silly mapToRegistry uri http://172.23.238.253:4873/passport-strategy
+92 verbose addNameRange registry:http://172.23.238.253:4873/passport-strategy not in flight; fetching
+93 verbose get http://172.23.238.253:4873/passport-strategy not expired, no request
+94 silly addNameRange number 2 { name: 'passport-strategy',
+94 silly addNameRange   range: '>=1.0.0 <2.0.0',
+94 silly addNameRange   hasData: true }
+95 silly addNameRange versions [ 'passport-strategy', [ '1.0.0' ] ]
+96 silly addNamed passport-strategy@1.0.0
+97 verbose addNamed "1.0.0" is a plain semver version for passport-strategy
+98 silly cache afterAdd passport-strategy@1.0.0
+99 verbose afterAdd /home/vagrant/.npm/passport-strategy/1.0.0/package/package.json not in flight; writing
+100 verbose afterAdd /home/vagrant/.npm/passport-strategy/1.0.0/package/package.json written
+101 http 304 http://172.23.238.253:4873/pause
+102 verbose headers { 'x-powered-by': 'Sinopia/1.4.0',
+102 verbose headers   etag: '"06a00f46b25d1b4406b9faf23f02e5a6"',
+102 verbose headers   'x-status-cat': 'http://flic.kr/p/aXY3dH',
+102 verbose headers   date: 'Tue, 19 Jan 2016 17:13:41 GMT',
+102 verbose headers   connection: 'keep-alive' }
+103 silly get cb [ 304,
+103 silly get   { 'x-powered-by': 'Sinopia/1.4.0',
+103 silly get     etag: '"06a00f46b25d1b4406b9faf23f02e5a6"',
+103 silly get     'x-status-cat': 'http://flic.kr/p/aXY3dH',
+103 silly get     date: 'Tue, 19 Jan 2016 17:13:41 GMT',
+103 silly get     connection: 'keep-alive' } ]
+104 verbose etag http://172.23.238.253:4873/pause from cache
+105 verbose get saving pause to /home/vagrant/.npm/172.23.238.253_4873/pause/.cache.json
+106 silly resolveWithNewModule pause@0.0.1 checking installable status
+107 silly cache add args [ 'pause@0.0.1', null ]
+108 verbose cache add spec pause@0.0.1
+109 silly cache add parsed spec { raw: 'pause@0.0.1',
+109 silly cache add   scope: null,
+109 silly cache add   name: 'pause',
+109 silly cache add   rawSpec: '0.0.1',
+109 silly cache add   spec: '0.0.1',
+109 silly cache add   type: 'version' }
+110 silly addNamed pause@0.0.1
+111 verbose addNamed "0.0.1" is a plain semver version for pause
+112 silly mapToRegistry name pause
+113 silly mapToRegistry using default registry
+114 silly mapToRegistry registry http://172.23.238.253:4873/
+115 silly mapToRegistry uri http://172.23.238.253:4873/pause
+116 verbose addNameVersion registry:http://172.23.238.253:4873/pause not in flight; fetching
+117 verbose get http://172.23.238.253:4873/pause not expired, no request
+118 silly cache afterAdd pause@0.0.1
+119 verbose afterAdd /home/vagrant/.npm/pause/0.0.1/package/package.json not in flight; writing
+120 verbose afterAdd /home/vagrant/.npm/pause/0.0.1/package/package.json written
+121 silly loadAllDepsIntoIdealTree Finishing
+122 silly idealTree:prePrune lib
+122 silly idealTree:prePrune └─┬ passport@0.3.2
+122 silly idealTree:prePrune   ├── passport-strategy@1.0.0
+122 silly idealTree:prePrune   └── pause@0.0.1
+123 silly loadIdealTree Finishing
+124 silly currentTree lib
+125 silly idealTree lib
+125 silly idealTree └─┬ passport@0.3.2
+125 silly idealTree   ├── passport-strategy@1.0.0
+125 silly idealTree   └── pause@0.0.1
+126 silly generateActionsToTake Starting
+127 silly install generateActionsToTake
+128 warn checkPermissions Missing write access to /usr/lib/node_modules
+129 silly rollbackFailedOptional Starting
+130 silly rollbackFailedOptional Finishing
+131 silly runTopLevelLifecycles Starting
+132 silly runTopLevelLifecycles Finishing
+133 silly install printInstalled
+134 verbose stack Error: EACCES, access '/usr/lib/node_modules'
+134 verbose stack     at Error (native)
+135 verbose cwd /vagrant/MyApp/VisualBI
+136 error Linux 3.13.0-65-generic
+137 error argv "node" "/usr/bin/npm" "install" "passport" "-g" "--save"
+138 error node v0.12.7
+139 error npm  v3.5.3
+140 error path /usr/lib/node_modules
+141 error code EACCES
+142 error errno -13
+143 error Error: EACCES, access '/usr/lib/node_modules'
+143 error     at Error (native)
+143 error  { [Error: EACCES, access '/usr/lib/node_modules'] errno: -13, code: 'EACCES', path: '/usr/lib/node_modules' }
+144 error Please try running this command again as root/Administrator.
+145 verbose exit [ -13, true ]

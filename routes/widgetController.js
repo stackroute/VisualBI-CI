@@ -36,22 +36,21 @@ router.post('/new', function(req, res) {
     createdOn: Date.now(),
     modifiedOn: Date.now(),
     queryMDX: parameters.queryMDX,
+    //queryName: parameters.queryName,
     connectionData: {
+                     connectionId: parameters.connectionData.connectionId,
                      dataSource: parameters.connectionData.dataSource,
                      catalog: parameters.connectionData.catalog,
                      cube: parameters.connectionData.cube
                    }
   }, function(err, widget) {
     if(!err) {
-      console.log("widget saved to db: " + widget);
       res.json({status: 'success', info: "Widget successfully saved"});
     } else {
-      console.error(err);
-      if(err.code === 11000) {
+      if(err.message === "already present") {
         res.json({status: 'error', info: "Widget name already exists"});
       }
       else {
-        console.log(err);
         res.json({status: 'error', info: "Oops! error occcured saving widget"});
       }
     }

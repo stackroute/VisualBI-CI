@@ -76,6 +76,9 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
            mdxQuery: function(){
              return $scope.mdxQuery;
            }
+          //  queryName: function(){
+          //    return $scope.queryName;
+           //}
          }
       });
     };

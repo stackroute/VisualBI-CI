@@ -5,6 +5,8 @@ var express       = require('express'),
     favicon       = require('serve-favicon'),
     cookieParser  = require('cookie-parser'),
     bodyParser    = require('body-parser');
+    
+
 
 // Developer defined modules
 var  db                = require('./models/db'),
@@ -39,6 +41,7 @@ app.use('/discover', discover);
 app.use('/serverCredentials', serverCredentials);
 app.use('/query', queryController);
 app.use('/widget', widgetController);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
