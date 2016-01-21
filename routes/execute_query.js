@@ -14,7 +14,6 @@ router.post('/', function(req, res) {
       var statement  = req.body.statement,
           connId   = req.body.connId,
           properties = {};
-
       properties[Xmla.PROP_DATASOURCEINFO]  = req.body.dataSource;
       properties[Xmla.PROP_CATALOG]         = req.body.catalog;
       /*available formats:
