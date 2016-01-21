@@ -6,6 +6,7 @@ var ConnectionsSchema = mongoose.Schema({
   userid: String,
   password: String,
   savedQueries: [{
+    _id: {type: String},
     queryName: {type: String},
     // createdBy: String,
     createdOn: Date,

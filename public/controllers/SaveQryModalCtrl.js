@@ -14,7 +14,7 @@ hotChocolate.controller('SaveQryModalCtrl',
                filterArray = $scope.items[3].list.length>0 ? $scope.items[3].list : [];
            var parameters = {
              queryName: $scope.newQueryName,
-             userName: "hotChocolate",
+             userName: $rootScope.userName,
              onMeasures: measureArray,
              onColumns: colArray,
              onRows: rowArray,

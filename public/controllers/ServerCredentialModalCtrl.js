@@ -10,12 +10,12 @@ hotChocolate.controller('ServerCredentialModalCtrl',
        });
        /*************** What to be done for saving **********/
        $scope.save = function (conn) {
-          saveConnection.saveConnection(conn)
+          saveConnection.saveConnection($rootScope.userName, conn)
                         .then(function(data){
                           $rootScope.queryList = conn.savedQueries;
                           $rootScope.connId = conn._id;
                           $rootScope.connIndex = $scope.connIndex;
-                          discover.getSource('/').then(function(data){
+                          discover.getSource('/',$rootScope.connId).then(function(data){
                             $scope.DataSourceNames = data.data.values;
                             // $scope.$parent.changeConnName($scope.connName);
                             // console.log($scope.DataSourceNames);
@@ -34,14 +34,14 @@ hotChocolate.controller('ServerCredentialModalCtrl',
          $scope.newConn = {};
        };
        $scope.addConn = function(){
-         addNewConnection.addNewConnection($scope.newConn)
+         addNewConnection.addNewConnection($rootScope.userName,$scope.newConn)
                           .then(function(data){
                             var conn = data.data;
                             console.log(conn);
                             $scope.availableConnections.push(conn);
                             $rootScope.connIndex = ($scope.availableConnections.length-1)+'';
                             $rootScope.connId = conn._id;
-                            discover.getSource('/').then(function(data){
+                            discover.getSource('/',$rootScope.connId).then(function(data){
                               $scope.DataSourceNames = data.data.values;
                               // console.log($scope.DataSourceNames);
                               console.log("ok"+$scope.availableConnections.length);

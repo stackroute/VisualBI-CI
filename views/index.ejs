@@ -10,6 +10,8 @@
 		<script src="js/modernizr-2.6.2.min.js"></script>
     <!-- Include Angular in the head -->
 		<script src="lib/angular/angular.min.js"></script>
+    <!-- Include Angular-Cookies in the head -->
+		<script src="lib/angular-cookies/angular-cookies.min.js"></script>
     <!-- jquery -->
     <script src="/lib/jquery/dist/jquery.min.js"></script>
     <!-- jquery-ui -->
@@ -51,6 +53,8 @@
     <script src="directives/toggleList.js"></script>
     <!-- Include saveQuery.js -->
     <script src="services/saveQuery.js"></script>
+    <!-- Include saveQuery.js -->
+    <script src="services/user_id.js"></script>
 
     <!-- Bootstrap CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -65,7 +69,7 @@
     <div class="container-fluid" id="main" ng-app="hotChocolate">
       <div class="row">
         <div class="col-xs-3" id= "left-menu">
-          <div id="left-menu-wrapper" ng-controller="ConnectionModelController" ng-init = "getActiveConnection('hotChocolate')">
+          <div id="left-menu-wrapper" ng-controller="ConnectionModelController" ng-init = "getActiveConnection()">
             <div class="connectionDiv">
               <div class="connectionHeading row">
                 <h4 id="cubeName">Connection </h4>
@@ -252,6 +256,7 @@
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-floppy-disk"></span></button>
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
               <button type="button" class="btn btn-default navbar-btn" ng-click="showGraphColumn()"><span class="glyphicon glyphicon-download-alt"></span></button>
+              <button type="button" class="btn btn-default navbar-btn" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></button>
             </div>
           </div> <!-- navbar-end -->
           <div id="content-wrapper">

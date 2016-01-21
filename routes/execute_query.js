@@ -12,7 +12,7 @@ var router = express.Router(),
 router.post('/', function(req, res) {
   // console.log(req.body.mdxQuery);
       var statement  = req.body.statement,
-          username   = req.body.username,
+          connId   = req.body.connId,
           properties = {};
 
       properties[Xmla.PROP_DATASOURCEINFO]  = req.body.dataSource;
@@ -80,13 +80,7 @@ router.post('/', function(req, res) {
       dataSet.CellData={"Cell":cellData};
     }
 
-    UserDetails.findOne({username:username},function(err,user){
-      if(err)
-        console.log(err);
-      else{
-        console.log("Inside getURL of UserDetails.findOne"+user.activeConnection);
-        Connections.findById(user.activeConnection,function(err,conn){
-          //////////
+        Connections.findById(connId,function(err,conn){
           var xmlaRequest = {
             async       : true,
             url         : conn.getServer(),
@@ -115,8 +109,6 @@ router.post('/', function(req, res) {
 
 
         });
-      }
-    });
 });
 
 module.exports = router;
