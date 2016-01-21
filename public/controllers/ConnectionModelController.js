@@ -131,6 +131,7 @@ hotChocolate.controller('ConnectionModelController',
                            for(var i=0, len=levels.length; i < len; i++) {
                              levels[i].hierName = $scope.dimensions[dimIdx].children[hierIdx].unique_name;
                              levels[i].levelIdx = i;
+                             levels[i].isMember = "no";
                            }
                            $scope.dimensions[dimIdx].children[hierIdx].children = levels;
                         });

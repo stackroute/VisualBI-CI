@@ -78,11 +78,12 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope,Gr
     var query = $scope.queryList[idx];
     console.log(query);
       $rootScope.selectedRetrieveQuery = true;
-      $scope.items[0].list = query.onColumns;
-      $scope.items[1].list = query.onRows;
-      $scope.items[2].list = query.onFilters;
-      if(query.connectionData.dataSource === $rootScope.DataSourceName ||
-          query.connectionData.catalog === $rootScope.CatalogName ||
+      $scope.items[0].list = query.onMeasures;
+      $scope.items[1].list = query.onColumns;
+      $scope.items[2].list = query.onRows;
+      $scope.items[3].list = query.onFilters;
+      if(query.connectionData.dataSource === $rootScope.DataSourceName &&
+          query.connectionData.catalog === $rootScope.CatalogName &&
             query.connectionData.cube === $rootScope.CubeName){
         $rootScope.selectedRetrieveQuery = false;
       }
@@ -92,6 +93,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope,Gr
     $scope.items[0].list = [];
     $scope.items[1].list = [];
     $scope.items[2].list = [];
+    $scope.items[3].list = [];
     // $( "#dataTableBody tr" ).replaceWith( "" );
   });
   $scope.open = function(){

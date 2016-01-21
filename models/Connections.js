@@ -10,20 +10,34 @@ var ConnectionsSchema = mongoose.Schema({
     // createdBy: String,
     createdOn: Date,
     modifiedOn: {type: Date, default: Date.now},
+    onMeasures: [{
+                unique_name: String,
+                caption_name: String,
+                isMember: String
+               }],
     onColumns: [{
                 unique_name: String,
                 caption_name: String,
+                hierName: String,
+                levelIdx: Number,
                 isMember: String
                }],
     onRows: [{
              unique_name: String,
              caption_name: String,
+             hierName: String,
+             levelIdx: Number,
              isMember: String
             }],
-    onFilters: [String],
+    onFilters: [{
+                unique_name: String,
+                caption_name: String,
+                hierName: String,
+                levelIdx: Number,
+                isMember: String
+               }],
     queryMDX: String,
     connectionData: {
-                    //  xmlaServer: String,
                      dataSource: String,
                      catalog: String,
                      cube: String

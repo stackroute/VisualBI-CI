@@ -91,7 +91,7 @@ router.post('/new', function(req, res) {
 
 // get query
 router.get('/find', function(req, res) {
-  Query.findOne({queryName: req.query.queryName}, 'onColumns onRows connectionData', function(err, query) {
+  Query.findOne({queryName: req.query.queryName}, 'onMeasures onColumns onRows onFilters connectionData', function(err, query) {
     if(!err) {
       res.json(query);
     } else {
