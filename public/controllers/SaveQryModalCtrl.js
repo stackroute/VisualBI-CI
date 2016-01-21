@@ -13,7 +13,7 @@ hotChocolate.controller('SaveQryModalCtrl',
                filterArray = $scope.items[2].list.length>0 ? $scope.items[2].list : [];
            var parameters = {
              queryName: $scope.newQueryName,
-             userName: "hotChocolate",
+             userName: $rootScope.userName,
              onColumns: colArray,
              onRows: rowArray,
              onFilters: filterArray,

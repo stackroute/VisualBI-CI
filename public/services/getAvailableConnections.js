@@ -7,7 +7,6 @@ var hotChocolate = angular.module("hotChocolate");
                                  return $http.get('/serverCredentials/getAvailableConnections',{params: parameters});
                                },
                                 activeConnection: function(uName){
-                                  // var parameters = {username: uName};
                                   return $http.get('/serverCredentials/getActiveConnection',{params: {username:uName}});
                                 }
                              };

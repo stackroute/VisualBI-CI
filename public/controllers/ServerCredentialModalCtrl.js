@@ -10,7 +10,7 @@ hotChocolate.controller('ServerCredentialModalCtrl',
        });
        /*************** What to be done for saving **********/
        $scope.save = function (conn) {
-          saveConnection.saveConnection(conn)
+          saveConnection.saveConnection($rootScope.userName, conn)
                         .then(function(data){
                           $rootScope.queryList = conn.savedQueries;
                           $rootScope.connId = conn._id;
@@ -34,7 +34,7 @@ hotChocolate.controller('ServerCredentialModalCtrl',
          $scope.newConn = {};
        };
        $scope.addConn = function(){
-         addNewConnection.addNewConnection($scope.newConn)
+         addNewConnection.addNewConnection($rootScope.userName,$scope.newConn)
                           .then(function(data){
                             var conn = data.data;
                             console.log(conn);

@@ -27,41 +27,43 @@
   <body ng-app = "login" ng-controller="loginCtrl">
     <center>
       <h1>Visual BI</h1>
-      <form id="loginForm" method="post" ng-submit="putCookie()" class="col-sm-12 form-horizontal ng-pristine ng-invalid ng-invalid-required" ng-hide="isRegSelected">
+      <h3 ng-hide="isRegSelected">Login</h3>
+      <h3 ng-show="isRegSelected">Register</h3>
+      <form id="loginForm" method="post" ng-submit="putCookie()" class="col-sm-offset-2 col-sm-8 form-horizontal ng-pristine ng-invalid ng-invalid-required" ng-hide="isRegSelected">
         <div class="form-group" ng-class="{ 'has-error': form.username.$dirty &amp;&amp; form.username.$error.required }">
-            <label for="username" class="col-sm-2">User Name : </label>
-            <div class="col-sm-6">
+            <label for="username" class="col-sm-4">User Name : </label>
+            <div class="col-sm-8">
               <input type="text" name="username" ng-model="userName" placeholder="Enter Username" class="form-control ng-pristine ng-invalid ng-invalid-required" required="">
             </div>
             <span ng-show="form.username.$dirty &amp;&amp; form.username.$error.required" class="help-block ng-hide">Username is required</span>
         </div>
         <div class="form-group" ng-class="{ 'has-error': form.password.$dirty &amp;&amp; form.password.$error.required }">
-            <label for="password" class="col-sm-2">Password : </label>
-            <div class="col-sm-6">
+            <label for="password" class="col-sm-4">Password : </label>
+            <div class="col-sm-8">
               <input type="password" name="password" ng-model="password" placeholder="Enter Password" class="form-control ng-pristine ng-invalid ng-invalid-required" required="">
             </div>
             <span ng-show="form.password.$dirty &amp;&amp; form.password.$error.required" class="help-block ng-hide">Password is required</span>
         </div>
-        <div class="col-sm-offset-2 col-sm-6">
-          <button type="submit" value="Submit">Submit</button>
+        <div class="col-sm-offset-3 col-sm-6">
+          <button type="submit" value="Submit">Login</button>
             &nbsp;
           <button type="reset" value="Reset">Reset</button>
             &nbsp;
-          <button type="button" ng-click="showRegisterForm()">Sign Up</button>
+          <button type="button" ng-click="showRegisterForm()">Register</button>
         </div>
+        <div class="col-sm-12 displayMsg">{{loginMsg}}</div>
       </form>
-      <b>{{loginMsg}}</b>
-      <form id="registerForm" method="post" action="/register" class="col-sm-12 form-horizontal ng-pristine ng-invalid ng-invalid-required" ng-show="isRegSelected">
+      <form id="registerForm" method="post" action="/register" class="col-sm-offset-2 col-sm-8 form-horizontal ng-pristine ng-invalid ng-invalid-required" ng-show="isRegSelected">
         <div class="form-group" ng-class="{ 'has-error': form.username.$dirty &amp;&amp; form.username.$error.required }">
-            <label for="username" class="col-sm-2">User Name : </label>
-            <div class="col-sm-6">
+            <label for="username" class="col-sm-4">User Name : </label>
+            <div class="col-sm-8">
               <input type="text" name="username" ng-model="userName" placeholder="Enter Username" class="form-control ng-pristine ng-invalid ng-invalid-required" required="">
             </div>
             <span ng-show="form.username.$dirty &amp;&amp; form.username.$error.required" class="help-block ng-hide">Username is required</span>
         </div>
         <div class="form-group" ng-class="{ 'has-error': form.password.$dirty &amp;&amp; form.password.$error.required }">
-            <label for="password" class="col-sm-2">Password : </label>
-            <div class="col-sm-6">
+            <label for="password" class="col-sm-4">Password : </label>
+            <div class="col-sm-8">
               <input type="password" name="password" ng-model="password" placeholder="Enter Password" class="form-control ng-pristine ng-invalid ng-invalid-required {'ng-invalid':myForm.confirmPassword.$error.match}" required="">
             </div>
             <span ng-show="form.password.$dirty &amp;&amp; form.password.$error.required" class="help-block ng-hide">Password is required</span>
@@ -74,16 +76,16 @@
             <span ng-show="form.confirmPassword.$dirty &amp;&amp; form.confirmPassword.$error.required" class="help-block ng-hide">Confirm Password is required</span>
             <div ng-show="myForm.myConfirmField.$error.match">Password and Confirm Password do not match!</div>
         </div> -->
-        <div class="col-sm-offset-2 col-sm-6">
-          <button type="submit" value="Submit">Register</button>
+        <div class="col-sm-offset-3 col-sm-6">
+          <button type="submit" value="Submit">Sign Up</button>
             &nbsp;
           <button type="reset" value="Reset">Reset</button>
             &nbsp;
           <button type="button" ng-click="showRegisterForm()">Login</button>
         </div>
+        <div><b><%= registerMsg %></b><div>
       </form>
-      <%= registerMsg %>
-      <b ng-show="userNameExist">User Name already Exists !!!</b>
+      <!-- <b ng-show="userNameExist">User Name already Exists !!!</b> -->
     </center>
   </body>
 </html>

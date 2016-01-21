@@ -17,3 +17,8 @@ body{
 input.ng-invalid{
     border-color: red;
 }
+.displayMsg {
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+}

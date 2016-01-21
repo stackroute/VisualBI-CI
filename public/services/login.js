@@ -1,5 +1,5 @@
-var hotChocolate = angular.module("login");
-hotChocolate.factory('login',
+angular.module("login")
+        .factory('login',
                       function($http) {
                            return {
                              authenticate: function (parameters) {

@@ -2,9 +2,9 @@ var hotChocolate = angular.module("hotChocolate");
 hotChocolate.factory('saveConnection',
                       function($http) {
                            return {
-                             saveConnection: function (conn) {
+                             saveConnection: function (userName, conn) {
                                var parameters= {
-                                 username: 'hotChocolate',
+                                 username: userName,
                                  connection_id: conn._id
                                };
                                var req = {

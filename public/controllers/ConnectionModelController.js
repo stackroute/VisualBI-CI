@@ -1,12 +1,15 @@
 var hotChocolate = angular.module("hotChocolate");
 hotChocolate.controller('ConnectionModelController',
                         function($scope, $rootScope, $http, $cookies, $window, $uibModal, addNewConnection,
-                                      getAvailableConnections, discover){
-    console.log($cookies.get('userName'));
+                                      getAvailableConnections, discover, user_id){
     if(!$cookies.get('userName')){
       $window.location.href = '/';
     }
     else{
+      $rootScope.userName = $cookies.get('userName');
+      user_id.getUserId($rootScope.userName).success(function(data){
+        $rootScope.user_id = data; // for widget_created by Sravani
+      });
       $scope.availableConnections = [];
       $scope.addConnection = false;
       $scope.newConn = {};
@@ -43,32 +46,36 @@ hotChocolate.controller('ConnectionModelController',
       $rootScope.dimensions = [];
       $scope.measures = [];
       $rootScope.measures = [];
-      $scope.getActiveConnection = function(userName){
+      $rootScope.queryList = [];
+      $scope.getActiveConnection = function(){
         var activeConnId;
+        var userName = $rootScope.userName;
         getAvailableConnections.availableConnections(userName).then(function(availableConnections) {
           $scope.availableConnections = availableConnections.data;
           console.log($scope.availableConnections);
-          getAvailableConnections.activeConnection(userName).then(function(activeConnection){
-            console.log(activeConnection);
-            activeConnId = activeConnection.data;
-            console.log(activeConnId);
-            for(var connIdx in $scope.availableConnections){
-              if (activeConnId === $scope.availableConnections[connIdx]._id){
-                $rootScope.connIndex  = connIdx;
+          if($scope.availableConnections.length !== 0){
+            getAvailableConnections.activeConnection(userName).then(function(activeConnection){
+              console.log(activeConnection);
+              activeConnId = activeConnection.data;
+              console.log(activeConnId);
+              for(var connIdx in $scope.availableConnections){
+                if (activeConnId === $scope.availableConnections[connIdx]._id){
+                  $rootScope.connIndex  = connIdx;
+                }
               }
-            }
-            $rootScope.queryList = $scope.availableConnections[$rootScope.connIndex].savedQueries;
-            console.log($rootScope.queryList);
-            $rootScope.connId = activeConnId;
-            discover.getSource('/',$rootScope.connId).then(function(data){
-              console.log("inside getSource");
-              $scope.DataSourceNames = data.data.values;
-              console.log($scope.DataSourceNames);
-            }, function(error){
-              $scope.DataSourceNames = [];
-              console.log(error);
+              $rootScope.queryList = $scope.availableConnections[$rootScope.connIndex].savedQueries;
+              console.log($rootScope.queryList);
+              $rootScope.connId = activeConnId;
+              discover.getSource('/',$rootScope.connId).then(function(data){
+                console.log("inside getSource");
+                $scope.DataSourceNames = data.data.values;
+                console.log($scope.DataSourceNames);
+              }, function(error){
+                $scope.DataSourceNames = [];
+                console.log(error);
+              });
             });
-          });
+          }
         });
       };
       $scope.getCatalogNames = function(DataSourceName){

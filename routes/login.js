@@ -3,6 +3,18 @@ var router = express.Router();
 var passport = require('passport');
 var Account = require('../models/userDetails');
 
+router.post('/getUserId', function (req, res) {
+    var uName = req.body.username;
+    Account.findOne({username : uName}, function(err, user){
+      if(!err){
+        res.json(user._id);
+      }else{
+        console.log(err);
+        res.json({"status":"error", "error":err});
+      }
+    });
+});
+
 router.get('/', function (req, res) {
     res.render('login',{ registerMsg : ""});
 });
