@@ -2,9 +2,8 @@ var app = angular.module('hotChocolate');
 
 app.factory('gridRenderService', function() {
   return {
-    renderData: function (data){
-      console.log(data);
-      $( "#dataTableBody tr" ).replaceWith( "" );
+    renderData: function (data, containerId){
+      $( "#"+containerId+" tr" ).replaceWith( "" );
       var addElement, ans, fs, members, tdChild;
       var axes = data.Axes,
           axis = axes.Axis,
@@ -21,7 +20,6 @@ app.factory('gridRenderService', function() {
          axis0Name = axis0Name.substring(0,axis0Name.length-1);
          axis0Names.push(axis0Name);
        }
-       console.log(axis0Names);
       /***************** Generating tree structure ****************/
       addElement = function(members, tree, level) {
         var child;
@@ -90,19 +88,13 @@ app.factory('gridRenderService', function() {
       };
       var template0 = $.trim($("#axis0_insersion").html()),
           frag0 = template0.replace(/{{axis0}}/ig,tdAxis0Child(axis0Child));
-      $('#dataTableBody').append(frag0);
+      $("#"+containerId).append(frag0);  // #dataTableBody
 
       /****************************** Data **********************************/
       var cellData = data.CellData,
           cells = cellData.Cell,
           val = [];
-          // console.log(cells);
-          // console.log(axis0);
-          // console.log(axis1);
       for (var cellIndex in cells) {
-        // var valObj = {};
-        // valObj.value = cells[cellIndex].FmtValue;
-        // val.push(valObj);
         val[cells[cellIndex].CellOrdinal] = cells[cellIndex].FmtValue;
       }
       var count  = 0,
@@ -130,9 +122,6 @@ app.factory('gridRenderService', function() {
         tempDataObj.td = td;
         dataArray.push(tempDataObj);
       }
-      console.log(dataArray);
-      console.log("graphData");
-      console.log(graphData);
       /****************************** Axis1 Hierarchical Structure **********************************/
       axis1Child = axis1.reduce((function(acc, member) {
         return addElement(member.Member, acc, 1);
@@ -168,7 +157,7 @@ app.factory('gridRenderService', function() {
       };
       var template1 = $.trim($("#axis1_insersion").html());
       var frag1 = template1.replace(/{{axis1}}/ig,"<tr id='row0' class='dataRow'>"+tdAxis1Child(axis1Child));
-      $('#dataTableBody').append(frag1);
+      $("#"+containerId).append(frag1);
       return graphData;
     } // end renderData
   };
