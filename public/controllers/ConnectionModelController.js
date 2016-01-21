@@ -127,8 +127,12 @@ hotChocolate.controller('ConnectionModelController',
                       "/" + $scope.dimensions[dimIdx].children[hierIdx].unique_name;
         discover.getDimensions(pathName)
                         .then(function(data){
-                           console.log(data.data.values);
-                           $scope.dimensions[dimIdx].children[hierIdx].children = data.data.values;
+                           var levels = data.data.values;
+                           for(var i=0, len=levels.length; i < len; i++) {
+                             levels[i].hierName = $scope.dimensions[dimIdx].children[hierIdx].unique_name;
+                             levels[i].levelIdx = i;
+                           }
+                           $scope.dimensions[dimIdx].children[hierIdx].children = levels;
                         });
     };
     $scope.getMembers = function(dimIdx, hierIdx, levelIdx) {
@@ -142,7 +146,11 @@ hotChocolate.controller('ConnectionModelController',
                       .then(function(data){
                          console.log(data.data.values);
                          var members = data.data.values;
-                         for(var i=0, len = members.length; i < len; i++) { members[i].isMember = "yes"; }
+                         for(var i=0, len = members.length; i < len; i++) {
+                           members[i].isMember = "yes";
+                           members[i].hierName = $scope.dimensions[dimIdx].children[hierIdx].unique_name;
+                           members[i].levelIdx = 10000 + i;
+                         }
                          $scope.dimensions[dimIdx].children[hierIdx].children[levelIdx].children = members;
                        });
     };
