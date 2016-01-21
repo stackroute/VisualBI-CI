@@ -32,8 +32,8 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     executeQueryService.executeQuery($scope.buildQuery()).then(function(data) {
       console.log(data.data);
       $scope.executeQueryData = data.data;
-      gridRenderService.renderData(data.data);
-      $scope.graphArray = GraphService.getGraphData(data.data);
+      $scope.graphArray = gridRenderService.renderData(data.data);
+      // $scope.graphArray = GraphService.getGraphData(data.data);
     });
   };
 

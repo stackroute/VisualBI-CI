@@ -169,6 +169,7 @@ app.factory('gridRenderService', function() {
       var template1 = $.trim($("#axis1_insersion").html());
       var frag1 = template1.replace(/{{axis1}}/ig,"<tr id='row0' class='dataRow'>"+tdAxis1Child(axis1Child));
       $('#dataTableBody').append(frag1);
+      return graphData;
     } // end renderData
   };
 });

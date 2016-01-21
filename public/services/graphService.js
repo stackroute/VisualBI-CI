@@ -3,55 +3,6 @@ var app = angular.module("hotChocolate");
 //Graph Service to hold functions related to plotting Graphs
 app.factory('GraphService', function($compile,$rootScope){
 	return {
-	//Get Graph data from ExecuteQuery Data
-	getGraphData : function(executeQueryData) {
-		var graphArray = [];
-		//get Axes Details
-		var axes = executeQueryData.Axes,
-			axis = axes.Axis,
-			axis0 = axis[0],
-			axis1 = axis[1];
-
-		//get Key Names for data
-		var axis0Names = [];
-		for(var index0 in axis0) {
-			var axis0Member = axis0[index0].Member;
-			var axis0Name = '';
-			for(var memIndex0 in axis0Member) {
-				axis0Name = axis0Name + axis0Member[memIndex0].Caption + ".";
-			}
-			axis0Name = axis0Name.substring(0,axis0Name.length-1);
-			axis0Names.push(axis0Name);
-		}
-
-		var cellData = executeQueryData.CellData,
-        cells = cellData.Cell,
-        val = [];
-    for (var cellIndex in cells) {
-      var valObj = {};
-      valObj.value = cells[cellIndex].FmtValue;
-      val.push(valObj);
-    }
-
-		var count = 0,
-			dataArray = [],
-			graphData = [];
-
-		for(var j = 0, len1 = axis1.length; j<len1;j++) {
-			var tempDataObj = {},
-				graphInnerArray = [];
-			for(var i=0, len=axis0.length;i<len;i++) {
-				var graphObj = {};
-				graphObj.key = axis0Names[i];
-				graphObj.value = parseFloat(val[count].value.replace(/,/g,''));
-				graphInnerArray.push(graphObj);
-				count++;
-			}
-			graphArray.push(graphInnerArray);
-		}
-		return graphArray;
-	},
-
 	//Render MiniGraph to be displayed in the table
 	renderMiniGraph : function(dataset,container,index) {
 		var dataToPass = dataset;
@@ -83,17 +34,17 @@ app.factory('GraphService', function($compile,$rootScope){
 		//Create SVG element
 		var svg = d3.select(container)
 					// .append("div")
-					// .attr("ng-controller","queryController")	
+					// .attr("ng-controller","queryController")
 					.append("button")
 					// .attr('ng-hide', true)
 					.attr("ng-click", "openModalGraph("+index+")")
 					// .attr("href","#")
-					// .attr("ng-click",console.log('From graph Service'))			
+					// .attr("ng-click",console.log('From graph Service'))
 					.append("svg")
 					.attr("width", w)
 					.attr("height", h);
 
-		
+
 
 		//Create bars
 		svg.selectAll("rect")
