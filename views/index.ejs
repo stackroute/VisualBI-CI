@@ -143,7 +143,7 @@
                     <li ng-repeat="hierarchy in dimension.children">
                       <label class='nav-toggle nav-header' ng-click="!hierarchy.children.length > 0 && getLevels($parent.$index, $index)" toggle-list>
                         <span class='nav-toggle-icon glyphicon glyphicon-chevron-right' ng-cloak></span>
-                        <a href='#' ng-model="dimension.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}" ng-cloak> {{hierarchy.caption_name}}</a>
+                        <a href='#' ng-cloak> {{hierarchy.caption_name}}</a>
                       </label>
                       <ul class='nav nav-list nav-left-ml' ng-show="hierarchy.children.length">
                         <li ng-repeat="level in hierarchy.children">
@@ -249,7 +249,7 @@
                 <h4>{{item.label}}</h4>
               </div>
               <div class="col-xs-10 columns">
-                <ul class="nav" data-drop="true" ng-model="item.list" jqyoui-droppable="{multiple:true}"  ng-cloak>
+                <ul class="nav" data-drop="true" ng-model="item.list" jqyoui-droppable="{multiple:true, onDrop: 'sortList($index)'}" ng-cloak>
                   <li ng-repeat="elem in item.list track by $index" ng-show="elem.caption_name">
                     {{elem.caption_name}}<button type='button' class='close' ng-click="deleteItem($index, $parent.$index)">&times;</button>
                   </li>
@@ -257,7 +257,7 @@
                 </ul>
               </div> <!-- col-xs-10 end-->
             </div> <!-- myRect end-->
-            <div class="row alert alert-warning" ng-show="isMdxInputError">
+            <div class="row alert alert-warning" ng-show="isMdxInputError" ng-cloak>
               <strong>{{mdxInputErrorMessage}}</strong>
             </div>
             <div class="row">
