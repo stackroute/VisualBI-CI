@@ -1,5 +1,5 @@
 var hotChocolate = angular.module('hotChocolate');
-hotChocolate.controller('queryController', function($scope, $http, $rootScope,GraphService,$uibModal,$compile, $cookies, $window) {
+hotChocolate.controller('queryController', function($scope, $http, $rootScope, GraphService, executeQueryService, gridRenderService, $uibModal, $compile, $cookies, $window) {
   console.log($cookies.get('userName'));
   if(!$cookies.get('userName')){
     $window.location.href = '/';
@@ -10,22 +10,97 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope,Gr
                     list: []
                   },
                   {
-                      label: 'Columns',
-                      list: []
-                    }, {
-                      label: 'Rows',
-                      list: []
-                    }, {
-                      label: 'Filters',
-                      list: []
-                    }];
-    $scope.deleteItem = function(childIndex, parentIndex) {
-      $scope.items[parentIndex].list.splice(childIndex, 1);
-    };
-    $scope.logout = function(){
-      $cookies.put('userName', undefined);
-      $window.location.href = '/logout';
-    };
+                    label: 'Columns',
+                    list: []
+                  }, {
+                    label: 'Rows',
+                    list: []
+                  }, {
+                    label: 'Filters',
+                    list: []
+                  }];
+  $scope.deleteItem = function(childIndex, parentIndex) {
+    $scope.items[parentIndex].list.splice(childIndex, 1);
+  };
+
+  $scope.logout = function(){
+    $cookies.put('userName', undefined);
+    $window.location.href = '/logout';
+  };
+
+  $scope.getExecuteQueryData = function() {
+    $( "#dataTableBody tr" ).replaceWith( "" );
+    executeQueryService.executeQuery($scope.buildQuery()).then(function(data) {
+      console.log(data.data);
+      $scope.executeQueryData = data.data;
+      gridRenderService.renderData(data.data);
+      $scope.graphArray = GraphService.getGraphData(data.data);
+    })
+  };
+
+  $scope.buildQuery = function () {
+    var measures = $scope.items[0].list,
+        measureArr = [];
+    for(var i=0; i < measures.length; i++) {
+      measureArr.push(measures[i].unique_name);
+    }
+    var measureSet = "{" + measureArr.join() + "}";
+
+    var columns = $scope.items[1].list;
+        columnSet = $scope.buildSubQuery(columns);
+        columnSubQuery = columns.length > 0 ? (measures.length > 0 ? "(" + columnSet + " * " + measureSet + ")" : columnSet) : measureSet;
+
+    var rows = $scope.items[2].list;
+        rowSet = $scope.buildSubQuery(rows);
+
+    var filters = $scope.items[3].list,
+        filterArr = [];
+    for(var j=0; j < filters.length; j++) {
+      filterArr.push(filters[j].unique_name);
+    }
+    var filterSet = "{" + filterArr.join() + "}";
+    var filterSubQuery = filters.length > 0 ? " where " + filterSet : "";
+
+    $scope.mdxQuery = "select non empty " + columnSubQuery + " on columns, non empty (" + rowSet + ") on rows" + " from ["+ $rootScope.CubeName +"]" + filterSubQuery ;
+    return $scope.mdxQuery;
+  }
+
+  $scope.buildSubQuery = function (itemArr) {
+    var columnResult = $scope.groupBy(itemArr, function(item){
+            return [item.hierName];
+        });
+        columnArr = [];
+    for(var j=0; j < columnResult.length; j++) {
+      var subColumnQuery = "";
+      var subColumnArr = [];
+      for(var k=0; k < columnResult[j].length; k++) {
+        subColumnArr.push(columnResult[j][k].isMember === "yes" ? columnResult[j][k].unique_name : columnResult[j][k].unique_name + ".members");
+      }
+      if (subColumnArr.length > 1) {
+        subColumnQuery = "Hierarchize ({" + subColumnArr.join() + "})";
+      } else {
+        subColumnQuery = subColumnArr.join();
+      }
+      columnArr.push(subColumnQuery);
+    }
+    return "{" + columnArr.join("*") + "}";
+  }
+
+  $scope.groupBy = function ( array , f )
+  {
+    var groups = {};
+    array.forEach( function( o )
+    {
+      var group = JSON.stringify( f(o) );
+      groups[group] = groups[group] || [];
+      groups[group].push( o );
+    });
+    return Object.keys(groups).map( function( group )
+    {
+      return groups[group];
+    })
+  }
+
   $scope.sortList = function(event, ui, listIdx) {
     var itemArr = $scope.items[listIdx].list,
         currItem = itemArr[itemArr.length-1];
