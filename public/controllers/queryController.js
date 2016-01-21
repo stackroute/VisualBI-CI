@@ -15,24 +15,20 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
     $scope.items[parentIndex].list.splice(childIndex, 1);
   };
   $scope.queryList = [];
-  $scope.widgetList = [];
-  // $scope.$watch()
-  $rootScope.$watch('queryList', function(newValue, oldValue){
-    $scope.queryList = newValue;
-    //console.log("connIndex "+$scope.connIndex);
-  });
   $scope.querySaveMessage = "";
   $scope.showModalAlert = false;
   $scope.newWidgetName = "";
   $scope.widgetSaveMessage = "";
-  $scope.hideMe = function(list) {
-    return list.length > 0;
-  };
-
   $scope.mdxQuery = "";
   $scope.executeQueryData = {};
   $scope.newQueryName = "";
-
+  $scope.newWidgetName = "";
+  $rootScope.$watch('queryList', function(newValue, oldValue){
+    $scope.queryList = newValue;
+  });
+  $scope.hideMe = function(list) {
+    return list.length > 0;
+  }
   $scope.retrieveQuery = function(idx) {
     var query = $scope.queryList[idx];
     console.log(query);
@@ -42,6 +38,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
       $scope.items[2].list = query.onFilters;
       $rootScope.$broadcast('retrieveQueryEvent', query.connectionData);
   };
+
   $scope.open = function(){
       var modalInstance = $uibModal.open({
          animation: $scope.animationsEnabled,
@@ -69,17 +66,17 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, $
  };
  $scope.export = function(){
      var modalInstance = $uibModal.open({
-        animation: $scope.animationsEnabled,
-        templateUrl: 'saveWidget.html',
-        controller: 'SaveWgtModalCtrl',
+         animation: $scope.animationsEnabled,
+         templateUrl: 'saveWidget.html',
+         controller: 'SaveWgtModalCtrl',
          resolve: {
            mdxQuery: function(){
              return $scope.mdxQuery;
            }
-          //  queryName: function(){
-          //    return $scope.queryName;
-           //}
          }
+      });
+      modalInstance.result.then(function(widgetList){
+        $scope.widgetList = widgetList;
       });
     };
 });

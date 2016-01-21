@@ -217,30 +217,47 @@
             </div>
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-default navbar-btn" id="export-widget" ng-click="export()"><span class="glyphicon glyphicon-floppy-disk"></span></button>
-              <!-- saveQueryModal-->
+              <!-- saveWidgetModal-->
               <script type="text/ng-template" id="saveWidget.html">
                 <div class="modal-header row">
-                    <h4 class="modal-title" id="myModalLabel">Save Widget</h4>
-                </div> <!-- End modal-header row -->
-                <div class="modal-body row">
-                <p>
-                  <label for="widgetName">Widget name</label>
-                  <input type="text" name="widgetName" id="widgetName" ng-model="newWidgetName">
-                </p>
+                    <h4 class="modal-title" id="myModalLabel">Export Widget</h4>
+                </div>  <!--End modal-header row -->
+                  <div class="modal-body row">
+                  <div class="row alert alert-warning" ng-show="isWidgetExists" ng-cloak>
+                    {{widgetMessage}}
+                  </div>
+                  <br>
+                    <label for="widgetName" class="col-xs-2">Widget name</label>
+                    <input type="text" name="widgetName" id="widgetName" ng-model="newWidgetName" ng-change="getDescription()">
+                  <br><br>
+                    <label for="description" class="col-xs-2">Widget description</label>
+                    <textarea cols="50" name="description" id="description" ng-model='description'>{{description}}</textarea>
+                    <br>
+                    <div>
+                    <strong class="col-xs-2">Existing widgets</strong>
+                    <div class="col-xs-4">
+                      <ul>
+                        <li ng-repeat="widget in widgetList" id="widgetList">
+                          {{widget.widgetName}}
+                        </li>
+                      </ul>
+                    </div>
+                    </div>
 
                   <button type="button" class="close" ng-click="showModalAlert = false">
                     <span aria-hidden="true">&times;</span>
                   </button>
-                  <strong>{{widgetSaveMessage}}</strong>
+                  <div><strong>{{widgetSaveMessage}}</strong></div>
                 </div>
-                </div> <!-- End modal-body -->
-                <div class="modal-footer row">
+                </div> <!-- End modal-body-->
+                  <div class="modal-footer row">
                     <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
                     <button class="btn btn-primary" type="button" ng-click="close()">Close</button>
                     <button class="btn btn-warning" type="button" ng-click="cancel()">cancel</button>
-                </div> <!-- End modal-footer -->
+                </div> <!-- End modal-footer
               </script>
               <!-- End saveQueryModal-->
+
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
             </div>
