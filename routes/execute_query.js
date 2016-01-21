@@ -11,6 +11,8 @@ var router = express.Router(),
 
 router.post('/', function(req, res) {
   // console.log(req.body.mdxQuery);
+  // console.log("inside route/execute");
+  
       var statement  = req.body.statement,
           connId   = req.body.connId,
           properties = {};

@@ -3,6 +3,8 @@ var app = angular.module('hotChocolate');
 app.factory('gridRenderService', function() {
   return {
     renderData: function (data){
+      console.log(data);
+      $( "#dataTableBody tr" ).replaceWith( "" );
       var addElement, ans, fs, members, tdChild;
       var axes = data.Axes,
           axis = axes.Axis,
@@ -19,7 +21,7 @@ app.factory('gridRenderService', function() {
          axis0Name = axis0Name.substring(0,axis0Name.length-1);
          axis0Names.push(axis0Name);
        }
-
+       console.log(axis0Names);
       /***************** Generating tree structure ****************/
       addElement = function(members, tree, level) {
         var child;
@@ -94,10 +96,14 @@ app.factory('gridRenderService', function() {
       var cellData = data.CellData,
           cells = cellData.Cell,
           val = [];
+          // console.log(cells);
+          // console.log(axis0);
+          // console.log(axis1);
       for (var cellIndex in cells) {
-        var valObj = {};
-        valObj.value = cells[cellIndex].FmtValue;
-        val.push(valObj);
+        // var valObj = {};
+        // valObj.value = cells[cellIndex].FmtValue;
+        // val.push(valObj);
+        val[cells[cellIndex].CellOrdinal] = cells[cellIndex].FmtValue;
       }
       var count  = 0,
           dataArray = [],
@@ -108,15 +114,25 @@ app.factory('gridRenderService', function() {
         var graphInnerArray = [];
         for (var i = 0, len = axis0.length; i < len; i++) {
           var graphObj = {};
-          graphObj.key = axis0Names[i];
-          graphObj.value = parseFloat(val[count].value.replace(/,/g,''));
-          graphInnerArray.push(graphObj);
-          td += "<td>"+val[count].value+"</td>";
+          if(val[count] !== undefined && val[count] !== null)
+          {
+            graphObj.key = axis0Names[i];
+            graphObj.value = parseFloat(val[count].replace(/,/g,''));
+            graphInnerArray.push(graphObj);
+          }
+          if(val[count] === undefined){
+            val[count] = "";
+          }
+          td += "<td>"+val[count]+"</td>";
           count++;
         }
+        graphData.push(graphInnerArray);
         tempDataObj.td = td;
         dataArray.push(tempDataObj);
       }
+      console.log(dataArray);
+      console.log("graphData");
+      console.log(graphData);
       /****************************** Axis1 Hierarchical Structure **********************************/
       axis1Child = axis1.reduce((function(acc, member) {
         return addElement(member.Member, acc, 1);

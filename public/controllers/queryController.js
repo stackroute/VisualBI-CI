@@ -29,13 +29,12 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   };
 
   $scope.getExecuteQueryData = function() {
-    $( "#dataTableBody tr" ).replaceWith( "" );
     executeQueryService.executeQuery($scope.buildQuery()).then(function(data) {
       console.log(data.data);
       $scope.executeQueryData = data.data;
       gridRenderService.renderData(data.data);
       $scope.graphArray = GraphService.getGraphData(data.data);
-    })
+    });
   };
 
   $scope.buildQuery = function () {
@@ -63,7 +62,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
 
     $scope.mdxQuery = "select non empty " + columnSubQuery + " on columns, non empty (" + rowSet + ") on rows" + " from ["+ $rootScope.CubeName +"]" + filterSubQuery ;
     return $scope.mdxQuery;
-  }
+  };
 
   $scope.buildSubQuery = function (itemArr) {
     var columnResult = $scope.groupBy(itemArr, function(item){
@@ -84,7 +83,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
       columnArr.push(subColumnQuery);
     }
     return "{" + columnArr.join("*") + "}";
-  }
+  };
 
   $scope.groupBy = function ( array , f )
   {
@@ -98,8 +97,8 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     return Object.keys(groups).map( function( group )
     {
       return groups[group];
-    })
-  }
+    });
+  };
 
   $scope.sortList = function(event, ui, listIdx) {
     var itemArr = $scope.items[listIdx].list,
