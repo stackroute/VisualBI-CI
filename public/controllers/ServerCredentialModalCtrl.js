@@ -15,7 +15,7 @@ hotChocolate.controller('ServerCredentialModalCtrl',
                           $rootScope.queryList = conn.savedQueries;
                           $rootScope.connId = conn._id;
                           $rootScope.connIndex = $scope.connIndex;
-                          discover.getSource('/').then(function(data){
+                          discover.getSource('/',$rootScope.connId).then(function(data){
                             $scope.DataSourceNames = data.data.values;
                             // $scope.$parent.changeConnName($scope.connName);
                             // console.log($scope.DataSourceNames);
@@ -41,7 +41,7 @@ hotChocolate.controller('ServerCredentialModalCtrl',
                             $scope.availableConnections.push(conn);
                             $rootScope.connIndex = ($scope.availableConnections.length-1)+'';
                             $rootScope.connId = conn._id;
-                            discover.getSource('/').then(function(data){
+                            discover.getSource('/',$rootScope.connId).then(function(data){
                               $scope.DataSourceNames = data.data.values;
                               // console.log($scope.DataSourceNames);
                               console.log("ok"+$scope.availableConnections.length);

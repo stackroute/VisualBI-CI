@@ -10,7 +10,7 @@ hotChocolate.directive('gridRender', function($http) {
         // console.log(scope.$root.DataSourceName);
         $( "#dataTableBody tr" ).replaceWith( "" );
         $http.post('/execute', {
-            username : "hotChocolate",
+            connId : scope.$root.connId,
             dataSource: scope.$root.DataSourceName,
             catalog: scope.$root.CatalogName,
             statement: buildQuery()

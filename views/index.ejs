@@ -10,6 +10,8 @@
 		<script src="js/modernizr-2.6.2.min.js"></script>
     <!-- Include Angular in the head -->
 		<script src="lib/angular/angular.min.js"></script>
+    <!-- Include Angular-Cookies in the head -->
+		<script src="lib/angular-cookies/angular-cookies.min.js"></script>
     <!-- jquery -->
     <script src="/lib/jquery/dist/jquery.min.js"></script>
     <!-- jquery-ui -->
@@ -224,7 +226,7 @@
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-floppy-disk"></span></button>
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
-              <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-download-alt"></span></button>
+              <button type="button" class="btn btn-default navbar-btn" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></button>
             </div>
           </div> <!-- navbar-end -->
           <div id="content-wrapper">
