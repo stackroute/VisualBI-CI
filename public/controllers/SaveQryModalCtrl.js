@@ -8,18 +8,19 @@ hotChocolate.controller('SaveQryModalCtrl',
        /*************** What to be done for saving **********/
        $scope.save = function () {
            console.log($scope.items);
-           var colArray = $scope.items[0].list.length>0 ? $scope.items[0].list : [];
-               rowArray = $scope.items[1].list.length>0 ? $scope.items[1].list : [];
-               filterArray = $scope.items[2].list.length>0 ? $scope.items[2].list : [];
+           var measureArray = $scope.items[0].list.length>0 ? $scope.items[0].list : [];
+               colArray = $scope.items[1].list.length>0 ? $scope.items[1].list : [];
+               rowArray = $scope.items[2].list.length>0 ? $scope.items[2].list : [];
+               filterArray = $scope.items[3].list.length>0 ? $scope.items[3].list : [];
            var parameters = {
              queryName: $scope.newQueryName,
              userName: $rootScope.userName,
+             onMeasures: measureArray,
              onColumns: colArray,
              onRows: rowArray,
              onFilters: filterArray,
              queryMDX: $scope.mdxQuery,
              connectionData: {
-               // xmlaServer: "http://172.23.238.252:8080/pentaho/Xmla?userid=admin&password=password",
                dataSource: $scope.$root.DataSourceName,
                catalog: $scope.$root.CatalogName,
                cube: $scope.$root.CubeName,

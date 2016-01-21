@@ -31,6 +31,8 @@
     <!-- Include ConnectionModelController.js -->
     <script src="services/saveConnection.js"></script>
     <script src="services/discover.js"></script>
+    <!-- Include GraphService -->
+    <script src="services/graphService.js"></script>
     <!-- Include ConnectionModelController.js -->
     <script src="controllers/ConnectionModelController.js"></script>
     <!-- Include ConnectionModelController.js -->
@@ -39,6 +41,8 @@
     <script src="controllers/queryController.js"></script>
     <!-- Include ConnectionModelController.js -->
     <script src="controllers/SaveQryModalCtrl.js"></script>
+    <!-- Include ModalGraph Controller -->
+    <script src="controllers/ModalGraphController.js"></script>
     <!-- Include gridRender.js -->
     <script src="directives/gridRender.js"></script>
     <!-- Include toggleList.js -->
@@ -52,6 +56,9 @@
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="stylesheets/style.css" rel="stylesheet">
+    <!-- Include graph Directives -->
+    <script src="directives/graphDirectives.js"></script>
+
 
   </head>
   <body>
@@ -146,7 +153,7 @@
                     <li ng-repeat="hierarchy in dimension.children">
                       <label class='nav-toggle nav-header' ng-click="!hierarchy.children.length > 0 && getLevels($parent.$index, $index)" toggle-list>
                         <span class='nav-toggle-icon glyphicon glyphicon-chevron-right' ng-cloak></span>
-                        <a href='#' ng-model="dimension.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}" ng-cloak> {{hierarchy.caption_name}}</a>
+                        <a href='#' ng-cloak> {{hierarchy.caption_name}}</a>
                       </label>
                       <ul class='nav nav-list nav-left-ml' ng-show="hierarchy.children.length">
                         <li ng-repeat="level in hierarchy.children">
@@ -177,22 +184,38 @@
           </div> <!-- left-menu-wrapper end-->
         </div> <!-- left-menu end-->
         <div class="col-xs-8" id="content" ng-controller="queryController">
+          <!-- Graph Modal -->
+    <script type="text/ng-template" id="modalGraph.html">
+      <div>
+        <div class="modal-header">
+          <h4 class="modal-title">Modal Graph</h4>
+          <label><input type="checkbox"> Sort values</label>
+        </div>
+        <div class="modal-body">
+          <modal-graph index-passed="index" graph-array="graphArray"></modal-graph>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" ng-click="ok()">OK</button>
+          <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+      </div>
+    </script>
           <!-- saveQueryModal-->
           <script type="text/ng-template" id="saveQuery.html">
             <div class="modal-header row">
                 <h4 class="modal-title" id="myModalLabel">Save Query</h4>
             </div> <!-- End modal-header row -->
             <div class="modal-body row">
-            <p>
-              <label for="queryName">Query name</label>
-              <input type="text" name="queryName" id="queryName" ng-model="newQueryName">
-            </p>
-
-              <button type="button" class="close" ng-click="showModalAlert = false">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <strong>{{querySaveMessage}}</strong>
-            </div>
+              <p>
+                <label for="queryName">Query name</label>
+                <input type="text" name="queryName" id="queryName" ng-model="newQueryName">
+              </p>
+              <div class="alert alert-success" ng-show="showModalAlert">
+                <button type="button" class="close" ng-click="showModalAlert = false">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{querySaveMessage}}</strong>
+              </div>
             </div> <!-- End modal-body -->
             <div class="modal-footer row">
                 <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
@@ -228,6 +251,7 @@
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-floppy-disk"></span></button>
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
+              <button type="button" class="btn btn-default navbar-btn" ng-click="showGraphColumn()"><span class="glyphicon glyphicon-download-alt"></span></button>
               <button type="button" class="btn btn-default navbar-btn" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></button>
             </div>
           </div> <!-- navbar-end -->
@@ -237,7 +261,7 @@
                 <h4>{{item.label}}</h4>
               </div>
               <div class="col-xs-10 columns">
-                <ul class="nav" data-drop="true" ng-model="item.list" jqyoui-droppable="{multiple:true}"  ng-cloak>
+                <ul class="nav" data-drop="true" ng-model="item.list" jqyoui-droppable="{multiple:true, onDrop: 'sortList($index)'}" ng-cloak>
                   <li ng-repeat="elem in item.list track by $index" ng-show="elem.caption_name">
                     {{elem.caption_name}}<button type='button' class='close' ng-click="deleteItem($index, $parent.$index)">&times;</button>
                   </li>
@@ -245,6 +269,9 @@
                 </ul>
               </div> <!-- col-xs-10 end-->
             </div> <!-- myRect end-->
+            <div class="row alert alert-warning" ng-show="isMdxInputError" ng-cloak>
+              <strong>{{mdxInputErrorMessage}}</strong>
+            </div>
             <div class="row">
               <div class="col-xs-12">
                 <div class="section_result">
@@ -263,6 +290,7 @@
             </div> <!-- row end-->
           </div> <!-- content-wrapper end-->
         </div> <!-- col-xs-8 end-->
+
         <div class="col-xs-1" id="right-menu">
           <div class="right-menu-wrapper">
             <div class="btn-group-vertical" role="group">
@@ -283,6 +311,7 @@
         </div> <!-- right-menu end -->
       </div> <!-- row end-->
     </div> <!--container main end -->
+
 
     <!-- app.js-->
     <!-- <script type="text/javascript" src="/app.js"></script> -->
