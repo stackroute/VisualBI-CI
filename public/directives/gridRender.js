@@ -24,7 +24,12 @@ hotChocolate.directive('gridRender', function($http,$timeout,GraphService) {
             console.log(scope.graphArray);
         })
         .error(function(data) {
-            console.log(data);
+            if(scope.items[0].list.length == 0 && scope.items[1].list.length == 0) {
+              scope.mdxInputErrorMessage = "Atleast one of Measures and Columns need to be filled.";
+            }
+            else if (scope.items[2].list.length == 0) {
+              scope.mdxInputErrorMessage = "Rows should not be empty.";
+            }
             scope.isMdxInputError = true;
             $timeout(function() {
               scope.isMdxInputError = false;
@@ -33,22 +38,66 @@ hotChocolate.directive('gridRender', function($http,$timeout,GraphService) {
       });
 
       function buildQuery() {
-        var subQuery = ["{}", "{}"];
-        for(var i=0; i < 2; i++) {
-          var dragItems = scope.items[i].list;
-          var len = dragItems.length;
-          if(len > 0) {
-            for(var j=0; j < len; j++) {
-              if(dragItems[j].isMember === "yes") {
-                subQuery[i] = "UNION(" + "{" + dragItems[j].unique_name + "}," + subQuery[i] + ")";
-              } else {
-                subQuery[i] = "UNION(" + dragItems[j].unique_name + ".members," + subQuery[i] + ")";
-              }
-            }
-          }
+        var measures = scope.items[0].list,
+            measureArr = [];
+        for(var i=0; i < measures.length; i++) {
+          measureArr.push(measures[i].unique_name);
         }
-        scope.mdxQuery = "select " + subQuery[0] + " on columns, " + subQuery[1] + " on rows" + " from ["+ scope.$root.CubeName +"]";
+        var measureSet = "{" + measureArr.join() + "}";
+
+        var columns = scope.items[1].list;
+            columnSet = buildSubQuery(columns);
+            columnSubQuery = columns.length > 0 ? (measures.length > 0 ? "(" + columnSet + " * " + measureSet + ")" : columnSet) : measureSet;
+
+        var rows = scope.items[2].list;
+            rowSet = buildSubQuery(rows);
+
+        var filters = scope.items[3].list,
+            filterArr = [];
+        for(var j=0; j < filters.length; j++) {
+          filterArr.push(filters[j].unique_name);
+        }
+        var filterSet = "{" + filterArr.join() + "}";
+        var filterSubQuery = filters.length > 0 ? " where " + filterSet : "";
+
+        scope.mdxQuery = "select non empty " + columnSubQuery + " on columns, non empty (" + rowSet + ") on rows" + " from ["+ scope.$root.CubeName +"]" + filterSubQuery ;
         return scope.mdxQuery;
+      }
+
+      function buildSubQuery(itemArr) {
+        var columnResult = groupBy(itemArr, function(item){
+                return [item.hierName];
+            });
+            columnArr = [];
+        for(var j=0; j < columnResult.length; j++) {
+          var subColumnQuery = "";
+          var subColumnArr = [];
+          for(var k=0; k < columnResult[j].length; k++) {
+            subColumnArr.push(columnResult[j][k].isMember === "yes" ? columnResult[j][k].unique_name : columnResult[j][k].unique_name + ".members");
+          }
+          if (subColumnArr.length > 1) {
+            subColumnQuery = "Hierarchize ({" + subColumnArr.join() + "})";
+          } else {
+            subColumnQuery = subColumnArr.join();
+          }
+          columnArr.push(subColumnQuery);
+        }
+        return "{" + columnArr.join("*") + "}";
+      }
+
+      function groupBy( array , f )
+      {
+        var groups = {};
+        array.forEach( function( o )
+        {
+          var group = JSON.stringify( f(o) );
+          groups[group] = groups[group] || [];
+          groups[group].push( o );
+        });
+        return Object.keys(groups).map( function( group )
+        {
+          return groups[group];
+        })
       }
 
 

@@ -1,6 +1,10 @@
 var hotChocolate = angular.module('hotChocolate');
 hotChocolate.controller('queryController', function($scope, $http, $rootScope,GraphService,$uibModal,$compile) {
   $scope.items = [{
+                    label: 'Measures',
+                    list: []
+                  },
+                  {
                     label: 'Columns',
                     list: []
                   }, {
@@ -10,9 +14,45 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope,Gr
                     label: 'Filters',
                     list: []
                   }];
-
   $scope.deleteItem = function(childIndex, parentIndex) {
     $scope.items[parentIndex].list.splice(childIndex, 1);
+  };
+  $scope.sortList = function(event, ui, listIdx) {
+    var itemArr = $scope.items[listIdx].list,
+        currItem = itemArr[itemArr.length-1];
+    delete currItem.children;
+    itemArr.splice(itemArr.length-1, 1);
+    var isValidationError = false;
+    for(var h=1; h < 4; h++) {
+      if(h !== listIdx) {
+        for(var g=0; g < $scope.items[h].list.length; g++) {
+          if($scope.items[h].list[g].hierName === currItem.hierName) {
+            isValidationError = true;
+            break;
+          }
+        }
+      }
+    }
+    if(!isValidationError && itemArr.indexOf(currItem) == -1) {
+      itemArr.push(currItem);
+      for(var i=0; i < itemArr.length-1; i++) {
+        if(itemArr[i].hierName == currItem.hierName) {
+          if(itemArr[i].levelIdx > currItem.levelIdx) {
+            itemArr.splice(i, 0, currItem);
+          }
+          else {
+            for(var j=i; itemArr[j].hierName == currItem.hierName; j++) {
+              if(itemArr[j].levelIdx >= currItem.levelIdx) {
+                break;
+              }
+            }
+            itemArr.splice(j, 0, currItem);
+          }
+          itemArr.splice(itemArr.length-1, 1);
+          break;
+        }
+      }
+    }
   };
   $scope.queryList = [];
   // $scope.$watch()
