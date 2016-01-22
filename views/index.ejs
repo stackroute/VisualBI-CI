@@ -18,6 +18,8 @@
     <script src="/lib/angular-dragdrop/src/angular-dragdrop.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    <!-- Include font Awesome-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Include Angularjs UI-Bootstrap -->
     <script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <!-- Include angularApp.js for defining module -->
@@ -43,15 +45,12 @@
     <script src="directives/toggleList.js"></script>
     <!-- Include saveQuery.js -->
     <script src="services/saveQuery.js"></script>
-
     <!-- Bootstrap CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="stylesheets/style.css" rel="stylesheet">
     <!-- Include graph Directives -->
     <script src="directives/graphDirectives.js"></script>
-
-
   </head>
   <body>
     <div class="container-fluid" id="main" ng-app="hotChocolate">
@@ -174,22 +173,72 @@
           </div> <!-- left-menu-wrapper end-->
         </div> <!-- left-menu end-->
         <div class="col-xs-8" id="content" ng-controller="queryController">
-          <!-- Graph Modal -->
-    <script type="text/ng-template" id="modalGraph.html">
-      <div>
-        <div class="modal-header">
-          <h4 class="modal-title">Modal Graph</h4>
-          <label><input type="checkbox"> Sort values</label>
-        </div>
-        <div class="modal-body">          
-          <modal-graph index-passed="index" graph-array="graphArray"></modal-graph>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary" ng-click="ok()">OK</button>
-          <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        </div>
-      </div>
-    </script>
+        <!-- Modal Bar Graph -->
+        <script type="text/ng-template" id="modalBarGraph.html">
+          <div>
+            <div class="modal-header">
+              <h4 class="modal-title">Modal Graph</h4>
+              
+            </div>
+            <div class="modal-body">          
+              <modalbar-graph index-passed="index" graph-array="graphArray"></modalbar-graph>
+            </div>
+            <div class="modal-footer">
+              <label><input type="checkbox"> Sort values</label>
+              <button class="btn btn-primary" ng-click="ok()">OK</button>
+              <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            </div>
+          </div>
+        </script>
+
+        <!-- Modal Line Graph -->
+          <script type="text/ng-template" id="modalLineGraph.html">
+            <div>
+              <div class="modal-header">
+                <h4 class="modal-title">Modal Graph</h4>
+              </div>
+              <div class="modal-body">          
+                <modalline-graph index-passed="index" graph-array="graphArray"></modalline-graph>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+              </div>
+            </div>
+          </script>
+
+          <!-- Modal Area Graph -->
+          <script type="text/ng-template" id="modalAreaGraph.html">
+            <div>
+              <div class="modal-header">
+                <h4 class="modal-title">Modal Graph</h4>
+              </div>
+              <div class="modal-body">          
+                <modalarea-graph index-passed="index" graph-array="graphArray"></modalarea-graph>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+              </div>
+            </div>
+          </script>
+
+          <!-- Modal Pie Graph -->
+          <script type="text/ng-template" id="modalPieGraph.html">
+            <div>
+              <div class="modal-header">
+                <h4 class="modal-title">Modal Graph</h4>
+              </div>
+              <div class="modal-body">          
+                <modalpie-graph index-passed="index" graph-array="graphArray"></modalpie-graph>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+              </div>
+            </div>
+          </script>
+
           <!-- saveQueryModal-->
           <script type="text/ng-template" id="saveQuery.html">
             <div class="modal-header row">
@@ -236,12 +285,12 @@
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-floppy-disk"></span></button>
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
-              <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-download-alt"></span></button>
+              <button type="button" class="btn btn-default navbar-btn" ng-click="showPieGraphColumn()"><i class="fa fa-pie-chart"></i></button>
             </div>
             <div class="btn-group" role="group">
-              <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-floppy-disk"></span></button>
-              <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
-              <button type="button" class="btn btn-default navbar-btn" ng-click="showGraphColumn()"><span class="glyphicon glyphicon-download-alt"></span></button>
+              <button type="button" class="btn btn-default navbar-btn" ng-click="showAreaGraphColumn()"><i class="fa fa-area-chart"></i></button>
+              <button type="button" class="btn btn-default navbar-btn" ng-click="showLineGraphColumn()"><i class="fa fa-line-chart"></i></button>
+              <button type="button" class="btn btn-default navbar-btn" ng-click="showBarGraphColumn()"><i class="fa fa-bar-chart"></i></button>
             </div>
           </div> <!-- navbar-end -->
           <div id="content-wrapper">
@@ -307,6 +356,8 @@
 
     <!-- D3 JS -->
     <script src="js/d3.js"></script>
+    <!-- D3 tip JS-->
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 
     <!-- Render BarChart -->
     <script src="js/renderBarChart2.js"></script>
