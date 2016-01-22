@@ -66,7 +66,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     var filterSet = "{" + filterArr.join() + "}";
     var filterSubQuery = filters.length > 0 ? " where " + filterSet : "";
 
-    $scope.mdxQuery = "select non empty " + columnSubQuery + " on columns, non empty (" + rowSet + ") on rows" + " from ["+ $rootScope.CubeName +"]" + filterSubQuery ;
+    $scope.mdxQuery = "select non empty (" + columnSubQuery + ") on columns, non empty (" + rowSet + ") on rows" + " from ["+ $rootScope.CubeName +"]" + filterSubQuery ;
     return $scope.mdxQuery;
   };
 
@@ -91,8 +91,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     return "{" + columnArr.join("*") + "}";
   };
 
-  $scope.groupBy = function ( array , f )
-  {
+  $scope.groupBy = function ( array , f ) {
     var groups = {};
     array.forEach( function( o )
     {
@@ -143,79 +142,83 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
       }
     }
   };
-    $scope.queryList = [];
 
-    $rootScope.$watch('queryList', function(newValue, oldValue){
-      $scope.queryList = newValue;
-    });
+  $scope.queryList = [];
 
-    $scope.querySaveMessage = "";
-    $scope.showModalAlert = false;
-    $scope.hideMe = function(list) {
-      return list.length > 0;
-    };
+  $rootScope.$watch('queryList', function(newValue, oldValue){
+    $scope.queryList = newValue;
+  });
 
-    $scope.mdxQuery = "";
+  $scope.querySaveMessage = "";
+  $scope.showModalAlert = false;
+  $scope.hideMe = function(list) {
+    return list.length > 0;
+  };
+
+  $scope.mdxQuery = "";
     // $scope.executeQueryData = {};
   $scope.graphArray = [];
-    $scope.newQueryName = "";
+  $scope.newQueryName = "";
   $scope.isMdxInputError = false;
   $scope.mdxInputErrorMessage = "MDX input error.";
   $rootScope.graphArray = [];
 
-    $scope.retrieveQuery = function(idx) {
-      var query = $scope.queryList[idx];
-      console.log(query);
-        $rootScope.selectedRetrieveQuery = true;
-      $scope.items[0].list = query.onMeasures;
-      $scope.items[1].list = query.onColumns;
-      $scope.items[2].list = query.onRows;
-      $scope.items[3].list = query.onFilters;
-      if(query.connectionData.dataSource === $rootScope.DataSourceName &&
-          query.connectionData.catalog === $rootScope.CatalogName &&
-              query.connectionData.cube === $rootScope.CubeName){
-          $rootScope.selectedRetrieveQuery = false;
-        }
-        $rootScope.$broadcast('retrieveQueryEvent', query.connectionData);
-    };
-    $scope.$on('resetQueryData', function(event) {
+  $scope.retrieveQuery = function(idx) {
+    var query = $scope.queryList[idx];
+    console.log(query);
+    $rootScope.selectedRetrieveQuery = true;
+    $scope.items[0].list = query.onMeasures;
+    $scope.items[1].list = query.onColumns;
+    $scope.items[2].list = query.onRows;
+    $scope.items[3].list = query.onFilters;
+    if(query.connectionData.dataSource === $rootScope.DataSourceName &&
+        query.connectionData.catalog === $rootScope.CatalogName &&
+            query.connectionData.cube === $rootScope.CubeName){
+        $rootScope.selectedRetrieveQuery = false;
+      }
+      $rootScope.$broadcast('retrieveQueryEvent', query.connectionData);
+  };
+
+  $scope.$on('resetQueryData', function(event) {
       $scope.items[0].list = [];
       $scope.items[1].list = [];
       $scope.items[2].list = [];
       $scope.items[3].list = [];
-      // $( "#dataTableBody tr" ).replaceWith( "" );
+  });
+
+  $scope.open = function(){
+    var modalInstance = $uibModal.open({
+       animation: $scope.animationsEnabled,
+       templateUrl: 'saveQuery.html',
+       controller: 'SaveQryModalCtrl',
+       resolve: {
+         items: function(){
+           return $scope.items;
+        },
+         queryList: function(){
+           return $scope.queryList;
+        },
+         mdxQuery: function(){
+           return $scope.mdxQuery;
+        }
+      }
     });
-    $scope.open = function(){
-        var modalInstance = $uibModal.open({
-           animation: $scope.animationsEnabled,
-           templateUrl: 'saveQuery.html',
-           controller: 'SaveQryModalCtrl',
-           resolve: {
-             items: function(){
-               return $scope.items;
-             },
-             queryList: function(){
-               return $scope.queryList;
-             },
-             mdxQuery: function(){
-               return $scope.mdxQuery;
-             }
-           }
-         });
-      modalInstance.result.then(function(queryList){
-        console.log(queryList);
-        $scope.queryList = queryList;
-      });
-       };
-   $scope.toggleAnimation = function () {
+
+    modalInstance.result.then(function(queryList){
+      console.log(queryList);
+      $scope.queryList = queryList;
+    });
+  };
+
+  $scope.toggleAnimation = function () {
     $scope.animationsEnabled = !$scope.animationsEnabled;
-   };
- }
-  //Show Graph Column function
-  $scope.showGraphColumn = function() {
+  };
+}
+  //Show Bar Graph Column
+  $scope.showBarGraphColumn = function() {
     console.log("entered showGraphColumn");
-    if(($("."+"miniGraph"+"").length) === 0){
-        $("#row0").prev().append("<td class="+"miniGraph"+"><span class='graphIcon'>"+"miniGraph"+"</span></td>");
+    if(($("."+"miniBarGraph"+"").length) === 0){
+        $("#row0").prev().append("<td class="+"miniBarGraph"+"><span class='graphIcon'>"+"Bar Chart"+"</span></td>");
 
         //$scope.graphArray = graphArray;
         for(var index in $scope.graphArray) {
@@ -223,20 +226,20 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
           var dataset = $scope.graphArray;
           console.log(dataset);
           $rootScope.graphArray = $scope.graphArray;
-          $("#row"+index).append($compile("<td class="+"miniGraph"+"><mini-graphs index-passed="+index+" "+"my-set="+'graphArray'+"></mini-graphs></td>")($scope));
+          $("#row"+index).append($compile("<td class="+"miniBarGraph"+"><minibar-graph index-passed="+index+" "+"my-set="+'graphArray'+"></minibar-graph></td>")($scope));
             //GraphService.renderMiniGraph(graphArray[index],'#row'+index+ ' '+'td.'+"miniGraph"+ ' ' +'span.graphIcon',index);
 
         }
       }
       else {
-        $("."+"miniGraph"+"").toggle();
+        $("."+"miniBarGraph"+"").toggle();
       }
   };
 
-  //Show Modal Graph in Modal Window
-  $scope.openModalGraph = function(indexPassed) {
+  //Show Modal Bar Graph in Modal Window
+  $scope.openModalBarGraph = function(indexPassed) {
     var modalInstance = $uibModal.open({
-      templateUrl : 'modalGraph.html',
+      templateUrl : 'modalBarGraph.html',
       controller : 'ModalGraphController',
       indexPassed : indexPassed,
       //data : $scope.graphArray,
@@ -252,4 +255,121 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     });
   };
 
+  //Show Line Graph column
+  $scope.showLineGraphColumn = function() {
+    console.log("entered showLineGraphColumn");
+      if(($("."+"miniLineGraph"+"").length) === 0){
+          $("#row0").prev().append("<td class="+"miniLineGraph"+"><span class='graphIcon'>"+"Line Chart"+"</span></td>");
+
+          //$scope.graphArray = graphArray;
+          for(var index in $scope.graphArray) {
+            console.log($scope.graphArray);
+            var dataset = $scope.graphArray;
+            console.log(dataset);
+            $rootScope.graphArray = $scope.graphArray;
+            $("#row"+index).append($compile("<td class="+"miniLineGraph"+"><miniline-graph index-passed="+index+" "+"my-set="+'graphArray'+"></miniline-graph></td>")($scope));
+              //GraphService.renderMiniGraph(graphArray[index],'#row'+index+ ' '+'td.'+"miniGraph"+ ' ' +'span.graphIcon',index);
+
+          }
+        }
+        else {
+          $("."+"miniLineGraph"+"").toggle();
+        }
+  };
+
+  //Show Line Modal Graph
+  $scope.openModalLineGraph = function(indexPassed) {
+    var modalInstance = $uibModal.open({
+      templateUrl : "modalLineGraph.html",
+      controller : "ModalGraphController",
+      indexPassed : indexPassed,
+      resolve : {
+        graphData : function(){
+          return $rootScope.graphArray;
+        },
+        index : function() {
+          return indexPassed;
+        }
+      }
+    });
+  };
+
+  //Show Area Graph Column
+  $scope.showAreaGraphColumn = function() {
+    console.log("entered showAreaGraphColumn");
+      if(($("."+"miniAreaGraph"+"").length) === 0){
+          $("#row0").prev().append("<td class="+"miniAreaGraph"+"><span class='graphIcon'>"+"Area Chart"+"</span></td>");
+
+          //$scope.graphArray = graphArray;
+          for(var index in $scope.graphArray) {
+            console.log($scope.graphArray);
+            var dataset = $scope.graphArray;
+            console.log(dataset);
+            $rootScope.graphArray = $scope.graphArray;
+            $("#row"+index).append($compile("<td class="+"miniAreaGraph"+"><miniarea-graph index-passed="+index+" "+"my-set="+'graphArray'+"></miniarea-graph></td>")($scope));
+              //GraphService.renderMiniGraph(graphArray[index],'#row'+index+ ' '+'td.'+"miniGraph"+ ' ' +'span.graphIcon',index);
+
+          }
+      } else {
+          $("."+"miniAreaGraph"+"").toggle();
+      }
+  };
+
+  //Show Area Modal Graph
+  $scope.openModalAreaGraph = function(indexPassed) {
+    var modalInstance = $uibModal.open({
+      templateUrl : "modalAreaGraph.html",
+      controller : "ModalGraphController",
+      indexPassed : indexPassed,
+      resolve : {
+        graphData : function(){
+          return $rootScope.graphArray;
+        },
+        index : function() {
+          return indexPassed;
+        }
+      }
+    });
+  };
+
+  //show Pie Graph column
+  $scope.showPieGraphColumn = function() {
+    console.log("entered showPieGraphColumn");
+      if(($("."+"miniPieGraph"+"").length) === 0){
+          $("#row0").prev().append("<td class="+"miniPieGraph"+"><span class='graphIcon'>"+"Pie Chart"+"</span></td>");
+
+          //$scope.graphArray = graphArray;
+          for(var index in $scope.graphArray) {
+            console.log($scope.graphArray);
+            var dataset = $scope.graphArray;
+            console.log(dataset);
+            $rootScope.graphArray = $scope.graphArray;
+            $("#row"+index).append($compile("<td class="+"miniPieGraph"+"><minipie-graph index-passed="+index+" "+"my-set="+'graphArray'+"></minipie-graph></td>")($scope));
+              //GraphService.renderMiniGraph(graphArray[index],'#row'+index+ ' '+'td.'+"miniGraph"+ ' ' +'span.graphIcon',index);
+
+          }
+        }
+        else {
+          $("."+"miniPieGraph"+"").toggle();
+        }
+  }
+
+  //Show Pie Modal Graph
+  $scope.openModalPieGraph = function(indexPassed) {
+    var modalInstance = $uibModal.open({
+      templateUrl : "modalPieGraph.html",
+      controller : "ModalGraphController",
+      indexPassed : indexPassed,
+      resolve : {
+        graphData : function(){
+          return $rootScope.graphArray;
+        },
+        index : function() {
+          return indexPassed;
+        }
+      }
+    });
+  };
+
+  }
 });
