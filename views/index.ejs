@@ -195,7 +195,7 @@
         <script type="text/ng-template" id="modalBarGraph.html">
           <div>
             <div class="modal-header">
-              <h4 class="modal-title">Modal Graph</h4>
+              <h4 class="modal-title">{{graphArray[graphArray.length-1][index]}}</h4>
 
             </div>
             <div class="modal-body">
@@ -213,7 +213,7 @@
           <script type="text/ng-template" id="modalLineGraph.html">
             <div>
               <div class="modal-header">
-                <h4 class="modal-title">Modal Graph</h4>
+                <h4 class="modal-title">{{graphArray[graphArray.length-1][index]}}</h4>
               </div>
               <div class="modal-body">
                 <modalline-graph index-passed="index" graph-array="graphArray"></modalline-graph>
@@ -229,7 +229,7 @@
           <script type="text/ng-template" id="modalAreaGraph.html">
             <div>
               <div class="modal-header">
-                <h4 class="modal-title">Modal Graph</h4>
+                <h4 class="modal-title">{{graphArray[graphArray.length-1][index]}}</h4>
               </div>
               <div class="modal-body">
                 <modalarea-graph index-passed="index" graph-array="graphArray"></modalarea-graph>
@@ -245,7 +245,7 @@
           <script type="text/ng-template" id="modalPieGraph.html">
             <div>
               <div class="modal-header">
-                <h4 class="modal-title">Modal Graph</h4>
+                <h4 class="modal-title">{{graphArray[graphArray.length-1][index]}}</h4>
               </div>
               <div class="modal-body">
                 <modalpie-graph index-passed="index" graph-array="graphArray"></modalpie-graph>
@@ -283,8 +283,8 @@
           <div class="navbar navbar-fixed-top">
             <div class="btn-group" role="group">
               <!-- save query button-->
-              <button type="button" class="btn btn-default navbar-btn" ng-click="open()">
-                <span class="glyphicon glyphicon-floppy-disk"></span> Save
+              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="save query" tooltip-placement="bottom" ng-click="open()">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
               </button>
               <button type="button" class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown">
                 Queries <span class="caret"></span>
@@ -295,20 +295,15 @@
               <button type="button" class="btn btn-default navbar-btn" id="executeButton" ng-click="getExecuteQueryData('#tableDiv')"><span class="glyphicon glyphicon-play-circle" ></span> Execute</button>
             </div>
             <div class="btn-group" role="group">
-              <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-floppy-disk"></span></button>
-              <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
-              <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
+              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="export widget" tooltip-placement="bottom"><i class="glyphicon glyphicon-export"></i></button>
+              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="show MDX" tooltip-placement="bottom" ng-click="showMdxQuery = showMdxQuery == false ? true : false"><i class="fa fa-file-code-o"></i></button>
+              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="non empty" tooltip-placement="bottom" ng-click="isQueryNonEmpty = isQueryNonEmpty == false ? true : false ; getExecuteQueryData('#dataTableBody')"><i class="fa fa-tasks"></i></button>
             </div>
             <div class="btn-group" role="group">
-              <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-floppy-disk"></span></button>
-              <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-print"></span></button>
-              <button type="button" class="btn btn-default navbar-btn" ng-click="showPieGraphColumn()"><i class="fa fa-pie-chart"></i></button>
-            </div>
-            <div class="btn-group" role="group">
-
-              <button type="button" class="btn btn-default navbar-btn" ng-click="showAreaGraphColumn()"><i class="fa fa-area-chart"></i></button>
-              <button type="button" class="btn btn-default navbar-btn" ng-click="showLineGraphColumn()"><i class="fa fa-line-chart"></i></button>
-              <button type="button" class="btn btn-default navbar-btn" ng-click="showBarGraphColumn()"><i class="fa fa-bar-chart"></i></button>
+              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="pie graph" tooltip-placement="bottom" ng-click="showPieGraphColumn()"><i class="fa fa-pie-chart"></i></button>
+              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="area graph" tooltip-placement="bottom" ng-click="showAreaGraphColumn()"><i class="fa fa-area-chart"></i></button>
+              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="line graph" tooltip-placement="bottom" ng-click="showLineGraphColumn()"><i class="fa fa-line-chart"></i></button>
+              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="bar graph" tooltip-placement="bottom" ng-click="showBarGraphColumn()"><i class="fa fa-bar-chart"></i></button>
             </div>
           </div> <!-- navbar-end -->
           <div id="content-wrapper">
@@ -327,6 +322,12 @@
             </div> <!-- myRect end-->
             <div class="row alert alert-warning" ng-show="isMdxInputError" ng-cloak>
               <strong>{{mdxInputErrorMessage}}</strong>
+            </div>
+            <div class="row alert alert-info" ng-show="showMdxQuery" ng-cloak>
+              <div class="col-xs-12">
+                <h3> <strong> MDX query </strong> </h3>
+                <p> {{mdxQuery}} </p>
+              </div>
             </div>
             <div class="row">
               <div class="col-xs-12">

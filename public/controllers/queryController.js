@@ -65,8 +65,8 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     }
     var filterSet = "{" + filterArr.join() + "}";
     var filterSubQuery = filters.length > 0 ? " where " + filterSet : "";
-
-    $scope.mdxQuery = "select non empty (" + columnSubQuery + ") on columns, non empty (" + rowSet + ") on rows" + " from ["+ $rootScope.CubeName +"]" + filterSubQuery ;
+    var nonEmpty = $scope.isQueryNonEmpty ? "non empty" : "";
+    $scope.mdxQuery = "select " + nonEmpty + " (" + columnSubQuery + ") on columns, " + nonEmpty + " (" + rowSet + ") on rows" + " from ["+ $rootScope.CubeName +"]" + filterSubQuery ;
     return $scope.mdxQuery;
   };
 
@@ -107,10 +107,12 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
 
   $scope.sortList = function(event, ui, listIdx) {
     var itemArr = $scope.items[listIdx].list,
-        currItem = itemArr[itemArr.length-1];
+        currItem = itemArr.pop();
     delete currItem.children;
-    itemArr.splice(itemArr.length-1, 1);
     var isValidationError = false;
+    if(listIdx !== 0 && currItem.hierName === "Measures") {
+      isValidationError = true;
+    }
     for(var h=1; h < 4; h++) {
       if(h !== listIdx) {
         for(var g=0; g < $scope.items[h].list.length; g++) {
@@ -130,7 +132,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
           }
           else {
             for(var j=i; itemArr[j].hierName == currItem.hierName; j++) {
-              if(itemArr[j].levelIdx >= currItem.levelIdx) {
+              if(itemArr[j].levelIdx > currItem.levelIdx) {
                 break;
               }
             }
@@ -156,7 +158,8 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   };
 
   $scope.mdxQuery = "";
-    // $scope.executeQueryData = {};
+  $scope.showMdxQuery = false;
+  $scope.isQueryNonEmpty = true;
   $scope.graphArray = [];
   $scope.newQueryName = "";
   $scope.isMdxInputError = false;
