@@ -271,8 +271,8 @@ app.factory('GraphService', function($compile,$rootScope){
 				.attr("transform","rotate(-90)")
 				.attr("y",6)
 				.attr("dy","0.71em")
-				.style("text-anchor","end")
-				.text("to be replaced!!!! Ge units from data");
+				.style("text-anchor","end");
+				// .text("to be replaced!!!! Ge units from data");
 
 			var line = d3.svg.line()
 							.interpolate("monotone")
@@ -370,8 +370,8 @@ app.factory('GraphService', function($compile,$rootScope){
 				.attr("transform","rotate(-90)")
 				.attr("y",6)
 				.attr("dy","0.71em")
-				.style("text-anchor","end")
-				.text("to be replaced!!!! Ge units from data");
+				.style("text-anchor","end");
+				// .text("to be replaced!!!! Ge units from data");
 
 			var area = d3.svg.area()
    							.x(function(d){return xScale(d.key);})

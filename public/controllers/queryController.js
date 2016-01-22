@@ -213,7 +213,6 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.toggleAnimation = function () {
     $scope.animationsEnabled = !$scope.animationsEnabled;
   };
-}
   //Show Bar Graph Column
   $scope.showBarGraphColumn = function() {
     console.log("entered showGraphColumn");
@@ -370,6 +369,5 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
       }
     });
   };
-
   }
 });

@@ -195,7 +195,7 @@
         <script type="text/ng-template" id="modalBarGraph.html">
           <div>
             <div class="modal-header">
-              <h4 class="modal-title">Modal Graph</h4>
+              <h4 class="modal-title">{{graphArray[graphArray.length-1][index]}}</h4>
 
             </div>
             <div class="modal-body">
@@ -213,7 +213,7 @@
           <script type="text/ng-template" id="modalLineGraph.html">
             <div>
               <div class="modal-header">
-                <h4 class="modal-title">Modal Graph</h4>
+                <h4 class="modal-title">{{graphArray[graphArray.length-1][index]}}</h4>
               </div>
               <div class="modal-body">
                 <modalline-graph index-passed="index" graph-array="graphArray"></modalline-graph>
@@ -229,7 +229,7 @@
           <script type="text/ng-template" id="modalAreaGraph.html">
             <div>
               <div class="modal-header">
-                <h4 class="modal-title">Modal Graph</h4>
+                <h4 class="modal-title">{{graphArray[graphArray.length-1][index]}}</h4>
               </div>
               <div class="modal-body">
                 <modalarea-graph index-passed="index" graph-array="graphArray"></modalarea-graph>
@@ -245,7 +245,7 @@
           <script type="text/ng-template" id="modalPieGraph.html">
             <div>
               <div class="modal-header">
-                <h4 class="modal-title">Modal Graph</h4>
+                <h4 class="modal-title">{{graphArray[graphArray.length-1][index]}}</h4>
               </div>
               <div class="modal-body">
                 <modalpie-graph index-passed="index" graph-array="graphArray"></modalpie-graph>
