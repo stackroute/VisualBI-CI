@@ -87,7 +87,7 @@ app.factory('GraphService', function($compile,$rootScope){
 				height = (450)-margin.top-margin.bottom;
 
 			var x = d3.scale.ordinal()
-						.rangeRoundBands([0,width],0.1,1)
+						.rangeRoundBands([0,width],0.1,0.3)
 						.domain(d3.map(dataset,function(d){return d.key;}));
 			var y = d3.scale.linear()
 						.range([height,0])
@@ -135,8 +135,8 @@ app.factory('GraphService', function($compile,$rootScope){
 				.attr("transform","rotate(-90)")
 				.attr("y",6)
 				.attr("dy","0.71em")
-				.style("text-anchor","end")
-				.text("to be replaced!!!! Ge units from data");
+				.style("text-anchor","end");
+				//.text("to be replaced!!!! Ge units from data");
 
 			svg.selectAll(".bar")
 				.data(dataset)
@@ -176,7 +176,7 @@ app.factory('GraphService', function($compile,$rootScope){
 	  						.call(xAxis)
 	  						.selectAll("text")
 	  						.style("text-anchor","end")
-							.attr("dx","-0.8em")
+							.attr("dx","-0.5em")
 							.attr("dy","0.15em")
 	  						.attr("transform",function(d){return "rotate(-65)";})
 	  						.selectAll("g")
@@ -420,92 +420,62 @@ app.factory('GraphService', function($compile,$rootScope){
 
    			renderModalPieGraph : function(dataset,container) {
    				var margin = {top:20,right:20,bottom:100,left:70},
-				width = 550-margin.left-margin.right,
-				height = (500)-margin.top-margin.bottom;
+				canvasWidth = 550-margin.left-margin.right,
+				canvasHeight = (500)-margin.top-margin.bottom;
 
-				var legendRectSize = 18;
-				var legendSpacing = 4;
+				var outerRadius = 150;
+				var color = d3.scale.category20();
 
-				var radius = Math.min(width, height) / 2;
-   				var donutWidth = 50;
-
-   				var color = d3.scale.category20b();
-
-   				var svg = d3.select(container)
-  							.append('svg')
-  							.attr('width', width)
-						  	.attr('height', height)
-						  	.append('g')
-						  	.attr('transform', 'translate(' + (width / 2) +  ',' + (height / 2) + ')');
-
+				var vis = d3.select(container)
+							.append("svg:svg")
+							.data([dataset])
+							.attr("width",canvasWidth)
+							.attr("height",canvasHeight)
+							.append("svg:g")
+							.attr("transform","translate("+1.5*outerRadius+","+1.5*outerRadius+")");
 				var arc = d3.svg.arc()
-								.innerRadius(radius - donutWidth)
-  								.outerRadius(radius);
-  				var pie = d3.layout.pie()
-  									.value(function(d) { return d.value; })
-  									.sort(null);
+								.outerRadius(outerRadius);
+				var pie = d3.layout.pie()
+							.value(function(d){return d.value;})
+							.sort(function(d){return null;});
 
-  				var tooltip = d3.select(container)                               
-          						.append('div')                                                
-          						.attr('class', 'tooltip');                                    
-                      
-        		tooltip.append('div')                                           
-          				.attr('class', 'label');                                      
-             
-        		tooltip.append('div')                                           
-          				.attr('class', 'count');                                      
+				var arcs = vis.selectAll("g.slice")
+								.data(pie)
+								.enter()
+								.append("svg:g")
+								.attr("class","slice");
+				arcs.append("svg:path")
+					.attr("fill",function(d,i){return color(i);})
+					.attr("d",arc);
 
-        		tooltip.append('div')                                          
-          				.attr('class', 'percent');
+				arcs.append("svg:text")
+					.attr("transform", function(d){
+						d.outerRadius = outerRadius+50;
+						d.innerRadius = outerRadius+45;
+						return "translate("+arc.centroid(d)+")";
+					})
+					.attr("text-anchor","middle")
+					.style("fill","Purple")
+					.style("font","bold 12px Arial")
+					.text(function(d,i){return dataset[i].key;});
 
-  				var path = svg.selectAll('path')
-  								.data(pie(dataset))
-  								.enter()
-  								.append('path')
-  								.attr('d', arc)
-  								.attr('fill', function(d, i) { 
-    								return color(d.value);
-  								})
-  								.each(function(d){this._current = d;});
+				arcs.filter(function(d){return d.endAngle-d.startAngle > .2})
+					.append("svg:text")
+					.attr("dy","0.35em")
+					.attr("text-anchor","middle")
+					.attr("transform", function(d){
+						d.outerRadius = outerRadius;
+						d.innerRadius = outerRadius/2;
+						return "translate("+arc.centroid(d)+")rotate("+angle(d)+")";
+					})
+					.style("fill","white")
+					.style("font","bold 12px Arial")
+					.text(function(d){return d.data.value;});
 
-  				path.on('mouseover', function(d) {                            
-            		var total = d3.sum(dataset.map(function(d) {                
-              			return d.value;                                           
-            		}));                                                        
-            		var percent = Math.round(1000 * d.value / total) / 10; 
-            		tooltip.select('.label').html(d.key);                
-            		tooltip.select('.count').html(d.value);                
-            		tooltip.select('.percent').html(percent + '%');             
-            		tooltip.style('display', 'block');                          
-         		});                                                           
-          
-          		path.on('mouseout', function() {                              
-            		tooltip.style('display', 'none');                        
-          		});
-
-  				var legend = svg.selectAll('.legend')
-								  	.data(color.domain())
-								  	.enter()
-								  	.append('g')
-								  	.attr('class', 'legend')
-								 	.attr('transform', function(d, i) {
-										var height = legendRectSize + legendSpacing;
-									    var offset =  height * color.domain().length / 2;
-									    var horz = -2 * legendRectSize;
-									    var vert = i * height - offset;
-									    return 'translate(' + horz + ',' + vert + ')';
-  									});
-
-  				legend.append('rect')
-  						.attr('width', legendRectSize)
-  						.attr('height', legendRectSize)
-  						.style('fill', color)
-  						.style('stroke', color)
-
-  				legend.append('text')
-  						.attr('x', legendRectSize + legendSpacing)
-  						.attr('y', legendRectSize - legendSpacing)
-  						.text(function(d) { return d.key; });
+					function angle(d) {
+						var a = (d.startAngle+d.endAngle)*90/Math.PI-90;
+						return a > 90 ? a-180:a;
+					}
    			}
    }//end of return object
 });

@@ -300,7 +300,12 @@ rect {
       } 
       #barGraphLabel {
         width : 80px;
-      }                                                              
+      } 
+
+      .slice text {
+            font-size: 16pt;
+            font-family: Arial;
+        }                                                             
 
 /*********** Angularizing Modal *******************/
 .selectConnection {
