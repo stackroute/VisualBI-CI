@@ -28,18 +28,18 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     $window.location.href = '/logout';
   };
 
-  $scope.getExecuteQueryData = function(container) {
+  $scope.getExecuteQueryData = function(containerId) {
     var parameters = {
           connId : $rootScope.connId,
           dataSource: $rootScope.DataSourceName,
           catalog: $rootScope.CatalogName,
           statement: $scope.buildQuery()
     };
+    console.log(containerId);
+    console.log(angular.element(document).find(containerId));
+    var container = angular.element(document).find(containerId);
     executeQueryService.render(container, parameters).then(function(data) {
          $scope.graphArray = data;
-         console.log(data);
-      // $scope.executeQueryData = data.data;
-      // $scope.graphArray = gridRenderService.renderData(data.data, 'dataTableBody');
     });
   };
 
@@ -213,7 +213,6 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.toggleAnimation = function () {
     $scope.animationsEnabled = !$scope.animationsEnabled;
   };
-}
   //Show Bar Graph Column
   $scope.showBarGraphColumn = function() {
     console.log("entered showGraphColumn");
@@ -352,7 +351,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
         else {
           $("."+"miniPieGraph"+"").toggle();
         }
-  }
+  };
 
   //Show Pie Modal Graph
   $scope.openModalPieGraph = function(indexPassed) {
@@ -370,6 +369,5 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
       }
     });
   };
-
   }
 });

@@ -28,12 +28,27 @@ app.factory('executeQueryService', function($http, $rootScope) {
 });
 
 var renderData =  function (container, data){
-  $( container+" tr" ).replaceWith( "" );
+  $('div.section_result').replaceWith('');
+  container.append('<div class="section_result">'+
+    '<table id="dataTable">'+
+      '<tbody id="dataTableBody">'+
+        '<script id="axis0_insersion">'+
+        '</script>'+
+        '<script id="axis1_insersion">'+
+        '</script>'+
+      '</tbody>'+
+    '</table>'+
+  '</div>');
+  $('#axis0_insersion').append('{{axis0}}');
+  $('#axis1_insersion').append('{{axis1}}');
+  // $( container+" tr" ).replaceWith( "" );
   var addElement, ans, fs, members, tdChild;
   var axes = data.Axes,
       axis = axes.Axis,
       axis0 = axis[0],
       axis1 = axis[1];
+  console.log(axis0);
+  console.log(axis1);
   /************* Function for graphKey *****************/
   var axis0Names = [];
   for (var index0 in axis0){
@@ -124,7 +139,7 @@ var renderData =  function (container, data){
   };
   var template0 = $.trim($("#axis0_insersion").html()),
       frag0 = template0.replace(/{{axis0}}/ig,tdAxis0Child(axis0Child));
-  $(container).append(frag0);  // #dataTableBody
+  $('#dataTableBody').append(frag0);  // #dataTableBody
 
   /****************************** Data **********************************/
   var cellData = data.CellData,
@@ -194,6 +209,6 @@ var renderData =  function (container, data){
   };
   var template1 = $.trim($("#axis1_insersion").html());
   var frag1 = template1.replace(/{{axis1}}/ig,"<tr id='row0' class='dataRow'>"+tdAxis1Child(axis1Child));
-  $(container).append(frag1);
+  $('#dataTableBody').append(frag1);
   return graphData;
 }; // end renderData
