@@ -122,6 +122,7 @@ app.factory('gridRenderService', function() {
         tempDataObj.td = td;
         dataArray.push(tempDataObj);
       }
+      console.log(graphData);
       /****************************** Axis1 Hierarchical Structure **********************************/
       axis1Child = axis1.reduce((function(acc, member) {
         return addElement(member.Member, acc, 1);

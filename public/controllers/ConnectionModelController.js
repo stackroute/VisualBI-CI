@@ -117,6 +117,8 @@ hotChocolate.controller('ConnectionModelController',
                                 $scope.measures = data.data.values;
                                 for(var i=0; i < $scope.measures.length; i++) {
                                   $scope.measures[i].isMember = "yes";
+                                  $scope.measures[i].hierName = "Measures";
+                                  $scope.measures[i].levelIdx = 0;
                                 }
           });
         }
