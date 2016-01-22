@@ -292,7 +292,15 @@ rect {
       }
       rect.disabled {                                                 /* NEW */
         fill: transparent !important;                                 /* NEW */
-      }                                                                 
+      }  
+
+      .modal-content input[type="checkbox"]{
+        width:40px;
+        padding-right: 15px;
+      } 
+      #barGraphLabel {
+        width : 80px;
+      }                                                              
 
 /*********** Angularizing Modal *******************/
 .selectConnection {
