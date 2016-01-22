@@ -59,7 +59,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     var filterSet = "{" + filterArr.join() + "}";
     var filterSubQuery = filters.length > 0 ? " where " + filterSet : "";
 
-    $scope.mdxQuery = "select non empty " + columnSubQuery + " on columns, non empty (" + rowSet + ") on rows" + " from ["+ $rootScope.CubeName +"]" + filterSubQuery ;
+    $scope.mdxQuery = "select non empty (" + columnSubQuery + ") on columns, non empty (" + rowSet + ") on rows" + " from ["+ $rootScope.CubeName +"]" + filterSubQuery ;
     return $scope.mdxQuery;
   };
 
