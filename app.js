@@ -16,7 +16,7 @@ var  db                = require('./models/db'),
     routes             = require('./routes/index'),
     users              = require('./routes/users'),
     serverCredentials  = require('./routes/serverCredentials');
-    widgetController  = require('./routes/widgetController');
+    widgetRouter  = require('./routes/widgetRouter');
 
 // initializing express application
 var app = express();
@@ -40,7 +40,7 @@ app.use('/execute', execute);
 app.use('/discover', discover);
 app.use('/serverCredentials', serverCredentials);
 app.use('/query', queryController);
-app.use('/widget', widgetController);
+app.use('/widget', widgetRouter);
 
 
 // catch 404 and forward to error handler
