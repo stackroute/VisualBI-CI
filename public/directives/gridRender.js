@@ -1,31 +1,111 @@
-/*******************   Necessary Imports    *****************************/
-// var render = require('./renderBarChart.js');
+var hotChocolate = angular.module("hotChocolate");
 
-/******** AJAX Request for getting json data from response ***********/
-var graphArray = [];
-function jsondata(query){
-  $( "#dataTableBody tr" ).replaceWith( "" );
-  $.post(
-      "/execute",
-      { username : query.username,
-        dataSource : query.dataSource,
-        catalog: query.catalog,
-        statement: query.mdxQuery
-        // statement: "select NON EMPTY ([Department].[All Departments]) on columns, NON EMPTY {[Measures].[Actual]} on ROWS from [Quadrant Analysis]"
-        // statement: "select NON EMPTY UNION([Department].members,{}) on columns, NON EMPTY {[Measures].[Actual], [Measures].[Budget]} on ROWS from [Quadrant Analysis]"
-        // statement: "select NON EMPTY {[Measures].[Actual],[Measures].[Budget]} ON COLUMNS, "+
-        //             "NON EMPTY Crossjoin(Union({[Region].[All Regions]},{[Region].[All Regions].Children}),"+
-        //                 " Crossjoin(Hierarchize(Union({[Department].[All Departments]}, "+
-        //                   "[Department].[All Departments].Children)),Union({[Positions].[All Positions]},"+
-        //                       "{[Positions].[All Positions].Children}))) ON ROWS from [Quadrant Analysis]"
-      }
-    ).done(function( data ) {
-        renderData(data);
+hotChocolate.directive('gridRender', function($http,$timeout,GraphService) {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      scope.$root.$watch('CubeName', function(newValue, oldValue){
+        $( "#dataTableBody tr" ).replaceWith( "" );
       });
-}
+      element.on('click', function() {
+        // console.log(scope.$root.DataSourceName);
+        $( "#dataTableBody tr" ).replaceWith( "" );
+        $http.post('/execute', {
+            connId : scope.$root.connId,
+            dataSource: scope.$root.DataSourceName,
+            catalog: scope.$root.CatalogName,
+            statement: buildQuery()
+        })
+        .success(function(data) {
+            scope.executeQueryData = data;
+            renderData(data);
+            console.log("*********************");
+            console.log(scope.executeQueryData);
+            scope.graphArray = GraphService.getGraphData(scope.executeQueryData);
+            console.log("**************************");
+            console.log(scope.graphArray);
+        })
+        .error(function(data) {
+            if(scope.items[0].list.length === 0 && scope.items[1].list.length === 0) {
+              scope.mdxInputErrorMessage = "Atleast one of Measures and Columns need to be filled.";
+            }
+            else if (scope.items[2].list.length === 0) {
+              scope.mdxInputErrorMessage = "Rows should not be empty.";
+            }
+            scope.isMdxInputError = true;
+            $timeout(function() {
+              scope.isMdxInputError = false;
+            }, 3000);
+        });
+      });
 
-/************************** Function for rendering data into grid ******************************/
+      function buildQuery() {
+        var measures = scope.items[0].list,
+            measureArr = [];
+        for(var i=0; i < measures.length; i++) {
+          measureArr.push(measures[i].unique_name);
+        }
+        var measureSet = "{" + measureArr.join() + "}";
+
+        var columns = scope.items[1].list;
+            columnSet = buildSubQuery(columns);
+            columnSubQuery = columns.length > 0 ? (measures.length > 0 ? "(" + columnSet + " * " + measureSet + ")" : columnSet) : measureSet;
+
+        var rows = scope.items[2].list;
+            rowSet = buildSubQuery(rows);
+
+        var filters = scope.items[3].list,
+            filterArr = [];
+        for(var j=0; j < filters.length; j++) {
+          filterArr.push(filters[j].unique_name);
+        }
+        var filterSet = "{" + filterArr.join() + "}";
+        var filterSubQuery = filters.length > 0 ? " where " + filterSet : "";
+
+        scope.mdxQuery = "select non empty " + columnSubQuery + " on columns, non empty (" + rowSet + ") on rows" + " from ["+ scope.$root.CubeName +"]" + filterSubQuery ;
+        return scope.mdxQuery;
+      }
+
+      function buildSubQuery(itemArr) {
+        var columnResult = groupBy(itemArr, function(item){
+                return [item.hierName];
+            });
+            columnArr = [];
+        for(var j=0; j < columnResult.length; j++) {
+          var subColumnQuery = "";
+          var subColumnArr = [];
+          for(var k=0; k < columnResult[j].length; k++) {
+            subColumnArr.push(columnResult[j][k].isMember === "yes" ? columnResult[j][k].unique_name : columnResult[j][k].unique_name + ".members");
+          }
+          if (subColumnArr.length > 1) {
+            subColumnQuery = "Hierarchize ({" + subColumnArr.join() + "})";
+          } else {
+            subColumnQuery = subColumnArr.join();
+          }
+          columnArr.push(subColumnQuery);
+        }
+        return "{" + columnArr.join("*") + "}";
+      }
+
+      function groupBy( array , f )
+      {
+        var groups = {};
+        array.forEach( function( o )
+        {
+          var group = JSON.stringify( f(o) );
+          groups[group] = groups[group] || [];
+          groups[group].push( o );
+        });
+        return Object.keys(groups).map( function( group )
+        {
+          return groups[group];
+        });
+      }
+
+
+     /************************** Function for rendering data into grid ******************************/
 function renderData(data){
+  console.log(data);
   var addElement, ans, fs, members, tdChild;
   var axes = data.Axes,
       axis = axes.Axis,
@@ -33,17 +113,17 @@ function renderData(data){
       axis1 = axis[1];
 
       /************* Function for graphKey *****************/
-
-      var axis0Names = [];
-      for (var index0 in axis0){
-         var axis0Member = axis0[index0].Member;
-         var axis0Name = '';
-         for(var memIndex0 in axis0Member){
-           axis0Name = axis0Name+axis0Member[memIndex0].Caption+".";
-         }
-         axis0Name = axis0Name.substring(0,axis0Name.length-1);
-         axis0Names.push(axis0Name);
-       }
+      //
+      // var axis0Names = [];
+      // for (var index0 in axis0){
+      //    var axis0Member = axis0[index0].Member;
+      //    var axis0Name = '';
+      //    for(var memIndex0 in axis0Member){
+      //      axis0Name = axis0Name+axis0Member[memIndex0].Caption+".";
+      //    }
+      //    axis0Name = axis0Name.substring(0,axis0Name.length-1);
+      //    axis0Names.push(axis0Name);
+      //  }
       //  console.log(axis0Names);
 /************************ Generating tree structure *************************************/
       addElement = function(members, tree, level) {
@@ -64,7 +144,7 @@ function renderData(data){
         };
 /************************************** Graph Arrays *****************************************/
 // var graphArray = [];
-var graphKey = [];
+// var graphKey = [];
 /****************************** Axis0 Hierarchical Structure **********************************/
 
         axis0Child = axis0.reduce((function(acc, member) {
@@ -142,7 +222,7 @@ var graphKey = [];
       }
       tempDataObj.td = td;
       dataArray.push(tempDataObj);
-      graphArray.push(graphInnerArray);
+      // graphArray.push(graphInnerArray);
     }
     // console.log(graphArray);
     // graphArray is for D3.js part.
@@ -185,19 +265,7 @@ var graphKey = [];
   var template1 = $.trim($("#axis1_insersion").html());
   var frag1 = template1.replace(/{{axis1}}/ig,"<tr id='row0' class='dataRow'>"+tdAxis1Child(axis1Child));
   $('#dataTableBody').append(frag1);
-}
-
-  $(".graph").on("click",function(){
-    // $(".graphColumn").toggle();
-    if(($("."+this.id+"").length) === 0){
-    $("#row0").prev().append("<td class="+this.id+"><span class='graphIcon'>"+this.id+"</span></td>");
-    $(".dataRow").append("<td class="+this.id+"><span class='graphIcon'></span></td>");
-
-    for(var index in graphArray) {
-      renderChart(graphArray[index],'#row'+index+ ' '+'td.'+this.id + ' ' +'span.graphIcon');
-    }
-  }
-  else{
-    $("."+this.id+"").toggle();
-  }
-  });
+} // end renderData
+    } // end link
+  }; // end return
+}); // end  directive

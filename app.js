@@ -1,5 +1,7 @@
 // Express modules
 var express       = require('express'),
+    passport      = require('passport'),
+    LocalStrategy = require('passport-local').Strategy,
     path          = require('path'),
     logger        = require('morgan'),
     favicon       = require('serve-favicon'),
@@ -13,6 +15,7 @@ var  db                = require('./models/db'),
     queryController    = require('./routes/queryController'),
     routes             = require('./routes/index'),
     users              = require('./routes/users'),
+    login              = require('./routes/login'),
     serverCredentials  = require('./routes/serverCredentials');
 
 // initializing express application
@@ -29,14 +32,28 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('express-session')({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routing
-app.use('/', routes);
+app.use('/', login);
+app.use('/home', routes);
 app.use('/users', users);
 app.use('/execute', execute);
 app.use('/discover', discover);
 app.use('/serverCredentials', serverCredentials);
 app.use('/query', queryController);
+
+// passport config
+var Account = require('./models/userDetails');
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
