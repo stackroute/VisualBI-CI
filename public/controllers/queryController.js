@@ -1,5 +1,5 @@
 var hotChocolate = angular.module('hotChocolate');
-hotChocolate.controller('queryController', function($scope, $http, $rootScope, GraphService, executeQueryService, gridRenderService, $uibModal, $compile, $cookies, $window) {
+hotChocolate.controller('queryController', function($scope, $http, $rootScope, GraphService, executeQueryService, $uibModal, $compile, $cookies, $window) {
   console.log($cookies.get('userName'));
   if(!$cookies.get('userName')){
     $window.location.href = '/';
@@ -28,11 +28,18 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     $window.location.href = '/logout';
   };
 
-  $scope.getExecuteQueryData = function() {
-    executeQueryService.executeQuery($scope.buildQuery()).then(function(data) {
-      console.log(data.data);
-      $scope.executeQueryData = data.data;
-      $scope.graphArray = gridRenderService.renderData(data.data, 'dataTableBody');
+  $scope.getExecuteQueryData = function(container) {
+    var parameters = {
+          connId : $rootScope.connId,
+          dataSource: $rootScope.DataSourceName,
+          catalog: $rootScope.CatalogName,
+          statement: $scope.buildQuery()
+    };
+    executeQueryService.render(container, parameters).then(function(data) {
+         $scope.graphArray = data;
+         console.log(data);
+      // $scope.executeQueryData = data.data;
+      // $scope.graphArray = gridRenderService.renderData(data.data, 'dataTableBody');
     });
   };
 
@@ -149,7 +156,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     };
 
     $scope.mdxQuery = "";
-    $scope.executeQueryData = {};
+    // $scope.executeQueryData = {};
   $scope.graphArray = [];
     $scope.newQueryName = "";
   $scope.isMdxInputError = false;

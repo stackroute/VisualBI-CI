@@ -34,7 +34,7 @@
     <!-- Include GraphService -->
     <script src="services/graphService.js"></script>
     <!-- Include gridRenderService -->
-    <script src="services/gridRenderService.js"></script>
+    <!-- <script src="services/gridRenderService.js"></script> -->
     <!-- Include executeQueryService -->
     <script src="services/executeQueryService.js"></script>
     <!-- Include ConnectionModelController.js -->
@@ -240,7 +240,7 @@
               <ul class="dropdown-menu" id="queryList">
                 <li ng-repeat="query in queryList"><a href="#" ng-click="retrieveQuery($index)">{{query.queryName}}</a></li>
               </ul>
-              <button type="button" class="btn btn-default navbar-btn" id="executeButton" ng-click="getExecuteQueryData()"><span class="glyphicon glyphicon-play-circle" ></span> Execute</button>
+              <button type="button" class="btn btn-default navbar-btn" id="executeButton" ng-click="getExecuteQueryData('#dataTableBody')"><span class="glyphicon glyphicon-play-circle" ></span> Execute</button>
             </div>
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-floppy-disk"></span></button>
