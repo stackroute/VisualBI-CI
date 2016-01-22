@@ -10,11 +10,12 @@ var router = express.Router(),
 
 
 router.post('/', function(req, res) {
-  console.log(req.body.mdxQuery);
+  // console.log(req.body.mdxQuery);
+  // console.log("inside route/execute");
+  
       var statement  = req.body.statement,
-          username   = req.body.username,
+          connId   = req.body.connId,
           properties = {};
-
       properties[Xmla.PROP_DATASOURCEINFO]  = req.body.dataSource;
       properties[Xmla.PROP_CATALOG]         = req.body.catalog;
       /*available formats:
@@ -80,13 +81,7 @@ router.post('/', function(req, res) {
       dataSet.CellData={"Cell":cellData};
     }
 
-    UserDetails.findOne({username:username},function(err,user){
-      if(err)
-        console.log(err);
-      else{
-        console.log("Inside getURL of UserDetails.findOne"+user.activeConnection);
-        Connections.findById(user.activeConnection,function(err,conn){
-          //////////
+        Connections.findById(connId,function(err,conn){
           var xmlaRequest = {
             async       : true,
             url         : conn.getServer(),
@@ -100,7 +95,7 @@ router.post('/', function(req, res) {
                     getDatafrmDataset(obj);
                   }
                   res.json(dataSet);
-                  console.log(JSON.stringify(dataSet,null,2));
+                  // console.log(JSON.stringify(dataSet,null,2));
               },
             error: function(xmla, xmlaRequest, exception) {
                   res.json({status: "error", info: exception});
@@ -115,8 +110,6 @@ router.post('/', function(req, res) {
 
 
         });
-      }
-    });
 });
 
 module.exports = router;

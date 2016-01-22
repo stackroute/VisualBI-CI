@@ -1,6 +1,11 @@
 var hotChocolate = angular.module('hotChocolate');
-hotChocolate.controller('queryController', function($scope, $http, $rootScope,GraphService,$uibModal,$compile) {
-  $scope.items = [{
+hotChocolate.controller('queryController', function($scope, $http, $rootScope, GraphService, executeQueryService, gridRenderService, $uibModal, $compile, $cookies, $window) {
+  console.log($cookies.get('userName'));
+  if(!$cookies.get('userName')){
+    $window.location.href = '/';
+  }
+  else{
+    $scope.items = [{
                     label: 'Measures',
                     list: []
                   },
@@ -17,6 +22,83 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope,Gr
   $scope.deleteItem = function(childIndex, parentIndex) {
     $scope.items[parentIndex].list.splice(childIndex, 1);
   };
+
+  $scope.logout = function(){
+    $cookies.put('userName', undefined);
+    $window.location.href = '/logout';
+  };
+
+  $scope.getExecuteQueryData = function() {
+    executeQueryService.executeQuery($scope.buildQuery()).then(function(data) {
+      console.log(data.data);
+      $scope.executeQueryData = data.data;
+      $scope.graphArray = gridRenderService.renderData(data.data, 'dataTableBody');
+    });
+  };
+
+  $scope.buildQuery = function () {
+    var measures = $scope.items[0].list,
+        measureArr = [];
+    for(var i=0; i < measures.length; i++) {
+      measureArr.push(measures[i].unique_name);
+    }
+    var measureSet = "{" + measureArr.join() + "}";
+
+    var columns = $scope.items[1].list;
+        columnSet = $scope.buildSubQuery(columns);
+        columnSubQuery = columns.length > 0 ? (measures.length > 0 ? "(" + columnSet + " * " + measureSet + ")" : columnSet) : measureSet;
+
+    var rows = $scope.items[2].list;
+        rowSet = $scope.buildSubQuery(rows);
+
+    var filters = $scope.items[3].list,
+        filterArr = [];
+    for(var j=0; j < filters.length; j++) {
+      filterArr.push(filters[j].unique_name);
+    }
+    var filterSet = "{" + filterArr.join() + "}";
+    var filterSubQuery = filters.length > 0 ? " where " + filterSet : "";
+
+    $scope.mdxQuery = "select non empty " + columnSubQuery + " on columns, non empty (" + rowSet + ") on rows" + " from ["+ $rootScope.CubeName +"]" + filterSubQuery ;
+    return $scope.mdxQuery;
+  };
+
+  $scope.buildSubQuery = function (itemArr) {
+    var columnResult = $scope.groupBy(itemArr, function(item){
+            return [item.hierName];
+        });
+        columnArr = [];
+    for(var j=0; j < columnResult.length; j++) {
+      var subColumnQuery = "";
+      var subColumnArr = [];
+      for(var k=0; k < columnResult[j].length; k++) {
+        subColumnArr.push(columnResult[j][k].isMember === "yes" ? columnResult[j][k].unique_name : columnResult[j][k].unique_name + ".members");
+      }
+      if (subColumnArr.length > 1) {
+        subColumnQuery = "Hierarchize ({" + subColumnArr.join() + "})";
+      } else {
+        subColumnQuery = subColumnArr.join();
+      }
+      columnArr.push(subColumnQuery);
+    }
+    return "{" + columnArr.join("*") + "}";
+  };
+
+  $scope.groupBy = function ( array , f )
+  {
+    var groups = {};
+    array.forEach( function( o )
+    {
+      var group = JSON.stringify( f(o) );
+      groups[group] = groups[group] || [];
+      groups[group].push( o );
+    });
+    return Object.keys(groups).map( function( group )
+    {
+      return groups[group];
+    });
+  };
+
   $scope.sortList = function(event, ui, listIdx) {
     var itemArr = $scope.items[listIdx].list,
         currItem = itemArr[itemArr.length-1];
@@ -54,74 +136,77 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope,Gr
       }
     }
   };
-  $scope.queryList = [];
-  // $scope.$watch()
-  $scope.querySaveMessage = "";
-  $scope.showModalAlert = false;
-  $scope.hideMe = function(list) {
-    return list.length > 0;
-  };
+    $scope.queryList = [];
 
-  $scope.mdxQuery = "";
-  $scope.executeQueryData = {};
+    $rootScope.$watch('queryList', function(newValue, oldValue){
+      $scope.queryList = newValue;
+    });
+
+    $scope.querySaveMessage = "";
+    $scope.showModalAlert = false;
+    $scope.hideMe = function(list) {
+      return list.length > 0;
+    };
+
+    $scope.mdxQuery = "";
+    $scope.executeQueryData = {};
   $scope.graphArray = [];
-  $scope.newQueryName = "";
+    $scope.newQueryName = "";
   $scope.isMdxInputError = false;
   $scope.mdxInputErrorMessage = "MDX input error.";
   $rootScope.graphArray = [];
 
-  $http.get('/query/byUser', {
-    params: {
-      userName: 'hotChocolate'
-    }
-  }).success(function(data) {
-      if(data.length > 0) {
-        if (data.status && data.status === 'error') {
-          console.log(data.error);
-        } else {
-          $scope.queryList = data;
+    $scope.retrieveQuery = function(idx) {
+      var query = $scope.queryList[idx];
+      console.log(query);
+        $rootScope.selectedRetrieveQuery = true;
+      $scope.items[0].list = query.onMeasures;
+      $scope.items[1].list = query.onColumns;
+      $scope.items[2].list = query.onRows;
+      $scope.items[3].list = query.onFilters;
+      if(query.connectionData.dataSource === $rootScope.DataSourceName &&
+          query.connectionData.catalog === $rootScope.CatalogName &&
+              query.connectionData.cube === $rootScope.CubeName){
+          $rootScope.selectedRetrieveQuery = false;
         }
-      }
-  });
-
-  $scope.retrieveQuery = function(idx) {
-    $http.get('/query/find', {
-      params: {
-        queryName: $scope.queryList[idx].queryName
-      }
-    }).success(function(data) {
-      $scope.items[0].list = data.onColumns;
-      $scope.items[1].list = data.onRows;
-      $rootScope.$broadcast('retrieveQueryEvent', data.connectionData);
+        $rootScope.$broadcast('retrieveQueryEvent', query.connectionData);
+    };
+    $scope.$on('resetQueryData', function(event) {
+      $scope.items[0].list = [];
+      $scope.items[1].list = [];
+      $scope.items[2].list = [];
+      $scope.items[3].list = [];
+      // $( "#dataTableBody tr" ).replaceWith( "" );
     });
-  };
-  $scope.open = function(){
-      var modalInstance = $uibModal.open({
-         animation: $scope.animationsEnabled,
-         templateUrl: 'saveQuery.html',
-         controller: 'SaveQryModalCtrl',
-         resolve: {
-           items: function(){
-             return $scope.items;
-           },
-           queryList: function(){
-             return $scope.queryList;
-           },
-           mdxQuery: function(){
-             return $scope.mdxQuery;
-           }
-         }
-       });
-    modalInstance.result.then(function(queryList){
-      console.log(queryList);
-      $scope.queryList = queryList;
-    });
-     };
+    $scope.open = function(){
+        var modalInstance = $uibModal.open({
+           animation: $scope.animationsEnabled,
+           templateUrl: 'saveQuery.html',
+           controller: 'SaveQryModalCtrl',
+           resolve: {
+             items: function(){
+               return $scope.items;
+            },
+             queryList: function(){
+               return $scope.queryList;
+            },
+             mdxQuery: function(){
+               return $scope.mdxQuery;
+            }
+          }
+          });       
+      
+        modalInstance.result.then(function(queryList){
+          console.log(queryList);
+          $scope.queryList = queryList;
+        });
+      };
  $scope.toggleAnimation = function () {
   $scope.animationsEnabled = !$scope.animationsEnabled;
  };
   //Show Bar Graph Column
   $scope.showBarGraphColumn = function() {
+
     console.log("entered showGraphColumn");
     if(($("."+"miniBarGraph"+"").length) === 0){
         $("#row0").prev().append("<td class="+"miniBarGraph"+"><span class='graphIcon'>"+"Bar Chart"+"</span></td>");
@@ -279,61 +364,3 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope,Gr
   };
 
 });
-
-
-hotChocolate.controller('SaveQryModalCtrl',
-    function ($scope, $uibModalInstance, $timeout, items, queryList, mdxQuery, saveQuery )
-    {
-        $scope.items = items;
-        $scope.queryList = queryList;
-        console.log($scope.queryList);
-        $scope.mdxQuery = mdxQuery;
-       /*************** What to be done for saving **********/
-       $scope.save = function () {
-           console.log($scope.items);
-           var colArray = $scope.items[0].list.length>0 ? $scope.items[0].list : [];
-               rowArray = $scope.items[1].list.length>0 ? $scope.items[1].list : [];
-               filterArray = $scope.items[2].list.length>0 ? $scope.items[2].list : [];
-           var parameters = {
-             queryName: $scope.newQueryName,
-             userName: "hotChocolate",
-             colArray: colArray,
-             rowArray: rowArray,
-             filterArray: filterArray,
-             queryMDX: $scope.mdxQuery,
-             connectionData: {
-               // xmlaServer: "http://172.23.238.252:8080/pentaho/Xmla?userid=admin&password=password",
-               dataSource: $scope.$root.DataSourceName,
-               catalog: $scope.$root.CatalogName,
-               cube: $scope.$root.CubeName,
-             }
-           };
-           saveQuery.saveQuery(parameters).success(function(data) {
-
-             console.log(data);
-             $scope.showModalAlert = true;
-             $timeout(function() {
-               $scope.showModalAlert = false;
-             }, 2000);
-             $scope.querySaveMessage = data.info;
-             if(data.status=="success")
-             {
-               $scope.queryList.push({queryName : $scope.newQueryName});
-             }
-             console.log($scope.queryList);
-             if (data.status === "success"){
-               $timeout(function() {
-                 $uibModalInstance.close($scope.queryList);
-               }, 5000);
-             }
-           });
-       };
-       $scope.close = function(){
-         $uibModalInstance.close($scope.queryList);
-       };
-       $scope.cancel = function () {
-         $uibModalInstance.dismiss('cancel');
-       };
-
-        //  $uibModalInstance.close();
-     });

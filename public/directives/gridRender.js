@@ -4,12 +4,14 @@ hotChocolate.directive('gridRender', function($http,$timeout,GraphService) {
   return {
     restrict: 'A',
     link: function(scope, element, attrs) {
-
+      scope.$root.$watch('CubeName', function(newValue, oldValue){
+        $( "#dataTableBody tr" ).replaceWith( "" );
+      });
       element.on('click', function() {
         // console.log(scope.$root.DataSourceName);
         $( "#dataTableBody tr" ).replaceWith( "" );
         $http.post('/execute', {
-            username : "hotChocolate",
+            connId : scope.$root.connId,
             dataSource: scope.$root.DataSourceName,
             catalog: scope.$root.CatalogName,
             statement: buildQuery()
@@ -24,10 +26,10 @@ hotChocolate.directive('gridRender', function($http,$timeout,GraphService) {
             console.log(scope.graphArray);
         })
         .error(function(data) {
-            if(scope.items[0].list.length == 0 && scope.items[1].list.length == 0) {
+            if(scope.items[0].list.length === 0 && scope.items[1].list.length === 0) {
               scope.mdxInputErrorMessage = "Atleast one of Measures and Columns need to be filled.";
             }
-            else if (scope.items[2].list.length == 0) {
+            else if (scope.items[2].list.length === 0) {
               scope.mdxInputErrorMessage = "Rows should not be empty.";
             }
             scope.isMdxInputError = true;
@@ -97,12 +99,13 @@ hotChocolate.directive('gridRender', function($http,$timeout,GraphService) {
         return Object.keys(groups).map( function( group )
         {
           return groups[group];
-        })
+        });
       }
 
 
      /************************** Function for rendering data into grid ******************************/
 function renderData(data){
+  console.log(data);
   var addElement, ans, fs, members, tdChild;
   var axes = data.Axes,
       axis = axes.Axis,
@@ -110,17 +113,17 @@ function renderData(data){
       axis1 = axis[1];
 
       /************* Function for graphKey *****************/
-
-      var axis0Names = [];
-      for (var index0 in axis0){
-         var axis0Member = axis0[index0].Member;
-         var axis0Name = '';
-         for(var memIndex0 in axis0Member){
-           axis0Name = axis0Name+axis0Member[memIndex0].Caption+".";
-         }
-         axis0Name = axis0Name.substring(0,axis0Name.length-1);
-         axis0Names.push(axis0Name);
-       }
+      //
+      // var axis0Names = [];
+      // for (var index0 in axis0){
+      //    var axis0Member = axis0[index0].Member;
+      //    var axis0Name = '';
+      //    for(var memIndex0 in axis0Member){
+      //      axis0Name = axis0Name+axis0Member[memIndex0].Caption+".";
+      //    }
+      //    axis0Name = axis0Name.substring(0,axis0Name.length-1);
+      //    axis0Names.push(axis0Name);
+      //  }
       //  console.log(axis0Names);
 /************************ Generating tree structure *************************************/
       addElement = function(members, tree, level) {
@@ -141,7 +144,7 @@ function renderData(data){
         };
 /************************************** Graph Arrays *****************************************/
 // var graphArray = [];
-var graphKey = [];
+// var graphKey = [];
 /****************************** Axis0 Hierarchical Structure **********************************/
 
         axis0Child = axis0.reduce((function(acc, member) {

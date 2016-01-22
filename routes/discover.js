@@ -25,22 +25,13 @@ var discoverRequestTypes =[
 
 // Functions
 
-function callRequest(username,fragments,res){
-  UserDetails.findOne({username:username},function(err,user){
-    if(err)
-      console.log(err);
-    else{
-      console.log("Inside callRequest & UserDetails.findOne"+user.activeConnection);
-      Connections.findById(user.activeConnection,function(err,conn){
-
-        console.log(conn.getServer());
-        var xmlaRequest = generateXmlaRequest(conn.getServer(), fragments, res);
-        var x = new xmla.Xmla;
-        x.request(xmlaRequest);
-      });
-
-    }
-  });
+function callRequest(connId,fragments,res){
+    Connections.findById(connId,function(err,conn){
+      console.log(conn.getServer());
+      var xmlaRequest = generateXmlaRequest(conn.getServer(), fragments, res);
+      var x = new xmla.Xmla;
+      x.request(xmlaRequest);
+    });
 }
 
 
@@ -115,9 +106,9 @@ router.get('/getServerDetails', function(req, res) {
   var parameters = req.query,
       pathName   = parameters.pathName,
       fragments  = pathName.split("/"),
-      username   = parameters.username;
+      connId     = parameters.connId;
 
-  callRequest(username,fragments,res);
+  callRequest(connId,fragments,res);
 
 });
 
@@ -126,9 +117,9 @@ router.get('/getServerDetails', function(req, res) {
    var parameters = req.query,
        pathName   = parameters.pathName,
        fragments  = pathName.split("/"),
-       username   = parameters.username;
+       connId     = parameters.connId;
 
-   callRequest(username,fragments,res);
+   callRequest(connId,fragments,res);
 
 });
 
@@ -136,12 +127,12 @@ router.get('/getServerDetails', function(req, res) {
 router.get('/getMeasures',function(req,res) {
   var parameters = req.query,
       pathName   = parameters.pathName,
-      username   = parameters.username;
+      connId     = parameters.connId;
 
 	pathName = pathName + "/[Measures]/[Measures]/[Measures].[MeasuresLevel]";     //Assumption that it follows this way
   var fragments = pathName.split("/");
 
-  callRequest(username,fragments,res);
+  callRequest(connId,fragments,res);
 });
 
 module.exports = router;

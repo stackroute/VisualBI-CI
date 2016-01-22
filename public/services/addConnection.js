@@ -2,9 +2,9 @@ var hotChocolate = angular.module("hotChocolate");
 hotChocolate.factory('addNewConnection',
                      function($http) {
                        return{
-                         addNewConnection: function (newConn) {
+                         addNewConnection: function (userName, newConn) {
                             var parameters= {
-                              username: 'hotChocolate',
+                              username: userName,
                               connName : newConn.connName,
                               url      : newConn.url,
                               userid   : newConn.userid,

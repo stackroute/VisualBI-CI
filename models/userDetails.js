@@ -1,13 +1,5 @@
 var mongoose = require('mongoose');
-// var ConnectionsSchema = mongoose.Schema({
-//   connectionName: String,
-//   serverURL: String,
-//   userid: String,
-//   password: String
-// });
-//
-// var Connection = mongoose.model('Connection',ConnectionsSchema);
-
+var passportLocalMongoose = require('passport-local-mongoose');
 
 var UserDetailsSchema = mongoose.Schema({
   username: String,
@@ -15,7 +7,7 @@ var UserDetailsSchema = mongoose.Schema({
   activeConnection: {type:mongoose.Schema.Types.ObjectId, ref:'Connection' },
   connections: [{type:mongoose.Schema.Types.ObjectId, ref:'Connection' }]
 });
-
+UserDetailsSchema.plugin(passportLocalMongoose);
 var UserDetails = mongoose.model('UserDetails', UserDetailsSchema);
 
 module.exports = UserDetails;

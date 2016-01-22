@@ -2,23 +2,23 @@ var hotChocolate = angular.module("hotChocolate");
 hotChocolate.factory('discover',
                       function($http) {
                         var factory = {};
-                        factory.getSource= function (path) {
+                        factory.getSource= function (path, connId) {
                            var parameters= {
-                             username: 'hotChocolate',
+                             connId: connId,
                              pathName: path
                            };
                            return $http.get('/discover/getServerDetails', {params: parameters});
                          };
-                         factory.getDimensions= function (path) {
+                         factory.getDimensions= function (path,connId) {
                             var parameters= {
-                              username: 'hotChocolate',
+                              connId: connId,
                               pathName: path
                             };
                             return $http.get('/discover/getDimensions', {params: parameters});
                           };
-                          factory.getMeasures= function (path) {
+                          factory.getMeasures= function (path,connId) {
                              var parameters= {
-                               username: 'hotChocolate',
+                               connId: connId,
                                pathName: path
                              };
                              return $http.get('/discover/getMeasures', {params: parameters});
