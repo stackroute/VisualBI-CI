@@ -5,6 +5,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     $window.location.href = '/';
   }
   else{
+    $rootScope.container = angular.element(document).find('#tableDiv');
     $scope.items = [{
                     label: 'Measures',
                     list: []
@@ -28,17 +29,15 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     $window.location.href = '/logout';
   };
 
-  $scope.getExecuteQueryData = function(containerId) {
+  $scope.getExecuteQueryData = function() {
     var parameters = {
           connId : $rootScope.connId,
           dataSource: $rootScope.DataSourceName,
           catalog: $rootScope.CatalogName,
           statement: $scope.buildQuery()
     };
-    console.log(containerId);
-    console.log(angular.element(document).find(containerId));
-    var container = angular.element(document).find(containerId);
-    executeQueryService.render(container, parameters).then(function(data) {
+    executeQueryService.removeGrid($rootScope.container);
+    executeQueryService.render($rootScope.container, parameters).then(function(data) {
          $scope.graphArray = data;
     });
   };
@@ -167,6 +166,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $rootScope.graphArray = [];
 
   $scope.retrieveQuery = function(idx) {
+    executeQueryService.removeGrid($rootScope.container);
     var query = $scope.queryList[idx];
     console.log(query);
     $rootScope.selectedRetrieveQuery = true;

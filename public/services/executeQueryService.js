@@ -3,6 +3,7 @@ var app = angular.module('hotChocolate');
 app.factory('executeQueryService', function($http, $rootScope) {
   return {
     render: function (container, parameters) {
+      // $('div.section_result').replaceWith('');
        var req = {
           method: 'POST',
           url: '/execute',
@@ -23,12 +24,16 @@ app.factory('executeQueryService', function($http, $rootScope) {
            reject(err);
          });
        });
+    },
+    removeGrid : function (container) {
+      console.log(container);
+      container.children().replaceWith('');
     }
   };
 });
 
 var renderData =  function (container, data){
-  $('div.section_result').replaceWith('');
+  // $('div.section_result').replaceWith('');
   container.append('<div class="section_result">'+
     '<table id="dataTable">'+
       '<tbody id="dataTableBody">'+

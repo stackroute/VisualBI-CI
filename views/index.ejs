@@ -292,12 +292,12 @@
               <ul class="dropdown-menu" id="queryList">
                 <li ng-repeat="query in queryList"><a href="#" ng-click="retrieveQuery($index)">{{query.queryName}}</a></li>
               </ul>
-              <button type="button" class="btn btn-default navbar-btn" id="executeButton" ng-click="getExecuteQueryData('#tableDiv')"><span class="glyphicon glyphicon-play-circle" ></span> Execute</button>
+              <button type="button" class="btn btn-default navbar-btn" id="executeButton" uib-tooltip="execute" tooltip-placement="bottom" ng-click="getExecuteQueryData()"><span class="glyphicon glyphicon-play-circle"></span></button>
             </div>
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-default navbar-btn" uib-tooltip="export widget" tooltip-placement="bottom"><i class="glyphicon glyphicon-export"></i></button>
               <button type="button" class="btn btn-default navbar-btn" uib-tooltip="show MDX" tooltip-placement="bottom" ng-click="showMdxQuery = showMdxQuery == false ? true : false"><i class="fa fa-file-code-o"></i></button>
-              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="non empty" tooltip-placement="bottom" ng-click="isQueryNonEmpty = isQueryNonEmpty == false ? true : false ; getExecuteQueryData('#dataTableBody')"><i class="fa fa-tasks"></i></button>
+              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="non empty" tooltip-placement="bottom" ng-click="isQueryNonEmpty = isQueryNonEmpty == false ? true : false ; getExecuteQueryData()"><i class="fa fa-tasks"></i></button>
             </div>
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-default navbar-btn" uib-tooltip="pie graph" tooltip-placement="bottom" ng-click="showPieGraphColumn()"><i class="fa fa-pie-chart"></i></button>
