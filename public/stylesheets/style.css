@@ -293,7 +293,15 @@ rect {
         stroke-width: 2;
       }
       rect.disabled {                                                 /* NEW */
-        fill: transparent !important;                                 /* NEW */
+        fill: transparent !important;
+      }
+
+      .modal-content input[type="checkbox"]{
+        width:40px;
+        padding-right: 15px;
+      }
+      #barGraphLabel {
+        width : 80px;
       }
 
 /*********** Angularizing Modal *******************/

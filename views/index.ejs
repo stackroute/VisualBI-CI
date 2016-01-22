@@ -190,6 +190,7 @@
         </div> <!-- left-menu end-->
 
         <div class="col-xs-9" id="content" ng-controller="queryController">
+
         <!-- Modal Bar Graph -->
         <script type="text/ng-template" id="modalBarGraph.html">
           <div>
@@ -201,7 +202,7 @@
               <modalbar-graph index-passed="index" graph-array="graphArray"></modalbar-graph>
             </div>
             <div class="modal-footer">
-              <label><input type="checkbox"> Sort values</label>
+              <div class="pull-left"><label id="barGraphLabel">Sort values</label><input type="checkbox"/></div>
               <button class="btn btn-primary" ng-click="ok()">OK</button>
               <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
             </div>
