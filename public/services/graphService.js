@@ -3,8 +3,6 @@ var app = angular.module("hotChocolate");
 //Graph Service to hold functions related to plotting Graphs
 app.factory('GraphService', function($compile,$rootScope){
 	return {
-
-
 		//Render MiniBarGraph to be displayed in the table
 		renderMiniBarGraph : function(dataset,container,index) {
 			var dataToPass = dataset;
@@ -17,10 +15,7 @@ app.factory('GraphService', function($compile,$rootScope){
 				}
 				return result;
 			}
-
-
 			var w = (dataset.length*6)+((dataset.length-1)*2);
-			console.log("****************"+dataset.length);
 			var h = (w*9)/16;
 			var xScale = d3.scale.ordinal()
 							.domain(d3.range(dataset.length))
@@ -33,41 +28,32 @@ app.factory('GraphService', function($compile,$rootScope){
 			var key = function(d) {
 				return d.key;
 			}
-			//console.log("Custom Text"+index);
 			//Create SVG element
 			var svg = d3.select(container)
-						// .append("div")
-						// .attr("ng-controller","queryController")	
 						.append("button")
-						// .attr('ng-hide', true)
 						.attr("ng-click", "openModalBarGraph("+index+")")
-						// .attr("href","#")
-						// .attr("ng-click",console.log('From graph Service'))			
 						.append("svg")
 						.attr("width", w)
-						.attr("height", h);		
-
+						.attr("height", h);
 			//Create bars
 			svg.selectAll("rect")
    				.data(dataset, key)
    				.enter()
    				.append("rect")
    				.attr("x", function(d, i) {
-					return xScale(i);
+						return xScale(i);
    				})
    				.attr("y", function(d) {
-   					console.log(h+" "+yScale(d.value));
-					return h - yScale(d.value);
+						return h - yScale(d.value);
    				})
    				.attr("width", xScale.rangeBand())
    				.attr("height", function(d) {
-					return yScale(d.value);
+						return yScale(d.value);
    				})
    				.attr("fill", function(d) {
-					return "rgb(0, 0, " + (d.value * 10) + ")";
-				});
-				//$compile(container.find('a'))($rootScope);
-   		},//Enf od render Mini Graph
+						return "rgb(0, 0, " + (d.value * 10) + ")";
+					});
+   		},//End of render Mini Graph
 
    		//Service to plot graph in Modal Window
    		renderModalBarGraph : function(dataset,container) {
@@ -136,7 +122,6 @@ app.factory('GraphService', function($compile,$rootScope){
 				.attr("y",6)
 				.attr("dy","0.71em")
 				.style("text-anchor","end");
-				//.text("to be replaced!!!! Ge units from data");
 
 			svg.selectAll(".bar")
 				.data(dataset)
@@ -371,7 +356,6 @@ app.factory('GraphService', function($compile,$rootScope){
 				.attr("y",6)
 				.attr("dy","0.71em")
 				.style("text-anchor","end");
-				// .text("to be replaced!!!! Ge units from data");
 
 			var area = d3.svg.area()
    							.x(function(d){return xScale(d.key);})
@@ -412,7 +396,7 @@ app.factory('GraphService', function($compile,$rootScope){
   								.enter()
   								.append('path')
   								.attr('d', arc)
-  								.attr('fill', function(d, i) { 
+  								.attr('fill', function(d, i) {
     								return color(d.value);
   								});
 
@@ -559,7 +543,6 @@ app.factory('GraphService', function($compile,$rootScope){
    							var adjust = sign * alpha;
    							da.attr("y",+y1+adjust);
    							db.attr("y",+y2-adjust);
-
    						});
    					});
 
@@ -572,7 +555,6 @@ app.factory('GraphService', function($compile,$rootScope){
    						setTimeout(relax,20);
    					}
    				}
-
 				relax();
    			}
    }//end of return object

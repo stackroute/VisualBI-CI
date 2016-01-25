@@ -10,9 +10,6 @@ var router = express.Router(),
 
 
 router.post('/', function(req, res) {
-  // console.log(req.body.mdxQuery);
-  // console.log("inside route/execute");
-  
       var statement  = req.body.statement,
           connId   = req.body.connId,
           properties = {};
@@ -95,7 +92,6 @@ router.post('/', function(req, res) {
                     getDatafrmDataset(obj);
                   }
                   res.json(dataSet);
-                  // console.log(JSON.stringify(dataSet,null,2));
               },
             error: function(xmla, xmlaRequest, exception) {
                   res.json({status: "error", info: exception});
@@ -106,9 +102,6 @@ router.post('/', function(req, res) {
           };
           var x = new xmla.Xmla();
           var result =x.execute(xmlaRequest);
-          //////////
-
-
         });
 });
 

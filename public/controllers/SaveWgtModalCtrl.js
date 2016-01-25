@@ -11,18 +11,15 @@ hotChocolate.controller('SaveWgtModalCtrl',
         $scope.widgetMessage = "";
         widget.getSavedWidgets(uName).success(function(data){
           $scope.widgetList = data;
-          console.log(data);
         })
         $scope.isRadioSelected = function(val) {
           return val === $scope.saveOption;
     };
 
-       /*************** What to be done for saving **********/
+       /*************** On save **********/
    $scope.save = function () {
-     console.log("Save option" + $scope.newWidgetName);
      var connId = $rootScope.connId;
      if($scope.saveOption === "add"){
-         console.log("inside save add");
          if($scope.newWidgetName === ""){
              $scope.widgetMessage = "Widget name cannot be empty";
              $scope.isWidgetExists = true;
@@ -66,8 +63,6 @@ hotChocolate.controller('SaveWgtModalCtrl',
               };
               widget.saveWidget(addParameters)
                 .success(function(data) {
-                    console.log("add_ctrl");
-                    console.log(data);
                     $scope.isWidgetExists = true;
                     $scope.widgetMessage = data.info;
                     $timeout(function() {
@@ -82,13 +77,10 @@ hotChocolate.controller('SaveWgtModalCtrl',
                       }, 2000);
                     }
                 });
-                console.log("meaasege"+$scope.widgetMessage);
             }
          } //else of non empty name;
      }
      else{
-       //if $scope.saveOption === "update"
-       console.log("Existing Widget Name"+$scope.existingWidgetName);
        if($scope.existingWidgetName === ""){
            $scope.widgetMessage = "Please enter an existing widget name";
            $scope.isWidgetExists = true;
@@ -123,7 +115,6 @@ hotChocolate.controller('SaveWgtModalCtrl',
               }
             };
             widget.updateWidget(updateParameters).success(function(data){
-              console.log("upd_ctrl");
               $scope.widgetMessage = data.info;
               $scope.isWidgetExists = true;
               $timeout(function() {

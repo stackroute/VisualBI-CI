@@ -10,7 +10,6 @@ function getConnectionObject(connId){
     if(errConn)
       console.log(err);
     else {
-      console.log(JSON.stringify(conn));
       return conn;
     }
   });
@@ -32,14 +31,10 @@ router.get("/getAvailableConnections",function(req,res){
   .populate('connections')
   .exec(function(err,user){
     if (err)
-    { console.log("error from getAvailableConnections"+ err);
-       res.send(err);}
+    {
+       res.send(err);
+    }
     else {
-        // var availableConnections = user.connections;
-        // for (var connectionIndex in availableConnections){
-        //   Connection.findById(availableConnections[connectionIndex]);
-        // }
-        console.log("success from getAvailableConnections"+user.connections);
        res.json(user.connections);
     }
   });
@@ -51,11 +46,9 @@ router.get("/getActiveConnection",function(req,res){
   UserDetails.findOne({username:usrname},
       function(err,user){
         if (err) {
-           console.log("error from getActiveConnection"+ err);
           res.send(err);
         }
         else {
-          console.log("success from getActiveConnection"+user.activeConnection);
           res.json(user.activeConnection);
         }
     });
@@ -71,37 +64,32 @@ router.get("/addConnection",function(req,res){
     password: req.query.password,
     savedQueries: []
   });
-  console.log(myConnection);
   myConnection.save( function(err, myConnection){
     if (err)
     {
-       res.send(err);}
+       res.send(err);
+     }
     else {
-      console.log(username);
       UserDetails.findOneAndUpdate(
         {username : username},
         {
           $push : {"connections" : myConnection},
           $set  : {"activeConnection" : myConnection._id}
         },
+        {
+          new : true
+        },
         function(err,user){
           if(err)
           {
-            console.log("Error Message from /addConnections "+err);
             res.send(err);
           }
           else {
-            console.log("Done");
-              // res.send(myConnection);
+              res.send(myConnection);
           }
       });
-      res.send(myConnection);
-
     }
-
-
   });
-
 });
 
 module.exports = router;

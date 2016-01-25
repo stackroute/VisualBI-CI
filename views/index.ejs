@@ -24,50 +24,36 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Include Angularjs UI-Bootstrap -->
     <script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <!-- Include angularApp.js for defining module -->
+    <!-- Angular App.js Module  -->
     <script src="angularApp.js" charset="utf-8"></script>
-    <!-- Include ConnectionModelController.js -->
+
+    <!-- Services -->
     <script src="services/addConnection.js"></script>
-    <!-- Include ConnectionModelController.js -->
     <script src="services/getAvailableConnections.js"></script>
-    <!-- Include ConnectionModelController.js -->
     <script src="services/saveConnection.js"></script>
     <script src="services/discover.js"></script>
-    <!-- Include GraphService -->
     <script src="services/graphService.js"></script>
-    <!-- Include gridRenderService -->
-    <!-- <script src="services/gridRenderService.js"></script> -->
-    <!-- Include executeQueryService -->
     <script src="services/executeQueryService.js"></script>
-    <!-- Include ConnectionModelController.js -->
-    <script src="controllers/ConnectionModelController.js"></script>
-    <!-- Include ConnectionModelController.js -->
-    <script src="controllers/ServerCredentialModalCtrl.js"></script>
-    <!-- Include ConnectionModelController.js -->
-    <script src="controllers/queryController.js"></script>
-    <!-- Include ConnectionModelController.js -->
-    <script src="controllers/SaveQryModalCtrl.js"></script>
-    <!-- Include ModalGraph Controller -->
-    <script src="controllers/ModalGraphController.js"></script>
-    <!-- Include WidgetModelController.js -->
-    <script src="controllers/SaveWgtModalCtrl.js"></script>
-    <!-- Include gridRender.js -->
-    <!-- <script src="directives/gridRender.js"></script> -->
-    <!-- Include toggleList.js -->
-    <script src="directives/toggleList.js"></script>
-    <!-- Include saveQuery.js -->
     <script src="services/saveQuery.js"></script>
-    <!-- Include saveQuery.js -->
     <script src="services/user_id.js"></script>
-    <!-- Include saveWidget.js -->
     <script src="services/saveWidget.js"></script>
 
-    <!-- Bootstrap CSS -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="stylesheets/style.css" rel="stylesheet">
-    <!-- Include graph Directives -->
+    <!-- Controllers -->
+    <script src="controllers/ConnectionModelController.js"></script>
+    <script src="controllers/ServerCredentialModalCtrl.js"></script>
+    <script src="controllers/queryController.js"></script>
+    <script src="controllers/SaveQryModalCtrl.js"></script>
+    <script src="controllers/ModalGraphController.js"></script>
+    <script src="controllers/SaveWgtModalCtrl.js"></script>
+
+    <!-- directives -->
+    <script src="directives/toggleList.js"></script>
     <script src="directives/graphDirectives.js"></script>
+
+    <!-- StyleSheets -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/style.css" rel="stylesheet">
+    
   </head>
   <body>
     <div class="container-fluid" id="main" ng-app="hotChocolate">

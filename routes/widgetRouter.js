@@ -7,8 +7,6 @@ var router = express.Router();
 //POST widgets
 router.post('/new', function(req, res) {
   var parameters = JSON.parse(req.body.parameter);
-  console.log(parameters);
-
     {
       Widget.create({
         widgetName: parameters.newWidgetName,
@@ -25,7 +23,6 @@ router.post('/new', function(req, res) {
                        }
        }, function(err, newWidget) {
               if(!err) {
-                  console.log("new widget");
                 res.json({status: 'success', info: "Widget successfully saved", widget: newWidget});
               } else {
                 res.json({status: 'error', info: "Oops! error occcured saving widget"});
@@ -37,15 +34,11 @@ router.post('/new', function(req, res) {
 router.post("/update",function(req,res){
   //Update existing widget
   var parameters = JSON.parse(req.body.parameter);
-    console.log(parameters.connectionData.connectionId);
-      // console.log(parameters.connectionData.connectionId);
-      //   console.log(parameters.connectionData.connectionId);
-      //     console.log(parameters.connectionData.connectionId);
-    var obj = new Widget({
-      "modifiedOn":Date.now(),
-      "description":parameters.description,
-      "connectionData.connectionId":parameters.connectionData.connectionId
-    });
+  var obj = new Widget({
+    "modifiedOn":Date.now(),
+    "description":parameters.description,
+    "connectionData.connectionId":parameters.connectionData.connectionId
+  });
 
     var upsertData = obj.toObject();
     delete upsertData._id;
@@ -54,23 +47,12 @@ router.post("/update",function(req,res){
         widgetName  : parameters.existingWidgetName,
         createdBy   : parameters.userName
       },
-      // {
-      //   $set  : {"modifiedOn" : Date.now()},
-      //   $set  : {"queryMDX" : parameters.queryMDX},
-      //   $set  : {"description" : parameters.description},
-      //   $set  : {"connectionData.connectionId": parameters.connectionData.connectionId},
-      //   $set  : {"connectionData.dataSource": parameters.connectionData.dataSource},
-      //   $set  : {"connectionData.catalog": parameters.connectionData.catalog},
-      //   $set  : {"connectionData.cube": parameters.connectionData.cube}
-      // },
       upsertData,
       {
         new : true,
         upsert: true
       },
       function(err,widgetOutput){
-        console.log("error"+err);
-        console.log("o/[p]"+ widgetOutput);
         if(!err){
           res.json({status: 'success', info: "Widget modified successfully",widget: widgetOutput});
         }
@@ -87,11 +69,9 @@ router.get("/getSavedWidgets",function(req,res){
   .exec(function(err,widgetList){
     if (err)
     {
-        console.log("error from getSavedWidgets"+ err);
         res.send(err);
     }
     else{
-        console.log("success from getSavedWidgets"+widgetList);
         res.json(widgetList);
     }
   });
