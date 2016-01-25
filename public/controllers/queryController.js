@@ -152,10 +152,8 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
 
   $scope.querySaveMessage = "";
   $scope.showModalAlert = false;
-  $scope.hideMe = function(list) {
-    return list.length > 0;
-  };
-
+  $scope.newWidgetName = "";
+  $scope.widgetSaveMessage = "";
   $scope.mdxQuery = "";
   $scope.showMdxQuery = false;
   $scope.isQueryNonEmpty = true;
@@ -164,7 +162,10 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.isMdxInputError = false;
   $scope.mdxInputErrorMessage = "MDX input error.";
   $rootScope.graphArray = [];
-
+  $scope.newWidgetName = "";
+  $scope.hideMe = function(list) {
+    return list.length > 0;
+  }
   $scope.retrieveQuery = function(idx) {
     executeQueryService.removeGrid($rootScope.container);
     var query = $scope.queryList[idx];
@@ -372,5 +373,21 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
       }
     });
   };
+
+  $scope.export = function(){
+      var modalInstance = $uibModal.open({
+          animation: $scope.animationsEnabled,
+          templateUrl: 'saveWidget.html',
+          controller: 'SaveWgtModalCtrl',
+          resolve: {
+            mdxQuery: function(){
+              return $scope.mdxQuery;
+            }
+          }
+       });
+       modalInstance.result.then(function(widgetList){
+         $scope.widgetList = widgetList;
+       });
+    };
   }
 });
