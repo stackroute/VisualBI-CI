@@ -20,7 +20,7 @@ hotChocolate.controller('SaveWgtModalCtrl',
        /*************** What to be done for saving **********/
    $scope.save = function () {
      console.log("Save option" + $scope.newWidgetName);
-     var connId = $rootScope.connId
+     var connId = $rootScope.connId;
      if($scope.saveOption === "add"){
          console.log("inside save add");
          if($scope.newWidgetName === ""){
@@ -61,7 +61,7 @@ hotChocolate.controller('SaveWgtModalCtrl',
                     connectionId: connId,
                     dataSource: $scope.$root.DataSourceName,
                     catalog: $scope.$root.CatalogName,
-                    cube: $scope.$root.CubeName,
+                    cube: $scope.$root.CubeName
                   }
               };
               widget.saveWidget(addParameters)

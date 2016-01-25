@@ -37,23 +37,40 @@ router.post('/new', function(req, res) {
 router.post("/update",function(req,res){
   //Update existing widget
   var parameters = JSON.parse(req.body.parameter);
-    console.log("update");
+    console.log(parameters.connectionData.connectionId);
+      // console.log(parameters.connectionData.connectionId);
+      //   console.log(parameters.connectionData.connectionId);
+      //     console.log(parameters.connectionData.connectionId);
+    var obj = new Widget({
+      "modifiedOn":Date.now(),
+      "description":parameters.description,
+      "connectionData.connectionId":parameters.connectionData.connectionId
+    });
+
+    var upsertData = obj.toObject();
+    delete upsertData._id;
     Widget.findOneAndUpdate(
       {
         widgetName  : parameters.existingWidgetName,
         createdBy   : parameters.userName
       },
+      // {
+      //   $set  : {"modifiedOn" : Date.now()},
+      //   $set  : {"queryMDX" : parameters.queryMDX},
+      //   $set  : {"description" : parameters.description},
+      //   $set  : {"connectionData.connectionId": parameters.connectionData.connectionId},
+      //   $set  : {"connectionData.dataSource": parameters.connectionData.dataSource},
+      //   $set  : {"connectionData.catalog": parameters.connectionData.catalog},
+      //   $set  : {"connectionData.cube": parameters.connectionData.cube}
+      // },
+      upsertData,
       {
-        $set  : {"modifiedOn" : Date.now()},
-        $set  : {"queryMDX" : parameters.queryMDX},
-        $set  : {"description" : parameters.description},
-        $set  : {"connectionData.connectionId" : parameters.connectionData.connectionId},
-        $set  : {"connectionData.connectionId": parameters.connectionData.connectionId},
-        $set  : {"connectionData.dataSource": parameters.connectionData.dataSource},
-        $set  : {"connectionData.catalog": parameters.connectionData.catalog},
-        $set  : {"connectionData.cube": parameters.connectionData.cube}
+        new : true,
+        upsert: true
       },
       function(err,widgetOutput){
+        console.log("error"+err);
+        console.log("o/[p]"+ widgetOutput);
         if(!err){
           res.json({status: 'success', info: "Widget modified successfully",widget: widgetOutput});
         }
