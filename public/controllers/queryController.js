@@ -221,7 +221,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.showBarGraphColumn = function() {
     console.log("entered showGraphColumn");
     if(($("."+"miniBarGraph"+"").length) === 0){
-        $("#row0").prev().append("<td class="+"miniBarGraph"+"><span class='graphIcon'>"+"Bar Chart"+"</span></td>");
+        $("#row0").prev().append("<td class="+"miniBarGraph"+"><span class='graphIcon'>"+"</span></td>");
 
         //$scope.graphArray = graphArray;
         for(var index in $scope.graphArray) {
@@ -262,7 +262,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.showLineGraphColumn = function() {
     console.log("entered showLineGraphColumn");
       if(($("."+"miniLineGraph"+"").length) === 0){
-          $("#row0").prev().append("<td class="+"miniLineGraph"+"><span class='graphIcon'>"+"Line Chart"+"</span></td>");
+          $("#row0").prev().append("<td class="+"miniLineGraph"+"><span class='graphIcon'>"+"</span></td>");
 
           //$scope.graphArray = graphArray;
           for(var index in $scope.graphArray) {
@@ -301,7 +301,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.showAreaGraphColumn = function() {
     console.log("entered showAreaGraphColumn");
       if(($("."+"miniAreaGraph"+"").length) === 0){
-          $("#row0").prev().append("<td class="+"miniAreaGraph"+"><span class='graphIcon'>"+"Area Chart"+"</span></td>");
+          $("#row0").prev().append("<td class="+"miniAreaGraph"+"><span class='graphIcon'>"+"</span></td>");
 
           //$scope.graphArray = graphArray;
           for(var index in $scope.graphArray) {
@@ -339,7 +339,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.showPieGraphColumn = function() {
     console.log("entered showPieGraphColumn");
       if(($("."+"miniPieGraph"+"").length) === 0){
-          $("#row0").prev().append("<td class="+"miniPieGraph"+"><span class='graphIcon'>"+"Pie Chart"+"</span></td>");
+          $("#row0").prev().append("<td class="+"miniPieGraph"+"><span class='graphIcon'>"+"</span></td>");
 
           //$scope.graphArray = graphArray;
           for(var index in $scope.graphArray) {

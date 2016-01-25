@@ -440,8 +440,8 @@ app.factory('GraphService', function($compile,$rootScope){
    					height : 500,
    					width : 500,
    					innerRadius : 50,
-   					outerRadius : 150,
-   					labelRadius : 175
+   					outerRadius : 120,
+   					labelRadius : 150
    				};
 
    				svg.attr({
