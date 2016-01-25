@@ -5,6 +5,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     $window.location.href = '/';
   }
   else{
+    $rootScope.container = angular.element(document).find('#tableDiv');
     $scope.items = [{
                     label: 'Measures',
                     list: []
@@ -28,18 +29,16 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     $window.location.href = '/logout';
   };
 
-  $scope.getExecuteQueryData = function(container) {
+  $scope.getExecuteQueryData = function() {
     var parameters = {
           connId : $rootScope.connId,
           dataSource: $rootScope.DataSourceName,
           catalog: $rootScope.CatalogName,
           statement: $scope.buildQuery()
     };
-    executeQueryService.render(container, parameters).then(function(data) {
+    executeQueryService.removeGrid($rootScope.container);
+    executeQueryService.render($rootScope.container, parameters).then(function(data) {
          $scope.graphArray = data;
-         console.log(data);
-      // $scope.executeQueryData = data.data;
-      // $scope.graphArray = gridRenderService.renderData(data.data, 'dataTableBody');
     });
   };
 
@@ -153,10 +152,8 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
 
   $scope.querySaveMessage = "";
   $scope.showModalAlert = false;
-  $scope.hideMe = function(list) {
-    return list.length > 0;
-  };
-
+  $scope.newWidgetName = "";
+  $scope.widgetSaveMessage = "";
   $scope.mdxQuery = "";
   $scope.showMdxQuery = false;
   $scope.isQueryNonEmpty = true;
@@ -165,8 +162,12 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.isMdxInputError = false;
   $scope.mdxInputErrorMessage = "MDX input error.";
   $rootScope.graphArray = [];
-
+  $scope.newWidgetName = "";
+  $scope.hideMe = function(list) {
+    return list.length > 0;
+  }
   $scope.retrieveQuery = function(idx) {
+    executeQueryService.removeGrid($rootScope.container);
     var query = $scope.queryList[idx];
     console.log(query);
     $rootScope.selectedRetrieveQuery = true;
@@ -354,7 +355,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
         else {
           $("."+"miniPieGraph"+"").toggle();
         }
-  }
+  };
 
   //Show Pie Modal Graph
   $scope.openModalPieGraph = function(indexPassed) {
@@ -372,5 +373,21 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
       }
     });
   };
+
+  $scope.export = function(){
+      var modalInstance = $uibModal.open({
+          animation: $scope.animationsEnabled,
+          templateUrl: 'saveWidget.html',
+          controller: 'SaveWgtModalCtrl',
+          resolve: {
+            mdxQuery: function(){
+              return $scope.mdxQuery;
+            }
+          }
+       });
+       modalInstance.result.then(function(widgetList){
+         $scope.widgetList = widgetList;
+       });
+    };
   }
 });

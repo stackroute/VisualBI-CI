@@ -13,6 +13,7 @@ hotChocolate.controller('ServerCredentialModalCtrl',
           saveConnection.saveConnection($rootScope.userName, conn)
                         .then(function(data){
                           $rootScope.queryList = conn.savedQueries;
+                          $rootScope.widgetList = conn.savedWidgets;
                           $rootScope.connId = conn._id;
                           $rootScope.connIndex = $scope.connIndex;
                           discover.getSource('/',$rootScope.connId).then(function(data){

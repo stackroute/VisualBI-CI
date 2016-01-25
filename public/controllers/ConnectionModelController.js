@@ -1,7 +1,7 @@
 var hotChocolate = angular.module("hotChocolate");
 hotChocolate.controller('ConnectionModelController',
                         function($scope, $rootScope, $http, $cookies, $window, $uibModal, addNewConnection,
-                                      getAvailableConnections, discover, user_id){
+                                      getAvailableConnections, executeQueryService, discover, user_id){
     if(!$cookies.get('userName')){
       $window.location.href = '/';
     }
@@ -24,6 +24,7 @@ hotChocolate.controller('ConnectionModelController',
       });
       $scope.CubeName = "";
       $scope.$watch('CubeName', function(newValue, oldValue){
+        executeQueryService.removeGrid($rootScope.container);
         console.log("start"+$rootScope.selectedRetrieveQuery);
         $rootScope.CubeName = newValue;
         if($rootScope.selectedRetrieveQuery === false){

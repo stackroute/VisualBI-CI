@@ -329,7 +329,7 @@ rect {
 
 
 /*********** Angularizing Modal *******************/
-.selectConnection {
+.selectConnection ,.selectWidget{
   border-right: 1px solid lightgrey;
 }
 .modal-content input{
@@ -373,7 +373,29 @@ rect {
   min-width: 40%;
   max-width: 45%;
 }
+#widgetList{
+  list-style-type: none;
+}
+/*.contentSpace{
+  padding-bottom: 10px;
+}*/
+.selectWidget, .addWidget{
+  height: 220px;
+}
 /*************************Avoiding templates from loading****************************/
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
+}
+/*************************Export Widgets***************************/
+
+.widgetList{
+  height: 100px;
+  overflow-y: auto;
+}
+
+.modal-content input[type="radio"]{
+  width:50px;
+}
+.modal-content textarea{
+  width: 100%;
 }
