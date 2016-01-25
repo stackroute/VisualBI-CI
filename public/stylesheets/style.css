@@ -19,15 +19,15 @@ body {
   margin-right: 0;
 }
 
-#main>.row>.col-xs-3 {
+#main>.row>.col-sm-3 {
   width: 23%;
 }
 
-#main>.row>.col-xs-9 {
+#main>.row>.col-sm-9 {
   width: 77%;
 }
 
-.col-xs-3 , .col-xs-9{
+#left-menu , #content {
   height: 100%;
 }
 
@@ -96,6 +96,10 @@ span.nav-toggle-icon{
   padding-right: 15px;
 }
 
+.navbar-header .navbar-toggle .icon-bar {
+    background-color: white;
+}
+
 .navbar .btn {
   font-size: 16px;
 }
@@ -121,12 +125,12 @@ span.nav-toggle-icon{
   border-radius: 4px;
 }
 
-.myRect .col-xs-2{
+.myRect .col-sm-2{
   background-color: #e3e3e3;
   text-align: center;
 }
 
-.myRect .col-xs-10 {
+.myRect .col-sm-10 {
   padding-top: 6px;
 }
 
@@ -303,7 +307,7 @@ rect {
       #barGraphLabel {
         width : 80px;
 
-      } 
+      }
 
       .slice text {
             font-size: 16pt;
@@ -323,7 +327,7 @@ rect {
 .label-circle {
     fill: #393939;
 }
-                                                             
+
 
       }
 
