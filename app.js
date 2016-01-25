@@ -8,6 +8,8 @@ var express       = require('express'),
     cookieParser  = require('cookie-parser'),
     bodyParser    = require('body-parser');
 
+
+
 // Developer defined modules
 var  db                = require('./models/db'),
     execute            = require('./routes/execute_query'),
@@ -17,6 +19,7 @@ var  db                = require('./models/db'),
     users              = require('./routes/users'),
     login              = require('./routes/login'),
     serverCredentials  = require('./routes/serverCredentials');
+    widgetRouter  = require('./routes/widgetRouter');
 
 // initializing express application
 var app = express();
@@ -48,6 +51,8 @@ app.use('/execute', execute);
 app.use('/discover', discover);
 app.use('/serverCredentials', serverCredentials);
 app.use('/query', queryController);
+app.use('/widget', widgetRouter);
+
 
 // passport config
 var Account = require('./models/userDetails');

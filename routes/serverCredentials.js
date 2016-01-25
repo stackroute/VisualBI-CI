@@ -85,7 +85,7 @@ router.get("/addConnection",function(req,res){
           $set  : {"activeConnection" : myConnection._id}
         },
         function(err,user){
-        if(err)
+          if(err)
           {
             console.log("Error Message from /addConnections "+err);
             res.send(err);
@@ -94,7 +94,6 @@ router.get("/addConnection",function(req,res){
             console.log("Done");
               // res.send(myConnection);
           }
-
       });
       res.send(myConnection);
 

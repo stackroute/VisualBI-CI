@@ -49,6 +49,8 @@
     <script src="controllers/SaveQryModalCtrl.js"></script>
     <!-- Include ModalGraph Controller -->
     <script src="controllers/ModalGraphController.js"></script>
+    <!-- Include WidgetModelController.js -->
+    <script src="controllers/SaveWgtModalCtrl.js"></script>
     <!-- Include gridRender.js -->
     <!-- <script src="directives/gridRender.js"></script> -->
     <!-- Include toggleList.js -->
@@ -57,7 +59,8 @@
     <script src="services/saveQuery.js"></script>
     <!-- Include saveQuery.js -->
     <script src="services/user_id.js"></script>
-
+    <!-- Include saveWidget.js -->
+    <script src="services/saveWidget.js"></script>
 
     <!-- Bootstrap CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -295,9 +298,73 @@
               <button type="button" class="btn btn-default navbar-btn" id="executeButton" uib-tooltip="execute" tooltip-placement="bottom" ng-click="getExecuteQueryData()"><span class="glyphicon glyphicon-play-circle"></span></button>
             </div>
             <div class="btn-group" role="group">
-              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="export widget" tooltip-placement="bottom"><i class="glyphicon glyphicon-export"></i></button>
+              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="export widget" tooltip-placement="bottom" ng-click="export()"><i class="glyphicon glyphicon-export"></i></button>
               <button type="button" class="btn btn-default navbar-btn" uib-tooltip="show MDX" tooltip-placement="bottom" ng-click="showMdxQuery = showMdxQuery == false ? true : false"><i class="fa fa-file-code-o"></i></button>
               <button type="button" class="btn btn-default navbar-btn" uib-tooltip="non empty" tooltip-placement="bottom" ng-click="isQueryNonEmpty = isQueryNonEmpty == false ? true : false ; getExecuteQueryData()"><i class="fa fa-tasks"></i></button>
+              <!-- saveWidgetModal-->
+              <script type="text/ng-template" id="saveWidget.html">
+                <div class="modal-header row">
+                    <h4 class="modal-title" id="myModalLabel">Export Widget</h4>
+                </div>  <!--End modal-header row -->
+                <div class="modal-body row">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <input type="radio" name="saveOption" ng-model="saveOption" value="update">
+                      <label>
+                       <h4> Update </h4>
+                      </label>
+                    </div>
+                    <div class="col-xs-6">
+                      <input type="radio" name="saveOption" ng-model="saveOption" value="add">
+                      <label> <h4> Add </h4> </label>
+                    </div>
+                  </div>
+                  <div class = "row">
+                    <div class="col-xs-6">
+                      <div>
+                        <label for="widgetName">Widget name</label>
+                        <br>
+                        <input type="text" name="widgetName" ng-model="existingWidgetName" ng-change="getDescription()" ng-disabled="isRadioSelected('add')">
+                      </div>
+                      <div>
+                        <strong class="contentSpace">Existing widgets</strong>
+                        <div class="widgetList">
+                          <ul>
+                            <li ng-repeat="widget in widgetList" id="widgetList">
+                              {{widget.widgetName}}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                     <div class="col-xs-6">
+                        <div class="contentSpace">
+                          <label for="widgetName">Widget name</label>
+                          <input type="text" name="widgetName" id="widgetName" ng-model="newWidgetName" ng-change="getDescription()" ng-disabled="isRadioSelected('update')">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-xs-12">
+                    <label for="description">Widget description</label>
+                    <br>
+                    <textarea name="description" id="description" ng-model='description'>{{description}}</textarea>
+                    <br>
+                  </div>
+                  <div class="alert alert-warning fade in col-xs-12" ng-show="isWidgetExists" ng-cloak>
+                    {{widgetMessage}}
+                  </div>
+                  <button type="button" class="close" ng-click="showModalAlert = false">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <div><strong>{{widgetSaveMessage}}</strong></div>
+                </div>
+                </div> <!-- End modal-body-->
+                  <div class="modal-footer row">
+                    <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
+                    <button class="btn btn-warning" type="button" ng-click="cancel()">cancel</button>
+                </div> <!-- End modal-footer
+              </script>
+              <!-- End saveQueryModal-->
             </div>
             <div class="btn-group" role="group">
               <button type="button" class="btn btn-default navbar-btn" uib-tooltip="pie graph" tooltip-placement="bottom" ng-click="showPieGraphColumn()"><i class="fa fa-pie-chart"></i></button>
