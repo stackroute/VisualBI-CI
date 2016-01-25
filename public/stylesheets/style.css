@@ -286,7 +286,7 @@ rect {
         z-index: 10;
       }
       .legend {
-        font-size: 12px;
+        font-size: 9px;
       }
       rect {
         cursor: pointer;                                              /* NEW */
@@ -312,7 +312,7 @@ rect {
 
         .label-text {
     alignment-baseline: middle;
-    font-size: 12px;
+    font-size: 9px;
     font-family: arial,helvetica,"sans-serif";
     fill: #393939;
 }
