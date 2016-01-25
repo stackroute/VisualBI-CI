@@ -19,10 +19,6 @@ router.get('/', function (req, res) {
     res.render('login',{ registerMsg : ""});
 });
 
-// router.get('/register', function(req, res) {
-//     res.render('register', { });
-// });
-
 router.post('/register', function(req, res) {
     Account.register(new Account({ username : req.body.username }), req.body.password, function(err, account) {
         if (err) {
@@ -44,9 +40,5 @@ router.post('/register', function(req, res) {
       req.logout();
       res.redirect('/');
   });
-
-  // router.get('/ping', function(req, res){
-  //     res.status(200).send("pong!");
-  // });
 
 module.exports = router;
