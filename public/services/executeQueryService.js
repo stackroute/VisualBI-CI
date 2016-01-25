@@ -2,7 +2,8 @@ var app = angular.module('hotChocolate');
 
 app.factory('executeQueryService', function($http, $rootScope) {
   return {
-    render: function (container, parameters) {
+    render: function (containerDiv, parameters) {
+      var container = angular.element(containerDiv);
       // $('div.section_result').replaceWith('');
        var req = {
           method: 'POST',
@@ -44,14 +45,16 @@ var renderData =  function (container, data){
       '</tbody>'+
     '</table>'+
   '</div>');
-  $('#axis0_insersion').append('{{axis0}}');
-  $('#axis1_insersion').append('{{axis1}}');
+  container.find('#axis0_insersion').append('{{axis0}}');
+  container.find('#axis1_insersion').append('{{axis1}}');
   // $( container+" tr" ).replaceWith( "" );
   var addElement, ans, fs, members, tdChild;
   var axes = data.Axes,
       axis = axes.Axis,
       axis0 = axis[0],
-      axis1 = axis[1];
+      axis1 = axis[1],
+      axis0Child = {},
+      axis1Child = {};
   console.log(axis0);
   console.log(axis1);
   /************* Function for graphKey *****************/
@@ -81,15 +84,16 @@ var renderData =  function (container, data){
     var child;
     if (members[0] != null) {
       child = members[0];
-      if (!tree[child.Caption]) {
-        tree[child.Caption] = {
+      if (!tree[child.UName]) {
+        tree[child.UName] = {
           count: 0,
+          caption: child.Caption,
           children: {}
         };
       }
-      tree[child.Caption].count += 1;
-      tree[child.Caption].level = child.index;
-      addElement(members.slice(1), tree[child.Caption].children, child.index + 1);
+      tree[child.UName].count += 1;
+      tree[child.UName].level = child.index;
+      addElement(members.slice(1), tree[child.UName].children, child.index + 1);
     }
     return tree;
   };
@@ -103,6 +107,7 @@ var renderData =  function (container, data){
 
   /************* Function for rendering axis0 *****************/
   tdAxis0Child = function(element) {
+    console.log(element);
     var a, ele, name,
         frag0 = "<tr>";
     for(var axis1MemberIndex=0, axis1MemberLen = axis1[0].Member.length; axis1MemberIndex < axis1MemberLen; axis1MemberIndex++){
@@ -121,7 +126,7 @@ var renderData =  function (container, data){
           prevElementArray[index] = elementArray[index];
           for (name in element) {
             ele = element[name];
-            results.push(("<td colspan='" + ele.count + "' class='level" + ele.level + "'>" + name + "</td>"));
+            results.push(("<td colspan='" + ele.count + "' class='level" + ele.level + "'>" + ele.caption + "</td>"));
           }
         }
         results.push("</tr>");
@@ -142,9 +147,9 @@ var renderData =  function (container, data){
       return acc + line;
     }), ""));
   };
-  var template0 = $.trim($("#axis0_insersion").html()),
+  var template0 = $.trim(container.find("#axis0_insersion").html()),
       frag0 = template0.replace(/{{axis0}}/ig,tdAxis0Child(axis0Child));
-  $('#dataTableBody').append(frag0);  // #dataTableBody
+  container.find('#dataTableBody').append(frag0);  // #dataTableBody
 
   /****************************** Data **********************************/
   var cellData = data.CellData,
@@ -197,12 +202,12 @@ var renderData =  function (container, data){
         for (name in element) {
           ele = element[name];
           if(Object.keys(ele.children).length === 0){
-            results.push(("<tr id='row"+rowId+"' class='dataRow'><td rowspan='" + ele.count + "' class='level" + ele.level + "'>" + name + "</td>")+dataArray[elementIndex].td);
+            results.push(("<tr id='row"+rowId+"' class='dataRow'><td rowspan='" + ele.count + "' class='level" + ele.level + "'>" + ele.caption + "</td>")+dataArray[elementIndex].td);
             elementIndex += 1;
             rowId += 1;
           }
           else{
-            results.push(("<tr id='row"+rowId+"' class='dataRow'><td rowspan='" + ele.count + "' class='level" + ele.level + "'>" + name + "</td>") + tdAxis1Child(ele.children));
+            results.push(("<tr id='row"+rowId+"' class='dataRow'><td rowspan='" + ele.count + "' class='level" + ele.level + "'>" + ele.caption + "</td>") + tdAxis1Child(ele.children));
           }
         }
         return results;
@@ -212,8 +217,10 @@ var renderData =  function (container, data){
       }), "")).slice(4);
     }
   };
-  var template1 = $.trim($("#axis1_insersion").html());
+  var template1 = $.trim(container.find("#axis1_insersion").html());
   var frag1 = template1.replace(/{{axis1}}/ig,"<tr id='row0' class='dataRow'>"+tdAxis1Child(axis1Child));
-  $('#dataTableBody').append(frag1);
+  container.find('#dataTableBody').append(frag1);
+  // console.log(axis0Child);
+  // console.log(axis1Child);
   return graphData;
 }; // end renderData

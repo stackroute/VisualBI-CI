@@ -39,6 +39,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     executeQueryService.removeGrid($rootScope.container);
     executeQueryService.render($rootScope.container, parameters).then(function(data) {
          $scope.graphArray = data;
+         console.log( $scope.graphArray);
     });
   };
 
