@@ -220,10 +220,12 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
         $("#row0").prev().append("<td class="+"miniBarGraph"+"><span class='graphIcon'>"+"</span></td>");
 
         for(var index in $scope.graphArray) {
-          var dataset = $scope.graphArray;
-          $rootScope.graphArray = $scope.graphArray;
-          $("#row"+index).append($compile("<td class="+"miniBarGraph"+"><minibar-graph index-passed="+index+" "+"my-set="+'graphArray'+"></minibar-graph></td>")($scope));
+          if(parseInt(index) !== $scope.graphArray.length-1) {
+              var dataset = $scope.graphArray;
+              $rootScope.graphArray = $scope.graphArray;
+              $("#row"+index).append($compile("<td class="+"miniBarGraph"+"><minibar-graph index-passed="+index+" "+"my-set="+'graphArray'+"></minibar-graph></td>")($scope));
         }
+      }
       }
       else {
         $("."+"miniBarGraph"+"").toggle();
@@ -254,10 +256,12 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
           $("#row0").prev().append("<td class="+"miniLineGraph"+"><span class='graphIcon'>"+"</span></td>");
 
           for(var index in $scope.graphArray) {
-            var dataset = $scope.graphArray;
-            $rootScope.graphArray = $scope.graphArray;
-            $("#row"+index).append($compile("<td class="+"miniLineGraph"+"><miniline-graph index-passed="+index+" "+"my-set="+'graphArray'+"></miniline-graph></td>")($scope));
+            if(parseInt(index) !== $scope.graphArray.length-1) {
+                var dataset = $scope.graphArray;
+                $rootScope.graphArray = $scope.graphArray;
+                $("#row"+index).append($compile("<td class="+"miniLineGraph"+"><miniline-graph index-passed="+index+" "+"my-set="+'graphArray'+"></miniline-graph></td>")($scope));
           }
+        }
         }
         else {
           $("."+"miniLineGraph"+"").toggle();
@@ -287,10 +291,12 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
           $("#row0").prev().append("<td class="+"miniAreaGraph"+"><span class='graphIcon'>"+"</span></td>");
 
           for(var index in $scope.graphArray) {
-            var dataset = $scope.graphArray;
-            $rootScope.graphArray = $scope.graphArray;
-            $("#row"+index).append($compile("<td class="+"miniAreaGraph"+"><miniarea-graph index-passed="+index+" "+"my-set="+'graphArray'+"></miniarea-graph></td>")($scope));
+            if(parseInt(index) !== $scope.graphArray.length-1) {
+                var dataset = $scope.graphArray;
+                $rootScope.graphArray = $scope.graphArray;
+                $("#row"+index).append($compile("<td class="+"miniAreaGraph"+"><miniarea-graph index-passed="+index+" "+"my-set="+'graphArray'+"></miniarea-graph></td>")($scope));
           }
+        }
       } else {
           $("."+"miniAreaGraph"+"").toggle();
       }
@@ -319,10 +325,11 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
           $("#row0").prev().append("<td class="+"miniPieGraph"+"><span class='graphIcon'>"+"</span></td>");
 
           for(var index in $scope.graphArray) {
-            var dataset = $scope.graphArray;
-            $rootScope.graphArray = $scope.graphArray;
-            $("#row"+index).append($compile("<td class="+"miniPieGraph"+"><minipie-graph index-passed="+index+" "+"my-set="+'graphArray'+"></minipie-graph></td>")($scope));
-
+            if(parseInt(index) !== $scope.graphArray.length-1){
+                var dataset = $scope.graphArray;
+                $rootScope.graphArray = $scope.graphArray;
+                $("#row"+index).append($compile("<td class="+"miniPieGraph"+"><minipie-graph index-passed="+index+" "+"my-set="+'graphArray'+"></minipie-graph></td>")($scope));
+            }
           }
         }
         else {
