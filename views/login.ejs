@@ -9,6 +9,8 @@
     <script src="js/modernizr-2.6.2.min.js"></script>
     <!-- Bootstrap CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap/js/bootstrap.min.js" rel="stylesheet">
     <!-- Adding customized Css login.css -->
     <link rel="stylesheet" href="stylesheets/login.css">
     <!-- Include Angular in the head -->
@@ -29,23 +31,23 @@
       <h1>Visual BI</h1>
       <h3 ng-hide="isRegSelected">Login</h3>
       <h3 ng-show="isRegSelected">Register</h3>
-      <form id="loginForm" method="post" ng-submit="putCookie()" class="col-sm-offset-2 col-sm-8 form-horizontal ng-pristine ng-invalid ng-invalid-required" ng-hide="isRegSelected">
-        <div class="form-group" ng-class="{ 'has-error': form.username.$dirty &amp;&amp; form.username.$error.required }">
+      <form id="loginForm" name="loginForm" method="post" ng-submit="putCookie()" class="col-sm-offset-2 col-sm-8 form-horizontal ng-pristine ng-invalid ng-invalid-required" ng-hide="isRegSelected" novalidate>
+        <div class="form-group" ng-class="{ 'has-error': loginForm.username.$dirty &amp;&amp; loginForm.username.$error.required }">
             <label for="username" class="col-sm-4">User Name : </label>
             <div class="col-sm-8">
               <input type="text" name="username" ng-model="userName" placeholder="Enter Username" class="form-control ng-pristine ng-invalid ng-invalid-required" required="">
             </div>
-            <span ng-show="form.username.$dirty &amp;&amp; form.username.$error.required" class="help-block ng-hide">Username is required</span>
+            <span ng-show="loginForm.username.$dirty &amp;&amp; loginForm.username.$error.required" class="help-block ng-hide">Username is required</span>
         </div>
-        <div class="form-group" ng-class="{ 'has-error': form.password.$dirty &amp;&amp; form.password.$error.required }">
+        <div class="form-group" ng-class="{ 'has-error': loginForm.password.$dirty &amp;&amp; loginForm.password.$error.required }">
             <label for="password" class="col-sm-4">Password : </label>
             <div class="col-sm-8">
               <input type="password" name="password" ng-model="password" placeholder="Enter Password" class="form-control ng-pristine ng-invalid ng-invalid-required" required="">
             </div>
-            <span ng-show="form.password.$dirty &amp;&amp; form.password.$error.required" class="help-block ng-hide">Password is required</span>
+            <span ng-show="loginForm.password.$dirty &amp;&amp; loginForm.password.$error.required" class="help-block ng-hide">Password is required</span>
         </div>
         <div class="col-sm-offset-3 col-sm-6">
-          <button type="submit" value="Submit">Login</button>
+          <button type="submit" value="Submit" name="login" id="login" ng-disabled="!loginForm.$valid">Login</button>
             &nbsp;
           <button type="reset" value="Reset">Reset</button>
             &nbsp;
@@ -53,31 +55,31 @@
         </div>
         <div class="col-sm-12 displayMsg">{{loginMsg}}</div>
       </form>
-      <form id="registerForm" method="post" action="/register" class="col-sm-offset-2 col-sm-8 form-horizontal ng-pristine ng-invalid ng-invalid-required" ng-show="isRegSelected">
-        <div class="form-group" ng-class="{ 'has-error': form.username.$dirty &amp;&amp; form.username.$error.required }">
+      <form id="registerForm" name="registerForm" method="post" action="/register" class="col-sm-offset-2 col-sm-8 form-horizontal ng-pristine ng-invalid ng-invalid-required {'ng-invalid':registerForm.confirmPassword.$error.match}" ng-show="isRegSelected" novalidate>
+        <div class="form-group" ng-class="{ 'has-error': registerForm.username.$dirty &amp;&amp; registerForm.username.$error.required }">
             <label for="username" class="col-sm-4">User Name : </label>
             <div class="col-sm-8">
               <input type="text" name="username" ng-model="userName" placeholder="Enter Username" class="form-control ng-pristine ng-invalid ng-invalid-required" required="">
             </div>
-            <span ng-show="form.username.$dirty &amp;&amp; form.username.$error.required" class="help-block ng-hide">Username is required</span>
+            <span ng-show="registerForm.username.$dirty &amp;&amp; registerForm.username.$error.required" class="help-block ng-hide">Username is required</span>
         </div>
-        <div class="form-group" ng-class="{ 'has-error': form.password.$dirty &amp;&amp; form.password.$error.required }">
+        <div class="form-group" ng-class="{ 'has-error': registerForm.password.$dirty &amp;&amp; registerForm.password.$error.required }">
             <label for="password" class="col-sm-4">Password : </label>
             <div class="col-sm-8">
-              <input type="password" name="password" ng-model="password" placeholder="Enter Password" class="form-control ng-pristine ng-invalid ng-invalid-required {'ng-invalid':myForm.confirmPassword.$error.match}" required="">
+              <input type="password" name="password" ng-model="password" placeholder="Enter Password" class="form-control ng-pristine ng-invalid ng-invalid-required {'ng-invalid':registerForm.confirmPassword.$error.match}" required="">
             </div>
-            <span ng-show="form.password.$dirty &amp;&amp; form.password.$error.required" class="help-block ng-hide">Password is required</span>
+            <span ng-show="registerForm.password.$dirty &amp;&amp; registerForm.password.$error.required" class="help-block ng-hide">Password is required</span>
         </div>
-        <!-- <div class="form-group" ng-class="{ 'has-error': form.password.$dirty &amp;&amp; form.password.$error.required }">
-            <label for="confirmPassword" class="col-sm-2">Confirm Password : </label>
-            <div class="col-sm-6">
+        <div class="form-group" ng-class="{ 'has-error': registerForm.confirmPassword.$dirty &amp;&amp; registerForm.confirmPassword.$error.required  || registerForm.confirmPassword.$dirty &amp;&amp; registerForm.confirmPassword.$error.match}">
+            <label for="confirmPassword" class="col-sm-4">Confirm Password : </label>
+            <div class="col-sm-8">
               <input type="password" name="confirmPassword" ng-model="confirmPassword" placeholder="Re-enter Password" match="password" class="form-control ng-pristine ng-invalid ng-invalid-required" required="">
             </div>
-            <span ng-show="form.confirmPassword.$dirty &amp;&amp; form.confirmPassword.$error.required" class="help-block ng-hide">Confirm Password is required</span>
-            <div ng-show="myForm.myConfirmField.$error.match">Password and Confirm Password do not match!</div>
-        </div> -->
+            <span ng-show="registerForm.confirmPassword.$dirty &amp;&amp; registerForm.confirmPassword.$error.required" class="help-block ng-hide">Confirm Password is required</span>
+            <span ng-show="registerForm.confirmPassword.$dirty &amp;&amp; registerForm.confirmPassword.$error.match">Password and Confirm Password do not match!</span>
+        </div>
         <div class="col-sm-offset-3 col-sm-6">
-          <button type="submit" value="Submit">Sign Up</button>
+          <button type="submit" value="Submit" ng-disabled="!registerForm.$valid">Sign Up</button>
             &nbsp;
           <button type="reset" value="Reset">Reset</button>
             &nbsp;
