@@ -1,7 +1,7 @@
-html, body {
+/*html, body {
   width: 100%;
   height: 100%;
-}
+}*/
 form.col-sm-8 {
   font-size: 20px;
   margin-top: 20px;
@@ -10,13 +10,27 @@ form.col-sm-8 {
   padding-left: 10px;
   padding-right: 20px;
   border-radius: 8px;
-  background-color: lightblue;
+  background-color: lightslategrey;
 }
 body h1 {
-  color:red;
+  color:darkslategrey;
+  font-size: 4em;
+}
+.registerFormClick {
+  color: darkslategrey;
+  text-align: left;
+}
+.registerFormClick a {
+  color: darkslategrey;
+}
+.registerFormClick a:hover{
+  color: lightblue;
 }
 form input{
   font-size: 18px;
+}
+.buttonDiv button {
+  border-radius: 4px;
 }
 td {
   padding: 2px;
@@ -33,31 +47,33 @@ input.ng-invalid{
   margin-top: 20px;
 }
 /* media queries */
+/*
 @media(max-width: 767px){
   body{
     background: url('../images/bi_sm.png') no-repeat center center fixed;
-    /*background-size: cover;*/
+    background-size: cover;
     background-size: 100% 100%;
   }
 }
 @media(min-width: 768px){
   body{
     background: url('../images/bi_md.png') no-repeat center center fixed;
-    /*background-size: cover;*/
+    background-size: cover;
     background-size: 100% 100%;
   }
 }
 @media(min-width: 992px){
   body{
     background: url('../images/bi_lg.png') no-repeat center center fixed;
-    /*background-size: cover;*/
+    background-size: cover;
     background-size: 100% 100%;
   }
 }
 @media(min-width: 1200px){
   body{
     background: url('../images/bi.jpg') no-repeat center center fixed;
-    /*background-size: cover;*/
+    background-size: cover;
     background-size: 100% 100%;
   }
 }
+*/
