@@ -25,7 +25,7 @@
 
 var hotChocolate = angular.module('hotChocolate');
 hotChocolate.controller('SaveWgtModalCtrl',
-    function ($scope, $rootScope, $filter, $uibModalInstance, $timeout, mdxQuery, widget )
+    function ($scope, $rootScope, $uibModalInstance, $timeout, mdxQuery, widget )
     {
       var uName = 'hotChocolate';
         $scope.mdxQuery = mdxQuery;
@@ -34,7 +34,6 @@ hotChocolate.controller('SaveWgtModalCtrl',
         $scope.isWidgetExists = false;
         $scope.saveOption = "update";
         $scope.widgetMessage = "";
-        $scope.widgetSlug = "";
         widget.getSavedWidgets(uName).success(function(data){
           $scope.widgetList = data;
         })
@@ -56,10 +55,10 @@ hotChocolate.controller('SaveWgtModalCtrl',
          }
          else{
             var widgetList = $scope.widgetList;
-            var widgetSlug = $filter('slug')($scope.newWidgetName);
+            var widgetName = $scope.newWidgetName;
             var isExists = false;
             for(widgetIdx in widgetList){
-              if (widgetList[widgetIdx].widgetSlug === widgetSlug)
+              if (widgetList[widgetIdx].widgetName === widgetName)
                {
                   isExists = true;
                   break;
@@ -85,11 +84,9 @@ hotChocolate.controller('SaveWgtModalCtrl',
                     dataSource: $scope.$root.DataSourceName,
                     catalog: $scope.$root.CatalogName,
                     cube: $scope.$root.CubeName
-                  },
-                  widgetSlug: widgetSlug
+                  }
               };
               console.log($scope.newWidgetName);
-              console.log($scope.widgetSlug);
               widget.saveWidget(addParameters)
                 .success(function(data) {
                     $scope.isWidgetExists = true;
@@ -121,10 +118,10 @@ hotChocolate.controller('SaveWgtModalCtrl',
        //entered a non-empty name in widgetName
        else{
          var widgetList = $scope.widgetList;
-         var widgetSlug = $filter('slug')($scope.existingWidgetName);
+         var widgetName = $scope.existingWidgetName;
          var isExists = false;
          for(widgetIdx in widgetList){
-            if (widgetList[widgetIdx].widgetSlug === widgetSlug)
+            if (widgetList[widgetIdx].widgetName === widgetName)
              {
                 isExists = true;
                 break;
@@ -141,8 +138,7 @@ hotChocolate.controller('SaveWgtModalCtrl',
                 dataSource: $scope.$root.DataSourceName,
                 catalog: $scope.$root.CatalogName,
                 cube: $scope.$root.CubeName,
-              },
-              widgetSlug: widgetSlug
+              }
             };
             widget.updateWidget(updateParameters).success(function(data){
               $scope.widgetMessage = data.info;
@@ -173,11 +169,11 @@ hotChocolate.controller('SaveWgtModalCtrl',
    };
    $scope.getDescription = function(){
       var widgetList = $scope.widgetList,
-          widgetSlug = $filter('slug')($scope.existingWidgetName);
+          widgetName = $scope.existingWidgetName;
       $scope.isWidgetExists = false;
       $scope.description = "";
       for(widgetIdx in widgetList){
-         if (widgetList[widgetIdx].widgetSlug === widgetSlug)
+         if (widgetList[widgetIdx].widgetName === widgetName)
           {
             if($scope.saveOption === "update"){
               $scope.description = widgetList[widgetIdx].description;
