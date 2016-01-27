@@ -7,12 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Include Modernizr in the head, before any other Javascript -->
     <script src="js/modernizr-2.6.2.min.js"></script>
-    <!-- Bootstrap CSS -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link href="bootstrap/js/bootstrap.min.js" rel="stylesheet">
-    <!-- Adding customized Css login.css -->
-    <link rel="stylesheet" href="stylesheets/login.css">
     <!-- Include Angular in the head -->
     <script src="lib/angular/angular.min.js"></script>
     <!-- Include Angular-Cookies in the head -->
@@ -25,13 +19,16 @@
     <script src="services/login.js"></script>
     <!-- Include Angular-Cookies in the head -->
     <script src="controllers/loginCtrl.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Adding customized Css login.css -->
+    <link rel="stylesheet" href="stylesheets/login.css">
   </head>
   <body ng-app = "login" ng-controller="loginCtrl" class="container">
     <center>
-      <h1>Visual BI</h1>
-      <h3 ng-hide="isRegSelected">Login</h3>
-      <h3 ng-show="isRegSelected">Register</h3>
+      <h1>SimpliBI</h1>
       <form id="loginForm" name="loginForm" method="post" ng-submit="putCookie()" class="col-sm-offset-2 col-sm-8 form-horizontal ng-pristine ng-invalid ng-invalid-required" ng-hide="isRegSelected" novalidate>
+        <h2 ng-hide="isRegSelected">Login</h2>
         <div class="form-group" ng-class="{ 'has-error': loginForm.username.$dirty &amp;&amp; loginForm.username.$error.required }">
             <label for="username" class="col-sm-4">User Name : </label>
             <div class="col-sm-8">
@@ -56,6 +53,7 @@
         <div class="col-sm-12 displayMsg">{{loginMsg}}</div>
       </form>
       <form id="registerForm" name="registerForm" method="post" action="/register" class="col-sm-offset-2 col-sm-8 form-horizontal ng-pristine ng-invalid ng-invalid-required {'ng-invalid':registerForm.confirmPassword.$error.match}" ng-show="isRegSelected" novalidate>
+        <h2 ng-show="isRegSelected">Register</h2>
         <div class="form-group" ng-class="{ 'has-error': registerForm.username.$dirty &amp;&amp; registerForm.username.$error.required }">
             <label for="username" class="col-sm-4">User Name : </label>
             <div class="col-sm-8">
