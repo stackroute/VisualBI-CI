@@ -1,5 +1,5 @@
 var hotChocolate = angular.module('hotChocolate');
-hotChocolate.controller('queryController', function($scope, $http, $rootScope, GraphService, executeQueryService, $uibModal, $compile, $cookies, $window) {
+hotChocolate.controller('queryController', function($scope, $http, $rootScope, GraphService, executeQueryService, $uibModal, $compile, $cookies, $window, $timeout) {
   if(!$cookies.get('userName')){
     $window.location.href = '/';
   }
@@ -29,18 +29,37 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   };
 
   $scope.getExecuteQueryData = function() {
-    var parameters = {
-          connId : $rootScope.connId,
-          dataSource: $rootScope.DataSourceName,
-          catalog: $rootScope.CatalogName,
-          statement: $scope.buildQuery()
-    };
     executeQueryService.removeGrid($rootScope.container);
-    executeQueryService.render($rootScope.container, parameters).then(function(data) {
-         $scope.graphArray = data;
-         console.log( $scope.graphArray);
-    });
-  };
+    if($scope.items[0].list.length == 0 && $scope.items[1].list.length == 0) {
+      $scope.mdxInputErrorMessage = "Atleast one of Measures and Columns need to be filled.";
+      $scope.isMdxInputError = true;
+      $timeout(function() {
+        $scope.isMdxInputError = false;
+      }, 3000);
+    }
+    else if ($scope.items[2].list.length == 0) {
+      $scope.mdxInputErrorMessage = "Rows should not be empty.";
+      $scope.isMdxInputError = true;
+      $timeout(function() {
+        $scope.isMdxInputError = false;
+      }, 3000);
+    }
+    else {
+      var parameters = {
+        connId : $rootScope.connId,
+        dataSource: $rootScope.DataSourceName,
+        catalog: $rootScope.CatalogName,
+        statement: $scope.buildQuery()
+      };
+      $scope.loadingQuery = true;
+      executeQueryService.render($rootScope.container, parameters).then(function(data) {
+        $timeout(function() {
+          $scope.loadingQuery = false;
+        }, 100);
+        $scope.graphArray = data;
+      });
+    } // end else
+  }; // end function
 
   $scope.buildQuery = function () {
     var measures = $scope.items[0].list,
@@ -155,6 +174,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.newWidgetName = "";
   $scope.widgetSaveMessage = "";
   $scope.mdxQuery = "";
+  $scope.loadingQuery = false;
   $scope.showMdxQuery = false;
   $scope.isQueryNonEmpty = true;
   $scope.graphArray = [];

@@ -30,7 +30,7 @@ app.factory('GraphService', function($compile,$rootScope){
 			}
 			//Create SVG element
 			var svg = d3.select(container)
-						.append("button")
+						.append("div")
 						.attr("ng-click", "openModalBarGraph("+index+")")
 						.append("svg")
 						.attr("width", w)
@@ -187,7 +187,7 @@ app.factory('GraphService', function($compile,$rootScope){
    			var yScale = d3.scale.linear().range([height,0]).domain([0,getMaxValue(dataset)]);
 
    			var svg = d3.select(container)
-   						.append("button")
+   						.append("div")
    						.attr("ng-click","openModalLineGraph("+index+")")
    						.append("svg")
    						.attr("width",width)
@@ -287,7 +287,7 @@ app.factory('GraphService', function($compile,$rootScope){
    			var yScale = d3.scale.linear().range([height,0]).domain([0,getMaxValue(dataset)]);
 
    			var svg = d3.select(container)
-   						.append("button")
+   						.append("div")
    						.attr("ng-click","openModalAreaGraph("+index+")")
    						.append("svg")
    						.attr("width",width)
@@ -377,7 +377,7 @@ app.factory('GraphService', function($compile,$rootScope){
    				var color = d3.scale.category20b();
 
    				var svg = d3.select(container)
-   							.append("button")
+   							.append("div")
    							.attr("ng-click","openModalPieGraph("+index+")")
   							.append('svg')
   							.attr('width', width)

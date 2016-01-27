@@ -27,7 +27,7 @@ angular.module("hotChocolate").directive("minibarGraph", function(GraphService,$
 			var idx = parseInt(scope.index);
 			var dataset = scope.data;
 			GraphService.renderMiniBarGraph(dataset[idx],element[0],idx);
-			$compile(element.find('button'))(scope.$parent);
+			$compile(element.find('div'))(scope.$parent);
 		}
 	}
 });
@@ -44,7 +44,7 @@ angular.module("hotChocolate").directive("minilineGraph", function(GraphService,
 			var idx = parseInt(scope.index);
 			var dataset = scope.data;
 			GraphService.renderMiniLineGraph(dataset[idx],element[0],idx);
-			$compile(element.find('button'))(scope.$parent);
+			$compile(element.find('div'))(scope.$parent);
 		}
 	}
 });
@@ -77,7 +77,7 @@ angular.module("hotChocolate").directive("miniareaGraph", function(GraphService,
 			var idx = parseInt(scope.index);
 			var dataset = scope.data;
 			GraphService.renderMiniAreaGraph(dataset[idx],element[0],idx);
-			$compile(element.find('button'))(scope.$parent);
+			$compile(element.find('div'))(scope.$parent);
 		}
 	}
 });
@@ -110,7 +110,7 @@ angular.module("hotChocolate").directive("minipieGraph", function(GraphService,$
 			var idx = parseInt(scope.index);
 			var dataset = scope.data;
 			GraphService.renderMiniPieGraph(dataset[idx],element[0],idx);
-			$compile(element.find('button'))(scope.$parent);
+			$compile(element.find('div'))(scope.$parent);
 		}
 	}
 });

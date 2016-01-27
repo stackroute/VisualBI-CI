@@ -180,11 +180,11 @@
                         <li ng-repeat="level in hierarchy.children">
                           <label class='nav-toggle nav-header' ng-click="!level.children.length > 0 && getMembers($parent.$parent.$index, $parent.$index, $index)" toggle-list>
                             <span class='nav-toggle-icon glyphicon glyphicon-chevron-right' ng-cloak></span>
-                            <a href='#' ng-model="hierarchy.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone', scroll: 'true'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}" ng-cloak> {{level.caption_name}}</a>
+                            <a href='#' ng-model="hierarchy.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone', scroll: true}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}" ng-cloak> {{level.caption_name}}</a>
                           </label>
                           <ul class='nav nav-list nav-left-ml' ng-show="level.children.length">
                             <li ng-repeat="member in level.children">
-                              <a href='#' ng-model="level.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone', scroll: 'true'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}"  ng-cloak> {{member.caption_name}}</a>
+                              <a href='#' ng-model="level.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone', scroll: true}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}"  ng-cloak> {{member.caption_name}}</a>
                             </li>
                           </ul>
                         </li>
@@ -417,6 +417,13 @@
               <div class="col-xs-12">
                 <h3> <strong> MDX query </strong> </h3>
                 <p> {{mdxQuery}} </p>
+              </div>
+            </div>
+            <div class="row loadingGif" ng-show="loadingQuery" ng-cloak>
+              <div class="col-xs-12">
+                <img src="/images/335.gif">
+                <br>
+                executing query
               </div>
             </div>
             <div class="row">
