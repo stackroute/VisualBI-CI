@@ -1,6 +1,10 @@
 var express = require('express'),
     Widget = require('../models/widgetModel'),
-    Connections = require('../models/Connections');
+    Connections = require('../models/Connections'),
+    slug = require('slug');
+
+slug.charmap['_'] = '__';
+slug.charmap[' '] = '_';
 
 var router = express.Router();
 
@@ -21,7 +25,7 @@ router.post('/new', function(req, res) {
                          catalog: parameters.connectionData.catalog,
                          cube: parameters.connectionData.cube
                        },
-        widgetSlug: parameters.widgetSlug
+        widgetSlug: slug(parameters.newWidgetName)
        }, function(err, newWidget) {
               if(!err) {
                 res.json({status: 'success', info: "Widget successfully saved", widget: newWidget});
@@ -46,7 +50,7 @@ router.post("/update",function(req,res){
     delete upsertData._id;
     Widget.findOneAndUpdate(
       {
-        widgetSlug  : parameters.widgetSlug,
+        widgetSlug  : slug(parameters.existingWidgetName),
         createdBy   : parameters.userName
       },
       upsertData,

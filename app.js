@@ -6,7 +6,8 @@ var express       = require('express'),
     logger        = require('morgan'),
     favicon       = require('serve-favicon'),
     cookieParser  = require('cookie-parser'),
-    bodyParser    = require('body-parser');
+    bodyParser    = require('body-parser'),
+    slug          = require('slug');
 
 
 
