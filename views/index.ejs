@@ -59,7 +59,7 @@
   <body>
     <div class="container-fluid" id="main" ng-app="hotChocolate">
       <div class="row">
-        <div class="col-xs-3" id= "left-menu">
+        <div class="col-xs-5 col-sm-3" id= "left-menu">
           <div id="left-menu-wrapper" ng-controller="ConnectionModelController" ng-init = "getActiveConnection()">
             <div class="connectionDiv">
               <div class="connectionHeading row">
@@ -179,27 +179,26 @@
           </div> <!-- left-menu-wrapper end-->
         </div> <!-- left-menu end-->
 
-        <div class="col-xs-9" id="content" ng-controller="queryController">
+        <div class="col-xs-7 col-sm-9" id="content" ng-controller="queryController">
+          <!-- Modal Bar Graph -->
+          <script type="text/ng-template" id="modalBarGraph.html">
+            <div>
+              <div class="modal-header">
+                <h4 class="modal-title">{{graphArray[graphArray.length-1][index]}}</h4>
 
-        <!-- Modal Bar Graph -->
-        <script type="text/ng-template" id="modalBarGraph.html">
-          <div>
-            <div class="modal-header">
-              <h4 class="modal-title">{{graphArray[graphArray.length-1][index]}}</h4>
+              </div>
+              <div class="modal-body">
+                <modalbar-graph index-passed="index" graph-array="graphArray"></modalbar-graph>
+              </div>
+              <div class="modal-footer">
+                <div class="pull-left"><label id="barGraphLabel">Sort values</label><input type="checkbox"/></div>
+                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+              </div>
+            </div>
+          </script>
 
-            </div>
-            <div class="modal-body">
-              <modalbar-graph index-passed="index" graph-array="graphArray"></modalbar-graph>
-            </div>
-            <div class="modal-footer">
-              <div class="pull-left"><label id="barGraphLabel">Sort values</label><input type="checkbox"/></div>
-              <button class="btn btn-primary" ng-click="ok()">OK</button>
-              <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-            </div>
-          </div>
-        </script>
-
-        <!-- Modal Line Graph -->
+          <!-- Modal Line Graph -->
           <script type="text/ng-template" id="modalLineGraph.html">
             <div>
               <div class="modal-header">
@@ -270,102 +269,110 @@
             </div> <!-- End modal-footer -->
           </script>
           <!-- End saveQueryModal-->
-          <div class="navbar navbar-fixed-top">
-            <div class="btn-group" role="group">
-              <!-- save query button-->
-              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="save query" tooltip-placement="bottom" ng-click="open()">
-                <span class="glyphicon glyphicon-floppy-disk"></span>
-              </button>
-              <button type="button" class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown">
-                Queries <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" id="queryList">
-                <li ng-repeat="query in queryList"><a href="#" ng-click="retrieveQuery($index)">{{query.queryName}}</a></li>
-              </ul>
-              <button type="button" class="btn btn-default navbar-btn" id="executeButton" uib-tooltip="execute" tooltip-placement="bottom" ng-click="getExecuteQueryData()"><span class="glyphicon glyphicon-play-circle"></span></button>
-            </div>
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="export widget" tooltip-placement="bottom" ng-click="export()"><i class="glyphicon glyphicon-export"></i></button>
-              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="show MDX" tooltip-placement="bottom" ng-click="showMdxQuery = showMdxQuery == false ? true : false"><i class="fa fa-file-code-o"></i></button>
-              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="non empty" tooltip-placement="bottom" ng-click="isQueryNonEmpty = isQueryNonEmpty == false ? true : false ; getExecuteQueryData()"><i class="fa fa-tasks"></i></button>
-              <!-- saveWidgetModal-->
-              <script type="text/ng-template" id="saveWidget.html">
-                <div class="modal-header row">
-                    <h4 class="modal-title" id="myModalLabel">Export Widget</h4>
-                </div>  <!--End modal-header row -->
-                <div class="modal-body row">
-                  <div class="row">
-                    <div class="col-xs-6">
-                      <input type="radio" name="saveOption" ng-model="saveOption" value="update">
-                      <label>
-                       <h4> Update </h4>
-                      </label>
-                    </div>
-                    <div class="col-xs-6">
-                      <input type="radio" name="saveOption" ng-model="saveOption" value="add">
-                      <label> <h4> Add </h4> </label>
-                    </div>
-                  </div>
-                  <div class = "row">
-                    <div class="col-xs-6">
-                      <div>
-                        <label for="widgetName">Widget name</label>
-                        <br>
-                        <input type="text" name="widgetName" ng-model="existingWidgetName" ng-change="getDescription()" ng-disabled="isRadioSelected('add')">
-                      </div>
-                      <div>
-                        <strong class="contentSpace">Existing widgets</strong>
-                        <div class="widgetList">
-                          <ul>
-                            <li ng-repeat="widget in widgetList" id="widgetList">
-                              {{widget.widgetName}}
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                     <div class="col-xs-6">
-                        <div class="contentSpace">
-                          <label for="widgetName">Widget name</label>
-                          <input type="text" name="widgetName" id="widgetName" ng-model="newWidgetName" ng-change="getDescription()" ng-disabled="isRadioSelected('update')">
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-xs-12">
-                    <label for="description">Widget description</label>
-                    <br>
-                    <textarea name="description" id="description" ng-model='description'>{{description}}</textarea>
-                    <br>
-                  </div>
-                  <div class="alert alert-warning fade in col-xs-12" ng-show="isWidgetExists" ng-cloak>
-                    {{widgetMessage}}
-                  </div>
-                  <button type="button" class="close" ng-click="showModalAlert = false">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <div><strong>{{widgetSaveMessage}}</strong></div>
+          <!-- saveWidgetModal-->
+          <script type="text/ng-template" id="saveWidget.html">
+            <div class="modal-header row">
+                <h4 class="modal-title" id="myModalLabel">Export Widget</h4>
+            </div>  <!--End modal-header row -->
+            <div class="modal-body row">
+              <div class="row">
+                <div class="col-xs-6">
+                  <input type="radio" name="saveOption" ng-model="saveOption" value="update">
+                  <label>
+                   <h4> Update </h4>
+                  </label>
                 </div>
-                </div> <!-- End modal-body-->
-                  <div class="modal-footer row">
-                    <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
-                    <button class="btn btn-warning" type="button" ng-click="cancel()">cancel</button>
-                </div> <!-- End modal-footer
-              </script>
-              <!-- End saveQueryModal-->
+                <div class="col-xs-6">
+                  <input type="radio" name="saveOption" ng-model="saveOption" value="add">
+                  <label> <h4> Add </h4> </label>
+                </div>
+              </div>
+              <div class = "row">
+                <div class="col-xs-6">
+                  <div>
+                    <label for="widgetName">Widget name</label>
+                    <br>
+                    <input type="text" name="widgetName" ng-model="existingWidgetName" ng-change="getDescription()" ng-disabled="isRadioSelected('add')">
+                  </div>
+                  <div>
+                    <strong class="contentSpace">Existing widgets</strong>
+                    <div class="widgetList">
+                      <ul>
+                        <li ng-repeat="widget in widgetList" id="widgetList">
+                          {{widget.widgetName}}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                 <div class="col-xs-6">
+                    <div class="contentSpace">
+                      <label for="widgetName">Widget name</label>
+                      <input type="text" name="widgetName" id="widgetName" ng-model="newWidgetName" ng-change="getDescription()" ng-disabled="isRadioSelected('update')">
+                    </div>
+                 </div>
+              </div>
+              <div class="col-xs-12">
+                <label for="description">Widget description</label>
+                <br>
+                <textarea name="description" id="description" ng-model='description'>{{description}}</textarea>
+                <br>
+              </div>
+              <div class="alert alert-warning fade in col-xs-12" ng-show="isWidgetExists" ng-cloak>
+                {{widgetMessage}}
+              </div>
+              <button type="button" class="close" ng-click="showModalAlert = false">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <div><strong>{{widgetSaveMessage}}</strong></div>
             </div>
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="pie graph" tooltip-placement="bottom" ng-click="showPieGraphColumn()"><i class="fa fa-pie-chart"></i></button>
-              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="area graph" tooltip-placement="bottom" ng-click="showAreaGraphColumn()"><i class="fa fa-area-chart"></i></button>
-              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="line graph" tooltip-placement="bottom" ng-click="showLineGraphColumn()"><i class="fa fa-line-chart"></i></button>
-              <button type="button" class="btn btn-default navbar-btn" uib-tooltip="bar graph" tooltip-placement="bottom" ng-click="showBarGraphColumn()"><i class="fa fa-bar-chart"></i></button>
+            </div> <!-- End modal-body-->
+              <div class="modal-footer row">
+                <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
+                <button class="btn btn-warning" type="button" ng-click="cancel()">cancel</button>
+            </div> <!-- End modal-footer
+          </script>
+          <div class="navbar navbar-fixed-top">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default navbar-btn" uib-tooltip="save query" tooltip-placement="bottom" ng-click="open()">
+                  <span class="glyphicon glyphicon-floppy-disk"></span>
+                </button>
+                <button type="button" class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown">
+                  Queries <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="queryList">
+                  <li ng-repeat="query in queryList"><a href="#" ng-click="retrieveQuery($index)">{{query.queryName}}</a></li>
+                </ul>
+                <button type="button" class="btn btn-default navbar-btn" id="executeButton" uib-tooltip="execute" tooltip-placement="bottom" ng-click="getExecuteQueryData()"><span class="glyphicon glyphicon-play-circle"></span></button>
+              </div>
             </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default navbar-btn" uib-tooltip="export widget" tooltip-placement="bottom" ng-click="export()"><i class="glyphicon glyphicon-export"></i></button>
+                <button type="button" class="btn btn-default navbar-btn" uib-tooltip="show MDX" tooltip-placement="bottom" ng-click="showMdxQuery = showMdxQuery == false ? true : false"><i class="fa fa-file-code-o"></i></button>
+                <button type="button" class="btn btn-default navbar-btn" uib-tooltip="non empty" tooltip-placement="bottom" ng-click="isQueryNonEmpty = isQueryNonEmpty == false ? true : false ; getExecuteQueryData()"><i class="fa fa-tasks"></i></button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default navbar-btn" uib-tooltip="pie graph" tooltip-placement="bottom" ng-click="showPieGraphColumn()"><i class="fa fa-pie-chart"></i></button>
+                <button type="button" class="btn btn-default navbar-btn" uib-tooltip="area graph" tooltip-placement="bottom" ng-click="showAreaGraphColumn()"><i class="fa fa-area-chart"></i></button>
+                <button type="button" class="btn btn-default navbar-btn" uib-tooltip="line graph" tooltip-placement="bottom" ng-click="showLineGraphColumn()"><i class="fa fa-line-chart"></i></button>
+                <button type="button" class="btn btn-default navbar-btn" uib-tooltip="bar graph" tooltip-placement="bottom" ng-click="showBarGraphColumn()"><i class="fa fa-bar-chart"></i></button>
+              </div>
+            </div> <!-- navbar collapse end -->
           </div> <!-- navbar-end -->
           <div id="content-wrapper">
             <div class="row myRect" ng-repeat="item in items">
-              <div class="col-xs-2"  ng-cloak>
+              <div class="col-xs-4 col-sm-2"  ng-cloak>
                 <h4>{{item.label}}</h4>
               </div>
-              <div class="col-xs-10 columns">
+              <div class="col-xs-8 col-sm-10 columns">
                 <ul class="nav" data-drop="true" ng-model="item.list" jqyoui-droppable="{multiple:true, onDrop: 'sortList($index)'}" ng-cloak>
                   <li ng-repeat="elem in item.list track by $index" ng-show="elem.caption_name">
                     {{elem.caption_name}}<button type='button' class='close' ng-click="deleteItem($index, $parent.$index)">&times;</button>
