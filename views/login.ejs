@@ -26,7 +26,7 @@
     <!-- Include Angular-Cookies in the head -->
     <script src="controllers/loginCtrl.js"></script>
   </head>
-  <body ng-app = "login" ng-controller="loginCtrl">
+  <body ng-app = "login" ng-controller="loginCtrl" class="container">
     <center>
       <h1>Visual BI</h1>
       <h3 ng-hide="isRegSelected">Login</h3>
@@ -46,7 +46,7 @@
             </div>
             <span ng-show="loginForm.password.$dirty &amp;&amp; loginForm.password.$error.required" class="help-block ng-hide">Password is required</span>
         </div>
-        <div class="col-sm-offset-3 col-sm-6">
+        <div class="col-sm-12">
           <button type="submit" value="Submit" name="login" id="login" ng-disabled="!loginForm.$valid">Login</button>
             &nbsp;
           <button type="reset" value="Reset">Reset</button>
@@ -78,7 +78,7 @@
             <span ng-show="registerForm.confirmPassword.$dirty &amp;&amp; registerForm.confirmPassword.$error.required" class="help-block ng-hide">Confirm Password is required</span>
             <span ng-show="registerForm.confirmPassword.$dirty &amp;&amp; registerForm.confirmPassword.$error.match">Password and Confirm Password do not match!</span>
         </div>
-        <div class="col-sm-offset-3 col-sm-6">
+        <div class="col-sm-12">
           <button type="submit" value="Submit" ng-disabled="!registerForm.$valid">Sign Up</button>
             &nbsp;
           <button type="reset" value="Reset">Reset</button>
