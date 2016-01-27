@@ -12,6 +12,9 @@ form.col-sm-8 {
   border-radius: 8px;
   background-color: lightblue;
 }
+body h1 {
+  color:red;
+}
 form input{
   font-size: 18px;
 }
