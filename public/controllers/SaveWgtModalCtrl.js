@@ -1,6 +1,31 @@
+/*
+   * Copyright 2016 NIIT Ltd, Wipro Ltd.
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *    http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   *
+   * Contributors:
+   *
+   * 1. Abhilash Kumbhum
+   * 2. Anurag Kankanala
+   * 3. Bharath Jaina
+   * 4. Digvijay Singam
+   * 5. Sravani Sanagavarapu
+   * 6. Vipul Kumar
+*/
+
 var hotChocolate = angular.module('hotChocolate');
 hotChocolate.controller('SaveWgtModalCtrl',
-    function ($scope, $rootScope, $filter, $uibModalInstance, $timeout, mdxQuery, widget )
+    function ($scope, $rootScope, $uibModalInstance, $timeout, mdxQuery, widget )
     {
       var uName = 'hotChocolate';
         $scope.mdxQuery = mdxQuery;
@@ -9,7 +34,6 @@ hotChocolate.controller('SaveWgtModalCtrl',
         $scope.isWidgetExists = false;
         $scope.saveOption = "update";
         $scope.widgetMessage = "";
-        $scope.widgetSlug = "";
         widget.getSavedWidgets(uName).success(function(data){
           $scope.widgetList = data;
         })
@@ -31,10 +55,10 @@ hotChocolate.controller('SaveWgtModalCtrl',
          }
          else{
             var widgetList = $scope.widgetList;
-            var widgetSlug = $filter('slug')($scope.newWidgetName);
+            var widgetName = $scope.newWidgetName;
             var isExists = false;
             for(widgetIdx in widgetList){
-              if (widgetList[widgetIdx].widgetSlug === widgetSlug)
+              if (widgetList[widgetIdx].widgetName === widgetName)
                {
                   isExists = true;
                   break;
@@ -60,11 +84,9 @@ hotChocolate.controller('SaveWgtModalCtrl',
                     dataSource: $scope.$root.DataSourceName,
                     catalog: $scope.$root.CatalogName,
                     cube: $scope.$root.CubeName
-                  },
-                  widgetSlug: widgetSlug
+                  }
               };
               console.log($scope.newWidgetName);
-              console.log($scope.widgetSlug);
               widget.saveWidget(addParameters)
                 .success(function(data) {
                     $scope.isWidgetExists = true;
@@ -96,10 +118,10 @@ hotChocolate.controller('SaveWgtModalCtrl',
        //entered a non-empty name in widgetName
        else{
          var widgetList = $scope.widgetList;
-         var widgetSlug = $filter('slug')($scope.existingWidgetName);
+         var widgetName = $scope.existingWidgetName;
          var isExists = false;
          for(widgetIdx in widgetList){
-            if (widgetList[widgetIdx].widgetSlug === widgetSlug)
+            if (widgetList[widgetIdx].widgetName === widgetName)
              {
                 isExists = true;
                 break;
@@ -116,8 +138,7 @@ hotChocolate.controller('SaveWgtModalCtrl',
                 dataSource: $scope.$root.DataSourceName,
                 catalog: $scope.$root.CatalogName,
                 cube: $scope.$root.CubeName,
-              },
-              widgetSlug: widgetSlug
+              }
             };
             widget.updateWidget(updateParameters).success(function(data){
               $scope.widgetMessage = data.info;
@@ -148,11 +169,11 @@ hotChocolate.controller('SaveWgtModalCtrl',
    };
    $scope.getDescription = function(){
       var widgetList = $scope.widgetList,
-          widgetSlug = $filter('slug')($scope.existingWidgetName);
+          widgetName = $scope.existingWidgetName;
       $scope.isWidgetExists = false;
       $scope.description = "";
       for(widgetIdx in widgetList){
-         if (widgetList[widgetIdx].widgetSlug === widgetSlug)
+         if (widgetList[widgetIdx].widgetName === widgetName)
           {
             if($scope.saveOption === "update"){
               $scope.description = widgetList[widgetIdx].description;
