@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var dbURI = "mongodb://localhost/visualBI2"; //"mongodb://172.23.238.253/visualBI";
+var dbURI = "mongodb://localhost/visualBI2"; 
 mongoose.connect(dbURI);
 
 mongoose.connection.on('connected', function () {
