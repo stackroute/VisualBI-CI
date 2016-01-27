@@ -13,7 +13,8 @@ var widgetSchema = new schema({
                        dataSource: String,
                        catalog: String,
                        cube: String
-                    }
+                    },
+   widgetSlug      : String
 });
 var widget = mongoose.model('Widget', widgetSchema);
 module.exports = widget;

@@ -20,7 +20,8 @@ router.post('/new', function(req, res) {
                          dataSource: parameters.connectionData.dataSource,
                          catalog: parameters.connectionData.catalog,
                          cube: parameters.connectionData.cube
-                       }
+                       },
+        widgetSlug: parameters.widgetSlug
        }, function(err, newWidget) {
               if(!err) {
                 res.json({status: 'success', info: "Widget successfully saved", widget: newWidget});
@@ -34,6 +35,7 @@ router.post('/new', function(req, res) {
 router.post("/update",function(req,res){
   //Update existing widget
   var parameters = JSON.parse(req.body.parameter);
+  console.log(parameters);
   var obj = new Widget({
     "modifiedOn":Date.now(),
     "description":parameters.description,
@@ -44,7 +46,7 @@ router.post("/update",function(req,res){
     delete upsertData._id;
     Widget.findOneAndUpdate(
       {
-        widgetName  : parameters.existingWidgetName,
+        widgetSlug  : parameters.widgetSlug,
         createdBy   : parameters.userName
       },
       upsertData,
