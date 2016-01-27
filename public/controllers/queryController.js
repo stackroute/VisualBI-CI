@@ -46,14 +46,17 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     }
     else {
       var parameters = {
-            connId : $rootScope.connId,
-            dataSource: $rootScope.DataSourceName,
-            catalog: $rootScope.CatalogName,
-            statement: $scope.buildQuery()
+        connId : $rootScope.connId,
+        dataSource: $rootScope.DataSourceName,
+        catalog: $rootScope.CatalogName,
+        statement: $scope.buildQuery()
       };
-
+      $scope.loadingQuery = true;
       executeQueryService.render($rootScope.container, parameters).then(function(data) {
-           $scope.graphArray = data;
+        $timeout(function() {
+          $scope.loadingQuery = false;
+        }, 100);
+        $scope.graphArray = data;
       });
     } // end else
   }; // end function
@@ -171,6 +174,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.newWidgetName = "";
   $scope.widgetSaveMessage = "";
   $scope.mdxQuery = "";
+  $scope.loadingQuery = false;
   $scope.showMdxQuery = false;
   $scope.isQueryNonEmpty = true;
   $scope.graphArray = [];
