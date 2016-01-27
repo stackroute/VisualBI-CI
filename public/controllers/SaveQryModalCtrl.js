@@ -3,11 +3,9 @@ hotChocolate.controller('SaveQryModalCtrl',
     {
         $scope.items = items;
         $scope.queryList = queryList;
-        console.log($scope.queryList);
         $scope.mdxQuery = mdxQuery;
        /*************** What to be done for saving **********/
        $scope.save = function () {
-           console.log($scope.items);
            var measureArray = $scope.items[0].list.length>0 ? $scope.items[0].list : [];
                colArray = $scope.items[1].list.length>0 ? $scope.items[1].list : [];
                rowArray = $scope.items[2].list.length>0 ? $scope.items[2].list : [];
@@ -28,7 +26,6 @@ hotChocolate.controller('SaveQryModalCtrl',
            };
            var connId = $rootScope.connId;
            query.saveQuery(parameters, connId).success(function(data) {
-             console.log(data);
              $scope.showModalAlert = true;
              $timeout(function() {
                $scope.showModalAlert = false;
@@ -38,7 +35,6 @@ hotChocolate.controller('SaveQryModalCtrl',
              {
                $scope.queryList.push(data.query);
              }
-             console.log($scope.queryList);
              if (data.status === "success"){
                $timeout(function() {
                  $uibModalInstance.close($scope.queryList);
@@ -52,6 +48,4 @@ hotChocolate.controller('SaveQryModalCtrl',
        $scope.cancel = function () {
          $uibModalInstance.dismiss('cancel');
        };
-
-        //  $uibModalInstance.close();
      });

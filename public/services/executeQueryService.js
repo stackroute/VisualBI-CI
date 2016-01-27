@@ -4,15 +4,12 @@ app.factory('executeQueryService', function($http, $rootScope) {
   return {
     render: function (containerDiv, parameters) {
       var container = angular.element(containerDiv);
-      // $('div.section_result').replaceWith('');
        var req = {
           method: 'POST',
           url: '/execute',
           data: parameters
         };
        return new Promise (function(resolve, reject){
-         console.log(req);
-         console.log(container);
          $http(req).then(function(data){
            var graphArray = renderData (container, data.data);
            if(graphArray !== undefined){
@@ -27,7 +24,6 @@ app.factory('executeQueryService', function($http, $rootScope) {
        });
     },
     removeGrid : function (container) {
-      console.log(container);
       container.children().replaceWith('');
     }
   };
@@ -36,18 +32,17 @@ app.factory('executeQueryService', function($http, $rootScope) {
 var renderData =  function (container, data){
   // $('div.section_result').replaceWith('');
   container.append('<div class="section_result">'+
-    '<table id="dataTable">'+
-      '<tbody id="dataTableBody">'+
-        '<script id="axis0_insersion">'+
-        '</script>'+
-        '<script id="axis1_insersion">'+
-        '</script>'+
-      '</tbody>'+
-    '</table>'+
-  '</div>');
+      '<table id="dataTable">'+
+        '<tbody id="dataTableBody">'+
+          '<script id="axis0_insersion">'+
+          '</script>'+
+          '<script id="axis1_insersion">'+
+          '</script>'+
+        '</tbody>'+
+      '</table>'+
+    '</div>');
   container.find('#axis0_insersion').append('{{axis0}}');
   container.find('#axis1_insersion').append('{{axis1}}');
-  // $( container+" tr" ).replaceWith( "" );
   var addElement, ans, fs, members, tdChild;
   var axes = data.Axes,
       axis = axes.Axis,
@@ -55,8 +50,6 @@ var renderData =  function (container, data){
       axis1 = axis[1],
       axis0Child = {},
       axis1Child = {};
-  console.log(axis0);
-  console.log(axis1);
   /************* Function for graphKey *****************/
   var axis0Names = [];
   for (var index0 in axis0){
@@ -68,6 +61,7 @@ var renderData =  function (container, data){
      axis0Name = axis0Name.substring(0,axis0Name.length-1);
      axis0Names.push(axis0Name);
    }
+
    /************* Headings for Graph Modal *****************/
    var axis1Names = [];
    for (var index1 in axis1){
@@ -79,6 +73,7 @@ var renderData =  function (container, data){
       axis1Name = axis1Name.substring(0,axis1Name.length-1);
       axis1Names.push(axis1Name);
     }
+
   /***************** Generating tree structure ****************/
   addElement = function(members, tree, level) {
     var child;
@@ -97,17 +92,17 @@ var renderData =  function (container, data){
     }
     return tree;
   };
+
   /***************** Graph Arrays *************/
   var graphKey = [];
-  /***************** Axis0 Hierarchical Structure **********/
 
+  /***************** Axis0 Hierarchical Structure **********/
   axis0Child = axis0.reduce((function(acc, member) {
     return addElement(member.Member, acc, 1);
   }), {});
 
   /************* Function for rendering axis0 *****************/
   tdAxis0Child = function(element) {
-    console.log(element);
     var a, ele, name,
         frag0 = "<tr>";
     for(var axis1MemberIndex=0, axis1MemberLen = axis1[0].Member.length; axis1MemberIndex < axis1MemberLen; axis1MemberIndex++){
@@ -184,11 +179,13 @@ var renderData =  function (container, data){
     dataArray.push(tempDataObj);
   }
   graphData.push(axis1Names);
+
   /****************************** Axis1 Hierarchical Structure **********************************/
   axis1Child = axis1.reduce((function(acc, member) {
     return addElement(member.Member, acc, 1);
   }), {});
   var elementIndex = 0;
+
   /************* Function for rendering axis1 *****************/
   var rowId = 0;
   tdAxis1Child = function(element) {
@@ -220,7 +217,5 @@ var renderData =  function (container, data){
   var template1 = $.trim(container.find("#axis1_insersion").html());
   var frag1 = template1.replace(/{{axis1}}/ig,"<tr id='row0' class='dataRow'>"+tdAxis1Child(axis1Child));
   container.find('#dataTableBody').append(frag1);
-  // console.log(axis0Child);
-  // console.log(axis1Child);
   return graphData;
 }; // end renderData

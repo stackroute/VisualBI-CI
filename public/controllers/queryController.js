@@ -1,6 +1,5 @@
 var hotChocolate = angular.module('hotChocolate');
 hotChocolate.controller('queryController', function($scope, $http, $rootScope, GraphService, executeQueryService, $uibModal, $compile, $cookies, $window) {
-  console.log($cookies.get('userName'));
   if(!$cookies.get('userName')){
     $window.location.href = '/';
   }
@@ -153,10 +152,8 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
 
   $scope.querySaveMessage = "";
   $scope.showModalAlert = false;
-  $scope.hideMe = function(list) {
-    return list.length > 0;
-  };
-
+  $scope.newWidgetName = "";
+  $scope.widgetSaveMessage = "";
   $scope.mdxQuery = "";
   $scope.showMdxQuery = false;
   $scope.isQueryNonEmpty = true;
@@ -165,11 +162,13 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   $scope.isMdxInputError = false;
   $scope.mdxInputErrorMessage = "MDX input error.";
   $rootScope.graphArray = [];
-
+  $scope.newWidgetName = "";
+  $scope.hideMe = function(list) {
+    return list.length > 0;
+  }
   $scope.retrieveQuery = function(idx) {
     executeQueryService.removeGrid($rootScope.container);
     var query = $scope.queryList[idx];
-    console.log(query);
     $rootScope.selectedRetrieveQuery = true;
     $scope.items[0].list = query.onMeasures;
     $scope.items[1].list = query.onColumns;
@@ -209,7 +208,6 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
     });
 
     modalInstance.result.then(function(queryList){
-      console.log(queryList);
       $scope.queryList = queryList;
     });
   };
@@ -219,20 +217,16 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
   };
   //Show Bar Graph Column
   $scope.showBarGraphColumn = function() {
-    console.log("entered showGraphColumn");
     if(($("."+"miniBarGraph"+"").length) === 0){
         $("#row0").prev().append("<td class="+"miniBarGraph"+"><span class='graphIcon'>"+"</span></td>");
 
-        //$scope.graphArray = graphArray;
         for(var index in $scope.graphArray) {
-          console.log($scope.graphArray);
-          var dataset = $scope.graphArray;
-          console.log(dataset);
-          $rootScope.graphArray = $scope.graphArray;
-          $("#row"+index).append($compile("<td class="+"miniBarGraph"+"><minibar-graph index-passed="+index+" "+"my-set="+'graphArray'+"></minibar-graph></td>")($scope));
-            //GraphService.renderMiniGraph(graphArray[index],'#row'+index+ ' '+'td.'+"miniGraph"+ ' ' +'span.graphIcon',index);
-
+          if(parseInt(index) !== $scope.graphArray.length-1) {
+              var dataset = $scope.graphArray;
+              $rootScope.graphArray = $scope.graphArray;
+              $("#row"+index).append($compile("<td class="+"miniBarGraph"+"><minibar-graph index-passed="+index+" "+"my-set="+'graphArray'+"></minibar-graph></td>")($scope));
         }
+      }
       }
       else {
         $("."+"miniBarGraph"+"").toggle();
@@ -245,7 +239,6 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
       templateUrl : 'modalBarGraph.html',
       controller : 'ModalGraphController',
       indexPassed : indexPassed,
-      //data : $scope.graphArray,
       resolve : {
         graphData : function() {
           return $rootScope.graphArray;
@@ -260,20 +253,16 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
 
   //Show Line Graph column
   $scope.showLineGraphColumn = function() {
-    console.log("entered showLineGraphColumn");
       if(($("."+"miniLineGraph"+"").length) === 0){
           $("#row0").prev().append("<td class="+"miniLineGraph"+"><span class='graphIcon'>"+"</span></td>");
 
-          //$scope.graphArray = graphArray;
           for(var index in $scope.graphArray) {
-            console.log($scope.graphArray);
-            var dataset = $scope.graphArray;
-            console.log(dataset);
-            $rootScope.graphArray = $scope.graphArray;
-            $("#row"+index).append($compile("<td class="+"miniLineGraph"+"><miniline-graph index-passed="+index+" "+"my-set="+'graphArray'+"></miniline-graph></td>")($scope));
-              //GraphService.renderMiniGraph(graphArray[index],'#row'+index+ ' '+'td.'+"miniGraph"+ ' ' +'span.graphIcon',index);
-
+            if(parseInt(index) !== $scope.graphArray.length-1) {
+                var dataset = $scope.graphArray;
+                $rootScope.graphArray = $scope.graphArray;
+                $("#row"+index).append($compile("<td class="+"miniLineGraph"+"><miniline-graph index-passed="+index+" "+"my-set="+'graphArray'+"></miniline-graph></td>")($scope));
           }
+        }
         }
         else {
           $("."+"miniLineGraph"+"").toggle();
@@ -299,20 +288,16 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
 
   //Show Area Graph Column
   $scope.showAreaGraphColumn = function() {
-    console.log("entered showAreaGraphColumn");
       if(($("."+"miniAreaGraph"+"").length) === 0){
           $("#row0").prev().append("<td class="+"miniAreaGraph"+"><span class='graphIcon'>"+"</span></td>");
 
-          //$scope.graphArray = graphArray;
           for(var index in $scope.graphArray) {
-            console.log($scope.graphArray);
-            var dataset = $scope.graphArray;
-            console.log(dataset);
-            $rootScope.graphArray = $scope.graphArray;
-            $("#row"+index).append($compile("<td class="+"miniAreaGraph"+"><miniarea-graph index-passed="+index+" "+"my-set="+'graphArray'+"></miniarea-graph></td>")($scope));
-              //GraphService.renderMiniGraph(graphArray[index],'#row'+index+ ' '+'td.'+"miniGraph"+ ' ' +'span.graphIcon',index);
-
+            if(parseInt(index) !== $scope.graphArray.length-1) {
+                var dataset = $scope.graphArray;
+                $rootScope.graphArray = $scope.graphArray;
+                $("#row"+index).append($compile("<td class="+"miniAreaGraph"+"><miniarea-graph index-passed="+index+" "+"my-set="+'graphArray'+"></miniarea-graph></td>")($scope));
           }
+        }
       } else {
           $("."+"miniAreaGraph"+"").toggle();
       }
@@ -337,19 +322,15 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
 
   //show Pie Graph column
   $scope.showPieGraphColumn = function() {
-    console.log("entered showPieGraphColumn");
       if(($("."+"miniPieGraph"+"").length) === 0){
           $("#row0").prev().append("<td class="+"miniPieGraph"+"><span class='graphIcon'>"+"</span></td>");
 
-          //$scope.graphArray = graphArray;
           for(var index in $scope.graphArray) {
-            console.log($scope.graphArray);
-            var dataset = $scope.graphArray;
-            console.log(dataset);
-            $rootScope.graphArray = $scope.graphArray;
-            $("#row"+index).append($compile("<td class="+"miniPieGraph"+"><minipie-graph index-passed="+index+" "+"my-set="+'graphArray'+"></minipie-graph></td>")($scope));
-              //GraphService.renderMiniGraph(graphArray[index],'#row'+index+ ' '+'td.'+"miniGraph"+ ' ' +'span.graphIcon',index);
-
+            if(parseInt(index) !== $scope.graphArray.length-1){
+                var dataset = $scope.graphArray;
+                $rootScope.graphArray = $scope.graphArray;
+                $("#row"+index).append($compile("<td class="+"miniPieGraph"+"><minipie-graph index-passed="+index+" "+"my-set="+'graphArray'+"></minipie-graph></td>")($scope));
+            }
           }
         }
         else {
@@ -373,5 +354,21 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
       }
     });
   };
+
+  $scope.export = function(){
+      var modalInstance = $uibModal.open({
+          animation: $scope.animationsEnabled,
+          templateUrl: 'saveWidget.html',
+          controller: 'SaveWgtModalCtrl',
+          resolve: {
+            mdxQuery: function(){
+              return $scope.mdxQuery;
+            }
+          }
+       });
+       modalInstance.result.then(function(widgetList){
+         $scope.widgetList = widgetList;
+       });
+    };
   }
 });

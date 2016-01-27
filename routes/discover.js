@@ -24,10 +24,8 @@ var discoverRequestTypes =[
  ];
 
 // Functions
-
 function callRequest(connId,fragments,res){
     Connections.findById(connId,function(err,conn){
-      console.log(conn.getServer());
       var xmlaRequest = generateXmlaRequest(conn.getServer(), fragments, res);
       var x = new xmla.Xmla;
       x.request(xmlaRequest);
@@ -86,7 +84,6 @@ function generateXmlaRequest(serverURL, fragments, response){
       },
       error   : function(err){
         response.write("Error finding the Required Data");
-        console.log(err);
       },
       callback: function() {
         response.end();
@@ -112,7 +109,7 @@ router.get('/getServerDetails', function(req, res) {
 
 });
 
-//----------------------------------------Dimesnions-----------------------------------------------
+//----------------------------------------Dimensions-----------------------------------------------
  router.get('/getDimensions',function(req,res) {
    var parameters = req.query,
        pathName   = parameters.pathName,
@@ -129,7 +126,7 @@ router.get('/getMeasures',function(req,res) {
       pathName   = parameters.pathName,
       connId     = parameters.connId;
 
-	pathName = pathName + "/[Measures]/[Measures]/[Measures].[MeasuresLevel]";     //Assumption that it follows this way
+	pathName = pathName + "/[Measures]/[Measures]/[Measures].[MeasuresLevel]";
   var fragments = pathName.split("/");
 
   callRequest(connId,fragments,res);

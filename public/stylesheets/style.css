@@ -19,15 +19,15 @@ body {
   margin-right: 0;
 }
 
-#main>.row>.col-xs-3 {
+#main>.row>.col-sm-3 {
   width: 23%;
 }
 
-#main>.row>.col-xs-9 {
+#main>.row>.col-sm-9 {
   width: 77%;
 }
 
-.col-xs-3 , .col-xs-9{
+#left-menu , #content {
   height: 100%;
 }
 
@@ -96,6 +96,10 @@ span.nav-toggle-icon{
   padding-right: 15px;
 }
 
+.navbar-header .navbar-toggle .icon-bar {
+    background-color: white;
+}
+
 .navbar .btn {
   font-size: 16px;
 }
@@ -121,12 +125,12 @@ span.nav-toggle-icon{
   border-radius: 4px;
 }
 
-.myRect .col-xs-2{
+.myRect .col-sm-2{
   background-color: #e3e3e3;
   text-align: center;
 }
 
-.myRect .col-xs-10 {
+.myRect .col-sm-10 {
   padding-top: 6px;
 }
 
@@ -329,7 +333,7 @@ rect {
 
 
 /*********** Angularizing Modal *******************/
-.selectConnection {
+.selectConnection ,.selectWidget{
   border-right: 1px solid lightgrey;
 }
 .modal-content input{
@@ -377,7 +381,29 @@ rect {
 div.logout {
   float: right;
 }
+#widgetList{
+  list-style-type: none;
+}
+/*.contentSpace{
+  padding-bottom: 10px;
+}*/
+.selectWidget, .addWidget{
+  height: 220px;
+}
 /*************************Avoiding templates from loading****************************/
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
+}
+/*************************Export Widgets***************************/
+
+.widgetList{
+  height: 100px;
+  overflow-y: auto;
+}
+
+.modal-content input[type="radio"]{
+  width:50px;
+}
+.modal-content textarea{
+  width: 100%;
 }

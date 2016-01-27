@@ -1,5 +1,5 @@
-angular.module('hotChocolate')
-    .factory('user_id', function($http){
+var app = angular.module("hotChocolate");
+app.factory('user_id', function($http){
       return{
         getUserId: function(uName){
           var req = {

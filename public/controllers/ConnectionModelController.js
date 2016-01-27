@@ -8,13 +8,12 @@ hotChocolate.controller('ConnectionModelController',
     else{
       $rootScope.userName = $cookies.get('userName');
       user_id.getUserId($rootScope.userName).success(function(data){
-        $rootScope.user_id = data; // for widget_created by Sravani
+        $rootScope.user_id = data;
       });
       $scope.availableConnections = [];
       $scope.addConnection = false;
       $scope.newConn = {};
       $scope.DataSourceName = "";
-      // $rootScope.connIndex = '0';
       $scope.$watch('DataSourceName', function(newValue, oldValue){
         $rootScope.DataSourceName = newValue;
       });
@@ -25,20 +24,15 @@ hotChocolate.controller('ConnectionModelController',
       $scope.CubeName = "";
       $scope.$watch('CubeName', function(newValue, oldValue){
         executeQueryService.removeGrid($rootScope.container);
-        console.log("start"+$rootScope.selectedRetrieveQuery);
         $rootScope.CubeName = newValue;
         if($rootScope.selectedRetrieveQuery === false){
-        $rootScope.$broadcast('resetQueryData');
-      }
-      else{
-          $rootScope.selectedRetrieveQuery = false;
-      }
-      console.log("end"+$rootScope.selectedRetrieveQuery);
-      $scope.dimensions = [];
-      $scope.measures = [];
-        // $scope.resetQueryData = function(){
-          // alert("hi");
-        // };
+            $rootScope.$broadcast('resetQueryData');
+        }
+        else{
+            $rootScope.selectedRetrieveQuery = false;
+        }
+        $scope.dimensions = [];
+        $scope.measures = [];
       });
       $scope.DataSourceNames = [];
       $scope.CatalogNames = [];
@@ -53,34 +47,26 @@ hotChocolate.controller('ConnectionModelController',
         var userName = $rootScope.userName;
         getAvailableConnections.availableConnections(userName).then(function(availableConnections) {
           $scope.availableConnections = availableConnections.data;
-          console.log($scope.availableConnections);
           if($scope.availableConnections.length !== 0){
             getAvailableConnections.activeConnection(userName).then(function(activeConnection){
-              console.log(activeConnection);
               activeConnId = activeConnection.data;
-              console.log(activeConnId);
               for(var connIdx in $scope.availableConnections){
                 if (activeConnId === $scope.availableConnections[connIdx]._id){
                   $rootScope.connIndex  = connIdx;
                 }
               }
               $rootScope.queryList = $scope.availableConnections[$rootScope.connIndex].savedQueries;
-              console.log($rootScope.queryList);
               $rootScope.connId = activeConnId;
               discover.getSource('/',$rootScope.connId).then(function(data){
-                console.log("inside getSource");
                 $scope.DataSourceNames = data.data.values;
-                console.log($scope.DataSourceNames);
               }, function(error){
                 $scope.DataSourceNames = [];
-                console.log(error);
               });
             });
           }
         });
       };
       $scope.getCatalogNames = function(DataSourceName){
-        // $rootScope.DataSourceName = DataSourceName;
         $scope.CatalogName = "";
         $scope.CatalogNames = [];
         $scope.CubeName = "";
@@ -88,33 +74,26 @@ hotChocolate.controller('ConnectionModelController',
         if(DataSourceName !== ""){
           discover.getSource('/'+DataSourceName, $rootScope.connId).then(function(data){
             $scope.CatalogNames = data.data.values;
-            console.log($scope.CatalogNames);
           });
         }
       };
       $scope.getCubeNames = function(DataSourceName, CatalogName){
-        // $rootScope.DataSourceName =
         $scope.CubeName = "";
         $scope.CubeNames = [];
-        console.log('/'+DataSourceName+'/'+CatalogName);
         if(DataSourceName !== "" && CatalogName !== ""){
           discover.getSource('/'+DataSourceName+'/'+CatalogName, $rootScope.connId).then(function(data){
             $scope.CubeNames = data.data.values;
-            console.log($scope.CubeNames);
           });
         }
       };
       $scope.getChildren = function(DataSourceName, CatalogName, CubeName){
-        console.log('/'+DataSourceName+'/'+CatalogName+'/'+CubeName);
         if(DataSourceName !== "" && CatalogName !== "" && CubeName !== ""){
           discover.getDimensions('/'+DataSourceName+'/'+CatalogName+'/'+CubeName, $rootScope.connId)
                           .then(function(data){
-                             console.log(data.data.values);
                              $scope.dimensions = data.data.values;
           });
           discover.getMeasures('/'+DataSourceName+'/'+CatalogName+'/'+CubeName, $rootScope.connId)
                           .then(function(data){
-                                console.log(data.data.values);
                                 $scope.measures = data.data.values;
                                 for(var i=0; i < $scope.measures.length; i++) {
                                   $scope.measures[i].isMember = "yes";
@@ -131,7 +110,6 @@ hotChocolate.controller('ConnectionModelController',
                       "/" + $scope.dimensions[idx].unique_name;
         discover.getDimensions(pathName,$rootScope.connId)
                         .then(function(data){
-                           console.log(data.data.values);
                            $scope.dimensions[idx].children = data.data.values;
 
               });
@@ -162,7 +140,6 @@ hotChocolate.controller('ConnectionModelController',
                       "/" + $scope.dimensions[dimIdx].children[hierIdx].children[levelIdx].unique_name;
         discover.getDimensions(pathName,$rootScope.connId)
                         .then(function(data){
-                           console.log(data.data.values);
                            var members = data.data.values;
                          for(var i=0, len = members.length; i < len; i++) {
                            members[i].isMember = "yes";
@@ -174,7 +151,6 @@ hotChocolate.controller('ConnectionModelController',
       };
 
       $scope.$on('retrieveQueryEvent', function(event, data) {
-        console.log(data);
         if( $scope.DataSourceName !== data.dataSource)
         {
           $scope.DataSourceName =  data.dataSource;
