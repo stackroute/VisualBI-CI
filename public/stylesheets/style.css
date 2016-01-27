@@ -377,6 +377,10 @@ rect {
   min-width: 40%;
   max-width: 45%;
 }
+/* style for logout button */
+div.logout {
+  float: right;
+}
 #widgetList{
   list-style-type: none;
 }

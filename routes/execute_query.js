@@ -79,6 +79,8 @@ router.post('/', function(req, res) {
     }
 
         Connections.findById(connId,function(err,conn){
+          console.log("conn logged");
+          console.log(conn);
           var xmlaRequest = {
             async       : true,
             url         : conn.getServer(),

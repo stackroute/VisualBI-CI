@@ -21,6 +21,8 @@ angular.module("login")
     $scope.showRegisterForm = function(){
       $scope.isRegSelected = !$scope.isRegSelected;
       $scope.loginMsg = "";
+            $scope.userName = "";
+            $scope.password = "";
       $scope.userNameExist = false;
     };
   });

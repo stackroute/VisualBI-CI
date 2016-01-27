@@ -156,11 +156,11 @@
                         <li ng-repeat="level in hierarchy.children">
                           <label class='nav-toggle nav-header' ng-click="!level.children.length > 0 && getMembers($parent.$parent.$index, $parent.$index, $index)" toggle-list>
                             <span class='nav-toggle-icon glyphicon glyphicon-chevron-right' ng-cloak></span>
-                            <a href='#' ng-model="hierarchy.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}" ng-cloak> {{level.caption_name}}</a>
+                            <a href='#' ng-model="hierarchy.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone', scroll: 'true'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}" ng-cloak> {{level.caption_name}}</a>
                           </label>
                           <ul class='nav nav-list nav-left-ml' ng-show="level.children.length">
                             <li ng-repeat="member in level.children">
-                              <a href='#' ng-model="level.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}"  ng-cloak> {{member.caption_name}}</a>
+                              <a href='#' ng-model="level.children" data-drag="true" data-jqyoui-options="{revert: 'invalid', appendTo: 'body', helper: 'clone', scroll: 'true'}" jqyoui-draggable="{index: {{$index}}, animate: 'true', placeholder: 'keep'}"  ng-cloak> {{member.caption_name}}</a>
                             </li>
                           </ul>
                         </li>
@@ -367,6 +367,9 @@
                 <button type="button" class="btn btn-default navbar-btn" uib-tooltip="line graph" tooltip-placement="bottom" ng-click="showLineGraphColumn()"><i class="fa fa-line-chart"></i></button>
                 <button type="button" class="btn btn-default navbar-btn" uib-tooltip="bar graph" tooltip-placement="bottom" ng-click="showBarGraphColumn()"><i class="fa fa-bar-chart"></i></button>
               </div>
+              <div class="btn-group logout" role="group">
+                <button type="button" class="btn btn-default navbar-btn" uib-tooltip="Logout" tooltip-placement="bottom" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></button>
+              </div>
             </div> <!-- navbar collapse end -->
           </div> <!-- navbar-end -->
           <div id="content-wrapper">
@@ -394,21 +397,8 @@
             </div>
             <div class="row">
               <div class="col-xs-12">
-                <div id="tableDiv">
-
-                </div>
-                <!-- <div class="section_result">
-                  <table id="dataTable">
-                    <tbody id="dataTableBody">
-                      <script id="axis0_insersion">
-                      {{axis0}}
-                      </script>
-                      <script id="axis1_insersion">
-                      {{axis1}}
-                      </script>
-                    </tbody>
-                  </table>
-                </div> section_result end-->
+                <!-- div for rendering the grid within -->
+                <div id="tableDiv"></div>
               </div> <!-- col-sm-12 end-->
             </div> <!-- row end-->
           </div> <!-- content-wrapper end-->
