@@ -22,7 +22,7 @@
    * 5. Sravani Sanagavarapu
    * 6. Vipul Kumar
 */
-   
+
 var hotChocolate = angular.module('hotChocolate');
 hotChocolate.controller('queryController', function($scope, $http, $rootScope, GraphService, executeQueryService, $uibModal, $compile, $cookies, $window, $timeout) {
   if(!$cookies.get('userName')){
@@ -153,7 +153,7 @@ hotChocolate.controller('queryController', function($scope, $http, $rootScope, G
         currItem = itemArr.pop();
     delete currItem.children;
     var isValidationError = false;
-    if(listIdx !== 0 && currItem.hierName === "Measures") {
+    if(listIdx !== 0 && currItem.hierName === "Measures" || listIdx == 0 && currItem.hierName !== "Measures") {
       isValidationError = true;
     }
     for(var h=1; h < 4; h++) {
