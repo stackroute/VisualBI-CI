@@ -38,7 +38,7 @@ $ npm start
 License
 ----
 
-MIT
+Apache
 
    [node.js]: <http://nodejs.org>
    [Twitter Bootstrap]: <http://twitter.github.com/bootstrap/>

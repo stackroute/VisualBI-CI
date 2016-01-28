@@ -35,11 +35,11 @@ form.col-sm-8 {
   padding-left: 10px;
   padding-right: 20px;
   border-radius: 8px;
-  background-color: lightslategrey;
+  background-color: rgba(217,237,247, 0.91);
 }
 body h1 {
   color:darkslategrey;
-  font-size: 4em;
+  font-size: 4.5em;
 }
 .registerFormClick {
   color: darkslategrey;
@@ -72,33 +72,28 @@ input.ng-invalid{
   margin-top: 20px;
 }
 /* media queries */
-/*
+
 @media(max-width: 767px){
   body{
-    background: url('../images/bi_sm.png') no-repeat center center fixed;
-    background-size: cover;
+    background: url('../images/bi2_sm.png') no-repeat center center fixed;
     background-size: 100% 100%;
   }
 }
 @media(min-width: 768px){
   body{
-    background: url('../images/bi_md.png') no-repeat center center fixed;
-    background-size: cover;
+    background: url('../images/bi2_md.png') no-repeat center center fixed;
     background-size: 100% 100%;
   }
 }
 @media(min-width: 992px){
   body{
-    background: url('../images/bi_lg.png') no-repeat center center fixed;
-    background-size: cover;
+    background: url('../images/bi2_lg.png') no-repeat center center fixed;
     background-size: 100% 100%;
   }
 }
 @media(min-width: 1200px){
   body{
-    background: url('../images/bi.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background: url('../images/bi2.jpg') no-repeat center center fixed;
     background-size: 100% 100%;
   }
 }
-*/
