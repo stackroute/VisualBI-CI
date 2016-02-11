@@ -23,6 +23,10 @@
     * 6. Vipul Kumar
 */
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+var config =  require('./config');
+
 // Express modules
 var express       = require('express'),
     passport      = require('passport'),
@@ -60,7 +64,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+if(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+    app.use(express.static(path.join(__dirname, 'public')));
+} else if(process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.normalize(__dirname + '/../public')));
+}
 app.use(require('express-session')({
     secret: 'keyboard cat',
     resave: false,
