@@ -1,6 +1,16 @@
+var path = require('path');
+
 module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+		env: {
+			dev: {
+				NODE_ENV: 'development'
+			},
+			test: {
+				NODE_ENV: 'test'
+			}
+		},
 		clean: {
 			build: ['dist']
 		},
@@ -20,7 +30,20 @@ module.exports = function(grunt) {
 					cwd: 'public',
 					src: ['**'],
 					dest: 'dist/public'
+				}, {
+					expand: true,
+					cwd: '.',
+					dest: 'dist',
+					src: ['package.json']
 				}]
+			}
+		},
+		express: {
+			server: {
+				options: {
+					port: 9000,
+					server: path.resolve(__dirname, 'app.js')
+				}
 			}
 		}
 	});
@@ -28,8 +51,13 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-express');
+
+	grunt.loadNpmTasks('grunt-env');
 
 	grunt.registerTask('build', ['clean:build','jshint','copy:build']);
-
 	grunt.registerTask('default', ['build']);
+
+	grunt.registerTask('serve', ['env:dev', 'express', 'express-keepalive']);
+	grunt.registerTask('serve:dist', ['env:test', 'express', 'express-keepalive']);
 };
