@@ -64,5 +64,5 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', ['build']);
 
 	grunt.registerTask('serve', ['env:dev', 'express', 'open:dev', 'express-keepalive']);
-	grunt.registerTask('serve:dist', ['env:test', 'express', 'open:dev', 'express-keepalive']);
+	grunt.registerTask('serve:dist', ['env:test', 'build', 'express', 'open:dev', 'express-keepalive']);
 };

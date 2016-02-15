@@ -1,5 +1,5 @@
 module.exports = {
 	mongoDb: {
-		url: 'mongodb://localhost/test'
+		url: 'mongodb://localhost/visualBI-test'
 	}
 };
