@@ -45,6 +45,11 @@ module.exports = function(grunt) {
 					server: path.resolve(__dirname, 'app.js')
 				}
 			}
+		},
+		open: {
+			dev: {
+				path: 'http://localhost:9000/'
+			}
 		}
 	});
 
@@ -52,12 +57,12 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-express');
-
 	grunt.loadNpmTasks('grunt-env');
+	grunt.loadNpmTasks('grunt-open');
 
 	grunt.registerTask('build', ['clean:build','jshint','copy:build']);
 	grunt.registerTask('default', ['build']);
 
-	grunt.registerTask('serve', ['env:dev', 'express', 'express-keepalive']);
-	grunt.registerTask('serve:dist', ['env:test', 'express', 'express-keepalive']);
+	grunt.registerTask('serve', ['env:dev', 'express', 'open:dev', 'express-keepalive']);
+	grunt.registerTask('serve:dist', ['env:test', 'express', 'open:dev', 'express-keepalive']);
 };
