@@ -7,8 +7,8 @@ module.exports = function(grunt) {
 			dev: {
 				NODE_ENV: 'development'
 			},
-			test: {
-				NODE_ENV: 'test'
+			dist: {
+				NODE_ENV: 'dist'
 			}
 		},
 		clean: {
@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					cwd: '.',
-					src: ['bin/**', 'config/**', 'lib/**', 'models/**', 'routes/**', 'views/**'],
+					src: ['bin/**', 'config/**', 'lib/**', 'models/**', 'routes/**', 'views/**', 'app.js'],
 					dest: 'dist/server'
 				}, {
 					expand: true,
@@ -39,10 +39,16 @@ module.exports = function(grunt) {
 			}
 		},
 		express: {
-			server: {
+			dev: {
 				options: {
 					port: 9000,
 					server: path.resolve(__dirname, 'app.js')
+				}
+			},
+			dist: {
+				options: {
+					port: 9000,
+					server: path.resolve(__dirname, 'dist/server/app.js')
 				}
 			}
 		},
@@ -63,6 +69,6 @@ module.exports = function(grunt) {
 	grunt.registerTask('build', ['clean:build','jshint','copy:build']);
 	grunt.registerTask('default', ['build']);
 
-	grunt.registerTask('serve', ['env:dev', 'express', 'open:dev', 'express-keepalive']);
-	grunt.registerTask('serve:dist', ['env:test', 'build', 'express', 'open:dev', 'express-keepalive']);
+	grunt.registerTask('serve', ['env:dev', 'express:dev', 'open:dev', 'express-keepalive']);
+	grunt.registerTask('serve:dist', ['env:dist', 'build', 'express:dist', 'open:dev', 'express-keepalive']);
 };

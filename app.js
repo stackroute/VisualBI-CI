@@ -24,6 +24,7 @@
 */
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+console.log('NODE_ENV: ' + process.env.NODE_ENV);
 
 var config =  require('./config');
 
@@ -66,7 +67,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 if(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     app.use(express.static(path.join(__dirname, 'public')));
-} else if(process.env.NODE_ENV === 'production') {
+} else {
     app.use(express.static(path.normalize(__dirname + '/../public')));
 }
 app.use(require('express-session')({
