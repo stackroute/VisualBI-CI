@@ -56,6 +56,17 @@ module.exports = function(grunt) {
 			dev: {
 				path: 'http://localhost:9000/'
 			}
+		},
+		bumpup: 'package.json',
+		compress: {
+			main: {
+				options: {
+					archive: 'dist/<%= pkg.name %>-<%= pkg.version %>.tgz'
+				},
+				files: [
+					{expand: true, cwd: './dist', src: ['package.json','public/**/*','server/**/*']}
+				]
+			}
 		}
 	});
 
@@ -65,6 +76,11 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-express');
 	grunt.loadNpmTasks('grunt-env');
 	grunt.loadNpmTasks('grunt-open');
+	grunt.loadNpmTasks('grunt-bumpup');
+	grunt.loadNpmTasks('grunt-contrib-compress');
+
+	grunt.registerTask('test', ['jshint']);
+	grunt.registerTask('package-only', ['clean:build', 'copy:build']);
 
 	grunt.registerTask('build', ['clean:build','jshint','copy:build']);
 	grunt.registerTask('default', ['build']);
